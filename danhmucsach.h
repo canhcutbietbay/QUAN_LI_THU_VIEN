@@ -19,25 +19,26 @@ struct NodeSach
   NodeSach *next;
 };
 // lenh khoi tao node
-void InsertFirst_NodeSach(NodeSach *First, Sach &sach);
-void InsertLast_NodeSach(NodeSach *Last, Sach &sach);
-void InsertAfter_NodeSach(NodeSach *node, Sach &sach);
+void InsertFirst_NodeSach(NodeSach *&First, Sach &sach);
+void InsertLast_NodeSach(NodeSach *First, Sach &sach);
+void InsertAfter_NodeSach(NodeSach *&node, Sach &sach);
 // new NodeSach;
 NodeSach *CreateNodeSach(Sach &sach)
 {
   NodeSach *node = new NodeSach;
   node->sach = sach;
+  node->next = nullptr;
   return node;
 }
 // them NodeSach o dau
-void InsertFirst_NodeSach(NodeSach *First, Sach &sach)
+void InsertFirst_NodeSach(NodeSach *&First, Sach &sach)
 {
   NodeSach *newSach = CreateNodeSach(sach);
   newSach->next = First;
   First = newSach;
 }
 // them NodeSach o vi tri
-void InsertAfter_NodeSach(NodeSach *node, Sach &sach)
+void InsertAfter_NodeSach(NodeSach *&node, Sach &sach)
 {
   NodeSach *newSach = CreateNodeSach(sach);
   newSach->next = node->next;
@@ -53,7 +54,7 @@ void InsertLast_NodeSach(NodeSach *First, Sach &sach)
     NodeSach *last;
     for (last = First; last->next != nullptr; last = last->next)
       ;
-    last->next = CreateNodeSach(sach);
+    InsertAfter_NodeSach(last, sach);
   }
 }
 //
