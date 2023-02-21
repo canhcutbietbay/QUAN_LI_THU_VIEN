@@ -1,8 +1,10 @@
+#define MAX_SIZE_LIST_DAU_SACH 100
+
 struct DauSach
 {
     char ISBN[15], TenSach[25], TacGia[25], TheLoai[25];
     int SoTrang, NXB;
-	// NodeSach* First = nullptr;
+	NodeSach *DS_Sach;
 
 	//constructor
 	DauSach() {}
@@ -18,11 +20,11 @@ struct DauSach
 	//destructor
     ~DauSach(){};
 };
-struct ListDauSach{
+struct DS_DauSach{
 	int n;
 	DauSach *nodes[MAX_SIZE_LIST_DAU_SACH];
-	ListDauSach(){
+	DS_DauSach(){
 		n = 0;
 	}
-	~ListDauSach(){}
+	~DS_DauSach(){}
 };

@@ -1,4 +1,4 @@
-struct DocGia{
+struct TheDocGia{
 	int MaThe;
 	char Ho[20];
 	char Ten[11];
@@ -12,6 +12,7 @@ struct DocGia{
 		 * 0: Khoa
 		 * 1: Hoat dong
 		 */
+    DS_MuonTra *DS_MT;
 	
 	//constructor
 	DocGia(){}
@@ -25,8 +26,9 @@ struct DocGia{
 };
 
 
-struct TreeDocGia{
-	DocGia docgia;
+struct TreeTheDocGia{
+    TheDocGia info;
+    int bf;
 	TreeDocGia *Left = NULL;
 	TreeDocGia *Right = NULL;
 };
