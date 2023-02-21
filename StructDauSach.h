@@ -18,3 +18,11 @@ struct DauSach
 	//destructor
     ~DauSach(){};
 };
+struct ListDauSach{
+	int n;
+	DauSach *nodes[MAX_SIZE_LIST_DAU_SACH];
+	ListDauSach(){
+		n = 0;
+	}
+	~ListDauSach(){}
+};
