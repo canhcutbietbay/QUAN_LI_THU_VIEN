@@ -16,7 +16,7 @@ struct MuonTra
 };
 struct NodeMuonTra
 {
-    MuonTra muontra;
+    MuonTra value;
     NodeMuonTra *Left;
     NodeMuonTra *Right;
 };

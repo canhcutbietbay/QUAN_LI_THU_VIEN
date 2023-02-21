@@ -15,7 +15,7 @@ struct Sach
 // lien ket don
 struct NodeSach
 {
-  Sach sach;
+  Sach value;
   NodeSach *next;
 };
 // lenh khoi tao node
