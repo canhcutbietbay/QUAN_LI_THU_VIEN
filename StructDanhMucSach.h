@@ -12,12 +12,16 @@ struct Sach
     TrangThai = tt;
     strcpy(ViTri, vt);
   }
+
+  ~Sach() {}
 };
 // lien ket don
 struct NodeSach
 {
-  Sach value;
+  Sach sach;
   NodeSach *next;
+
+  ~NodeSach() {}
 };
 /*
 
