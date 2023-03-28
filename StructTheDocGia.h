@@ -27,6 +27,7 @@ struct TheDocGia{
 
 
 struct TreeTheDocGia{
+	// key info.MaThe
     TheDocGia info;
     int bf;
 	TreeDocGia *Left = NULL;
