@@ -64,7 +64,9 @@ NodeTheDocGia Rotate_Right(NodeTheDocGia root)
 		}
 	return p;
 }
-// Them vao cay
+/*
+Them vao cay
+*/
 void Insert(NodeTheDocGia &pavltree, int x)
 {
 	NodeTheDocGia fp, p, q, fya, ya, s;
@@ -185,4 +187,45 @@ void Insert(NodeTheDocGia &pavltree, int x)
 		fya.right = p;
 	else
 		fya.left = p;
+}
+/*
+TAO CAY TIM KIEM AVL
+*/
+void Create_AVLTree(NodeTheDocGia &root)
+{
+	int mathe;
+	char ho[20];
+	char ten[11];
+	int phai;
+	/*
+	 * 0: Nam
+	 * 1: Nu
+	 */
+	int trangthai;
+	/*
+	 * 0: Khoa
+	 * 1: Hoat dong
+	 */
+	DS_MuonTra *ds_mt;
+	//
+	NodeTheDocGia p;
+	do
+	{
+		//...
+		if (mathe != 0)
+		{
+			//...
+			if (root == nullptr)
+			{
+				// p = New_Node();...//
+				// p.DocGia.MaThe = mathe;
+				// p.bf = 0;
+				// p.left = nullptr;
+				// p.right = nullptr;
+				// root = p;
+			}
+			else
+				Insert(root, mathe);
+		}
+	} while (mathe != 0); // khóa =0 thì dừng nhập
 }
