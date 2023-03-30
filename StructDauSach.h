@@ -31,3 +31,13 @@ struct DS_DauSach
     }
     ~DS_DauSach() {}
 };
+
+	// su dung khi doc file
+void InsertLastDauSach(DS_DauSach &DSDS, DauSach *dausach){
+	if(DSDS.n > MAX_SIZE_LIST_DAU_SACH)
+		printf("DSDS day \n");
+	else{
+		DSDS.nodes[DSDS.n] = dausach;
+        DSDS.n++;
+	}
+}

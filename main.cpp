@@ -1,10 +1,55 @@
 #include <iostream>
-
+#include <fstream>
+#include "StructDanhMucSach.h"
+#include "StructDauSach.h"
 using namespace std;
 
 void clrscr()
 {
   system("cls");
+}
+DS_DauSach DSDS;
+void GetDataDauSachFromFile(DS_DauSach &DSDS)
+{
+  fstream FileDauSach;
+
+  FileDauSach.open("data_dausach.txt", ios::in);
+
+  if (!FileDauSach.is_open())
+  {
+    printf("Loi mo File de doc \n");
+    return;
+  }
+  string data;
+
+  DauSach dauSach;
+
+  int n;
+  FileDauSach >> n;
+  FileDauSach.ignore();
+  for (int i = 0; i < n; i++)
+  {
+    DauSach *dauSach = new DauSach;
+    getline(FileDauSach, data);
+    strcpy(dauSach -> ISBN, data.c_str());
+    getline(FileDauSach, data);
+    strcpy(dauSach->TenSach, data.c_str());
+    getline(FileDauSach, data);
+    dauSach -> SoTrang = atoi(data.c_str());
+    getline(FileDauSach, data);
+    strcpy(dauSach -> TacGia, data.c_str());
+    getline(FileDauSach, data);
+    dauSach -> NXB = atoi(data.c_str());
+    getline(FileDauSach, data);
+    strcpy(dauSach -> TenSach, data.c_str());
+    InsertLastDauSach (DSDS, dauSach);
+  }
+  FileDauSach.close();
+}
+
+void GetDataFromFile()
+{
+  GetDataDauSachFromFile(DSDS);
 }
 
 void Menu()
@@ -27,6 +72,12 @@ int ChonMenu()
     return n;
   else
     return ChonMenu();
+}
+
+void InDanhSachDauSach(DS_DauSach &DSDS){
+  for (int i = 0; i < DSDS.n; i++) {
+    cout << DSDS.nodes[i]->TenSach << endl;
+  }
 }
 
 void XuLyMenu()
@@ -60,7 +111,7 @@ void XuLyMenu()
     break;
   case 7:
     clrscr();
-    cout << "7" << endl;
+    InDanhSachDauSach(DSDS);
     break;
   case 99:
     cout << "Thoat!!!\n";
@@ -70,6 +121,7 @@ void XuLyMenu()
 }
 int main()
 {
+  GetDataFromFile();
   Menu();
   XuLyMenu();
   return 0;
