@@ -2,7 +2,8 @@
 #include <fstream>
 #include "StructDanhMucSach.h"
 #include "StructDauSach.h"
-#include "StructTheDocGia.h"
+//#include "StructMuonTra.h"
+//#include "StructTheDocGia.h"
 #include <iomanip>
 
 using namespace std;
@@ -45,37 +46,37 @@ void GetDataDauSachFromFile(DS_DauSach &DSDS)
   FileDauSach.close();
 }
 
-NodeTheDocGia TreeAVLDocGia;
-void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
-{
-  fstream FileDocGia;
-  FileDocGia.open("data_docgia.txt", ios::in);
-  if (!FileDocGia.is_open())
-  {
-    printf("Loi mo File de doc \n");
-    return;
-  }
-  string data;
-  int n;
-  FileDocGia >> n;
-  FileDocGia.ignore();
-  for (int i = 0; i < n; i++)
-  {
-    TheDocGia *theDocGia = new TheDocGia;
-    getline(FileDocGia, data);
-    theDocGia->MaThe = atoi(data.c_str());
-    getline(FileDocGia, data);
-    strcpy (theDocGia->Ho, data.c_str());
-    getline(FileDocGia, data);
-    strcpy (theDocGia->Ten, data.c_str());
-    getline(FileDocGia, data);
-    theDocGia->Phai = atoi(data.c_str());
-    getline(FileDocGia, data);
-    theDocGia->TrangThai = atoi(data.c_str());
-    // InsertDocGia(TreeAVLDocGia, docGia);
-  }
-  FileDocGia.close();
-}
+//NodeTheDocGia TreeAVLDocGia;
+//void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
+//{
+//  fstream FileDocGia;
+//  FileDocGia.open("data_docgia.txt", ios::in);
+//  if (!FileDocGia.is_open())
+//  {
+//    printf("Loi mo File de doc \n");
+//    return;
+//  }
+//  string data;
+//  int n;
+//  FileDocGia >> n;
+//  FileDocGia.ignore();
+//  for (int i = 0; i < n; i++)
+//  {
+//    TheDocGia *theDocGia = new TheDocGia;
+//    getline(FileDocGia, data);
+//    theDocGia->MaThe = atoi(data.c_str());
+//    getline(FileDocGia, data);
+//    strcpy (theDocGia->Ho, data.c_str());
+//    getline(FileDocGia, data);
+//    strcpy (theDocGia->Ten, data.c_str());
+//    getline(FileDocGia, data);
+//    theDocGia->Phai = atoi(data.c_str());
+//    getline(FileDocGia, data);
+//    theDocGia->TrangThai = atoi(data.c_str());
+//    // InsertDocGia(TreeAVLDocGia, docGia);
+//  }
+//  FileDocGia.close();
+//}
 void GetDataFromFile()
 {
   GetDataDauSachFromFile(DSDS);
