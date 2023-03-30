@@ -1,17 +1,19 @@
 #include <iostream>
 #include <fstream>
+#include <string.h>
 #include "StructDanhMucSach.h"
 #include "StructDauSach.h"
-//#include "StructMuonTra.h"
-//#include "StructTheDocGia.h"
+#include "StructTheDocGia.h"
+#include "StructMuonTra.h"
 #include <iomanip>
-
+//
 using namespace std;
-
+//
 void clrscr()
 {
   system("cls");
 }
+//
 DS_DauSach DSDS; // global
 void GetDataDauSachFromFile(DS_DauSach &DSDS)
 {
@@ -45,44 +47,51 @@ void GetDataDauSachFromFile(DS_DauSach &DSDS)
   }
   FileDauSach.close();
 }
+//
+NodeTheDocGia TreeAVLDocGia;
+void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
+{
+  fstream FileDocGia;
+  FileDocGia.open("data_docgia.txt", ios::in);
+  if (!FileDocGia.is_open())
+  {
+    printf("Loi mo File de doc \n");
+    return;
+  }
+  string data;
+  int n;
+  FileDocGia >> n;
+  FileDocGia.ignore();
+  TheDocGia *theDocGia = new TheDocGia;
+  for (int i = 0; i < n; i++)
+  {
+    getline(FileDocGia, data);
+    theDocGia->MaThe = atoi(data.c_str());
+    getline(FileDocGia, data);
+    strcpy(theDocGia->Ho, data.c_str());
+    getline(FileDocGia, data);
+    strcpy(theDocGia->Ten, data.c_str());
+    getline(FileDocGia, data);
+    theDocGia->Phai = atoi(data.c_str());
+    getline(FileDocGia, data);
+    theDocGia->TrangThai = atoi(data.c_str());
 
-//NodeTheDocGia TreeAVLDocGia;
-//void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
-//{
-//  fstream FileDocGia;
-//  FileDocGia.open("data_docgia.txt", ios::in);
-//  if (!FileDocGia.is_open())
-//  {
-//    printf("Loi mo File de doc \n");
-//    return;
-//  }
-//  string data;
-//  int n;
-//  FileDocGia >> n;
-//  FileDocGia.ignore();
-//  for (int i = 0; i < n; i++)
-//  {
-//    TheDocGia *theDocGia = new TheDocGia;
-//    getline(FileDocGia, data);
-//    theDocGia->MaThe = atoi(data.c_str());
-//    getline(FileDocGia, data);
-//    strcpy (theDocGia->Ho, data.c_str());
-//    getline(FileDocGia, data);
-//    strcpy (theDocGia->Ten, data.c_str());
-//    getline(FileDocGia, data);
-//    theDocGia->Phai = atoi(data.c_str());
-//    getline(FileDocGia, data);
-//    theDocGia->TrangThai = atoi(data.c_str());
-//    // InsertDocGia(TreeAVLDocGia, docGia);
-//  }
-//  FileDocGia.close();
-//}
+    if (i == 0)
+    {
+      TreeAVLDocGia = Create_AVLTree(theDocGia);
+      continue;
+    }
+    InsertDocGia(TreeAVLDocGia, theDocGia);
+  }
+  FileDocGia.close();
+}
+//
 void GetDataFromFile()
 {
   GetDataDauSachFromFile(DSDS);
   // GetDataDocGiaFromFile();
 }
-
+//
 void Menu()
 {
   cout << "1. Them doc gia" << endl;
@@ -94,6 +103,7 @@ void Menu()
   cout << "7. In danh sach dau sach" << endl;
   cout << "99. Thoat" << endl;
 }
+//
 int ChonMenu()
 {
   int n = 0;
@@ -104,7 +114,7 @@ int ChonMenu()
   else
     return ChonMenu();
 }
-
+//
 void InDanhSachDauSach(DS_DauSach &DSDS)
 {
   for (int i = 0; i < DSDS.n; i++)
@@ -112,7 +122,7 @@ void InDanhSachDauSach(DS_DauSach &DSDS)
     cout << DSDS.nodes[i]->ISBN << "||" << DSDS.nodes[i]->TenSach << "||" << DSDS.nodes[i]->SoTrang << "||" << DSDS.nodes[i]->TacGia << "||" << DSDS.nodes[i]->NXB << "||" << DSDS.nodes[i]->TheLoai << endl;
   }
 }
-
+//
 void XuLyMenu()
 {
   int input = ChonMenu();
@@ -152,6 +162,7 @@ void XuLyMenu()
     break;
   }
 }
+// MAIN
 int main()
 {
   GetDataFromFile();
