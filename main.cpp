@@ -2,28 +2,26 @@
 #include <fstream>
 #include "StructDanhMucSach.h"
 #include "StructDauSach.h"
+#include "StructTheDocGia.h"
+#include <iomanip>
+
 using namespace std;
 
 void clrscr()
 {
   system("cls");
 }
-DS_DauSach DSDS;
+DS_DauSach DSDS; // global
 void GetDataDauSachFromFile(DS_DauSach &DSDS)
 {
   fstream FileDauSach;
-
   FileDauSach.open("data_dausach.txt", ios::in);
-
   if (!FileDauSach.is_open())
   {
     printf("Loi mo File de doc \n");
     return;
   }
   string data;
-
-  DauSach dauSach;
-
   int n;
   FileDauSach >> n;
   FileDauSach.ignore();
@@ -31,25 +29,57 @@ void GetDataDauSachFromFile(DS_DauSach &DSDS)
   {
     DauSach *dauSach = new DauSach;
     getline(FileDauSach, data);
-    strcpy(dauSach -> ISBN, data.c_str());
+    strcpy(dauSach->ISBN, data.c_str());
     getline(FileDauSach, data);
     strcpy(dauSach->TenSach, data.c_str());
     getline(FileDauSach, data);
-    dauSach -> SoTrang = atoi(data.c_str());
+    dauSach->SoTrang = atoi(data.c_str());
     getline(FileDauSach, data);
-    strcpy(dauSach -> TacGia, data.c_str());
+    strcpy(dauSach->TacGia, data.c_str());
     getline(FileDauSach, data);
-    dauSach -> NXB = atoi(data.c_str());
+    dauSach->NXB = atoi(data.c_str());
     getline(FileDauSach, data);
-    strcpy(dauSach -> TenSach, data.c_str());
-    InsertLastDauSach (DSDS, dauSach);
+    strcpy(dauSach->TheLoai, data.c_str());
+    InsertLastDauSach(DSDS, dauSach);
   }
   FileDauSach.close();
 }
 
+NodeTheDocGia TreeAVLDocGia;
+void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
+{
+  fstream FileDocGia;
+  FileDocGia.open("data_docgia.txt", ios::in);
+  if (!FileDocGia.is_open())
+  {
+    printf("Loi mo File de doc \n");
+    return;
+  }
+  string data;
+  int n;
+  FileDocGia >> n;
+  FileDocGia.ignore();
+  for (int i = 0; i < n; i++)
+  {
+    TheDocGia *theDocGia = new TheDocGia;
+    getline(FileDocGia, data);
+    theDocGia->MaThe = atoi(data.c_str());
+    getline(FileDocGia, data);
+    strcpy (theDocGia->Ho, data.c_str());
+    getline(FileDocGia, data);
+    strcpy (theDocGia->Ten, data.c_str());
+    getline(FileDocGia, data);
+    theDocGia->Phai = atoi(data.c_str());
+    getline(FileDocGia, data);
+    theDocGia->TrangThai = atoi(data.c_str());
+    // InsertDocGia(TreeAVLDocGia, docGia);
+  }
+  FileDocGia.close();
+}
 void GetDataFromFile()
 {
   GetDataDauSachFromFile(DSDS);
+  // GetDataDocGiaFromFile();
 }
 
 void Menu()
@@ -74,9 +104,11 @@ int ChonMenu()
     return ChonMenu();
 }
 
-void InDanhSachDauSach(DS_DauSach &DSDS){
-  for (int i = 0; i < DSDS.n; i++) {
-    cout << DSDS.nodes[i]->TenSach << endl;
+void InDanhSachDauSach(DS_DauSach &DSDS)
+{
+  for (int i = 0; i < DSDS.n; i++)
+  {
+    cout << DSDS.nodes[i]->ISBN << "||" << DSDS.nodes[i]->TenSach << "||" << DSDS.nodes[i]->SoTrang << "||" << DSDS.nodes[i]->TacGia << "||" << DSDS.nodes[i]->NXB << "||" << DSDS.nodes[i]->TheLoai << endl;
   }
 }
 
