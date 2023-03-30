@@ -1,228 +1,127 @@
-int MT[90000];
-
-struct TheDocGia
-{
-  int MaThe;
-  char Ho[20];
-  char Ten[11];
-  int Phai;
-  /*
-   * 0: Nam
-   * 1: Nu
-   */
-  int TrangThai;
-  /*
-   * 0: Khoa
-   * 1: Hoat dong
-   */
-  DS_MuonTra *DS_MT;
-
-  // constructor
-  TheDocGia() {}
-  TheDocGia(char ho[20], char ten[11], int phai, int trangthai)
-  {
-    // random MaThe...
-    strcpy(Ho, ho);
-    strcpy(Ten, ten);
-    Phai = phai;
-    TrangThai = trangthai;
-  }
-};
-
-// Cay AVL
-struct NodeTheDocGia
-{
-  // key = DocGia.MaThe
-  TheDocGia DocGia;
-  int bf = 0;
-  NodeTheDocGia *left = nullptr;
-  NodeTheDocGia *right = nullptr;
-};
 //
-// ham cua Cay AVL
-NodeTheDocGia *Rotate_Left(NodeTheDocGia *root)
+struct Sach
 {
-  NodeTheDocGia *p;
-  if (root != nullptr)
-    if (root->right != nullptr)
-    {
-      p = root->right;
-      root->right = p->left;
-      p->left = root;
-    }
-  return p;
-}
-NodeTheDocGia *Rotate_Right(NodeTheDocGia *root)
-{
-  NodeTheDocGia *p;
-  if (root != nullptr)
-    if (root->left != nullptr)
-    {
-      p = root->left;
-      root->left = p->right;
-      p->right = root;
-    }
-  return p;
-}
-/*
-Them vao cay
-*/
-void InsertDocGia(NodeTheDocGia *TreeAVLDocGia, TheDocGia *docgia)
-{
-  NodeTheDocGia *fp, *p, *q, *fya, *ya, *s;
-  int imbal;
-  fp = nullptr;
-  p = TreeAVLDocGia;
-  fya = nullptr;
-  ya = p;
+  char MaSach[15];
+  int TrangThai;
+  char ViTri[15];
+  // construction
+  Sach(){};
+  Sach(char ms[], int tt, char vt[])
+  {
+    strcpy(MaSach, ms);
+    TrangThai = tt;
+    strcpy(ViTri, vt);
+  }
 
-  while (p != nullptr)
-  {
-    if (docgia->MaThe == p->DocGia.MaThe) // bi trung khoa
-      return;
-    if (docgia->MaThe < p->DocGia.MaThe)
-      q = p->left;
-    else
-      q = p->right;
-    if (q != nullptr)
-      if (q->bf != 0) // truong hop chi so can bang cua q la 1 hay -1
-      {
-        fya = p;
-        ya = q;
-      }
-    fp = p;
-    p = q;
-  }
-  // Thêm nút mới (nut la) la con cua nut fp
-  q = new NodeTheDocGia;
-  q->DocGia.MaThe = docgia->MaThe;
-  strcpy(q->DocGia.Ho, docgia->Ho);
-  strcpy(q->DocGia.Ten, docgia->Ten);
-  q->DocGia.Phai = docgia->Phai;
-  q->DocGia.TrangThai = docgia->TrangThai;
-  q->DocGia.DS_MT = nullptr;
-  // q->bf = 0;
-  // q->left = nullptr;
-  // q->right = nullptr;
-  if (docgia->MaThe < fp->DocGia.MaThe)
-    fp->left = q;
-  else
-    fp->right = q;
+  ~Sach() {}
+};
+// lien ket don
+struct NodeSach
+{
+  Sach sach;
+  NodeSach *next;
 
-  /*Hieu chinh chi so can bang cua tat ca cac nut giua ya va q, neu bi lech
-     ve phia trai thi chi so can bang cua tat ca cac nut giua ya va q deu la
-     1, neu bi lech ve phia phai thi chi so can bang cua tat ca cac nut giua
-     ya va q deu la -1 */
-  if (docgia->MaThe < ya->DocGia.MaThe)
-    p = ya->left;
-  else
-    p = ya->right;
-  s = p; // s là con của nút ya
-  while (p != q)
-  {
-    if (docgia->MaThe < p->DocGia.MaThe)
-    {
-      p->bf = 1;
-      p = p->left;
-    }
-    else
-    {
-      p->bf = -1;
-      p = p->right;
-    }
-  }
-  // xac dinh huong lech
-  if (docgia->MaThe < ya->DocGia.MaThe)
-    imbal = 1;
-  else
-    imbal = -1;
-  // cay vua lech
-  if (ya->bf == 0)
-  {
-    ya->bf = imbal;
-    return;
-  }
-  // cay het lech
-  if (ya->bf != imbal)
-  {
-    ya->bf = 0;
-    return;
-  }
-  // cây mất cân bằng
-  if (s->bf == imbal) // Truong hop xoay don
-  {
-    if (imbal == 1) // xoay phai
-      p = Rotate_Right(ya);
-    else // xoay trai
-      p = Rotate_Left(ya);
-    ya->bf = 0;
-    s->bf = 0;
-  }
-  else // Truong hop xoay kep
-  {
-    if (imbal == 1) // xoay kep trai-phai
-    {
-      ya->left = Rotate_Left(s);
-      p = Rotate_Right(ya);
-    }
-    else // xoay kep phai-trai -
-    {
-      ya->right = Rotate_Right(s);
-      p = Rotate_Left(ya);
-    }
-    if (p->bf == 0) // truong hop p la nut moi them vao
-    {
-      ya->bf = 0;
-      s->bf = 0;
-    }
-    else if (p->bf == imbal)
-    {
-      ya->bf = -imbal;
-      s->bf = 0;
-    }
-    else
-    {
-      ya->bf = 0;
-      s->bf = imbal;
-    }
-    p->bf = 0;
-  }
-  if (fya == nullptr)
-    TreeAVLDocGia = p;
-  else if (ya == fya->right)
-    fya->right = p;
-  else
-    fya->left = p;
-}
+  ~NodeSach() {}
+};
 /*
-TAO CAY TIM KIEM AVL
-*/
-NodeTheDocGia *Create_AVLTree(TheDocGia *root) // tao cay khi nhap data tu file
+ */
+// lenh khoi tao node
+void InsertFirst_NodeSach(NodeSach *&First, Sach &sach);
+void InsertLast_NodeSach(NodeSach *First, Sach &sach);
+void InsertAfter_NodeSach(NodeSach *&node, Sach &sach);
+// lenh truy xuat
+NodeSach *GetNodeSach(NodeSach *First, int pos);
+NodeSach *GetNodeSach(NodeSach *First, char *masach);
+Sach *GetSach(NodeSach *First, char *masach);
+// lenh cap nhat sach cua node
+void UpdateNodeSach(NodeSach *&node, Sach *sach);
+// lenh xoa sach
+void DeleteNodeSach(NodeSach *First, char *masach);
+/*
+ */
+
+// new NodeSach;
+NodeSach *CreateNodeSach(Sach &sach)
 {
-  NodeTheDocGia *fr = new NodeTheDocGia;
-  //...
-  if (root != nullptr)
-  {
-    fr->DocGia.MaThe = root->MaThe;
-    strcpy(fr->DocGia.Ho, root->Ho);
-    strcpy(fr->DocGia.Ten, root->Ten);
-    fr->DocGia.Phai = root->Phai;
-    fr->DocGia.TrangThai = root->TrangThai;
-    fr->DocGia.DS_MT = nullptr;
-    // fr->bf = 0;
-    // fr->left = nullptr;
-    // fr->right = nullptr;
-    return fr;
-  }
-  else
-    return;
+  NodeSach *node = new NodeSach;
+  node->sach = sach;
+  node->next = nullptr;
+  return node;
 }
-/*
-XOA NUT CAY AVL
-*/
-void RemoveDocGia(NodeTheDocGia *TreeAVLDocGia, int mathe)
+
+// them NodeSach o dau
+void InsertFirst_NodeSach(NodeSach *&First, Sach &sach)
+{
+  NodeSach *newSach = CreateNodeSach(sach);
+  newSach->next = First;
+  First = newSach;
+}
+
+// them NodeSach o vi tri
+void InsertAfter_NodeSach(NodeSach *&node, Sach &sach)
+{
+  NodeSach *newSach = CreateNodeSach(sach);
+  newSach->next = node->next;
+  node->next = newSach;
+}
+
+// them NodeSach o cuoi
+void InsertLast_NodeSach(NodeSach *First, Sach &sach)
+{
+  if (First == nullptr)
+    InsertFirst_NodeSach(First, sach);
+  else
+  {
+    NodeSach *last;
+    for (last = First; last->next != nullptr; last = last->next)
+      ;
+    InsertAfter_NodeSach(last, sach);
+  }
+}
+
+// lay node sach o vi tri pos
+NodeSach *GetNodeSach(NodeSach *First, int pos)
+{
+  NodeSach *node = First;
+  for (int i = 1; i != pos; i++) // ds tinh tu 1
+    if (node->next == nullptr)
+      return nullptr;
+    else
+      node = node->next;
+  return node;
+}
+
+// lay node sach theo ma sach
+NodeSach *GetNodeSach(NodeSach *First, char *masach)
+{
+  for (NodeSach *node = First; node != nullptr; node = node->next)
+  {
+    if (strcmp(node->sach.MaSach, masach) == 0)
+      return node;
+  }
+  return nullptr;
+}
+
+// lay sach theo ma sach
+Sach *GetSach(NodeSach *First, char *masach)
+{
+  NodeSach *node = GetNodeSach(First, masach);
+  if (node)
+    return &node->sach;
+  else
+    return nullptr;
+}
+
+// cap nhat lai sach cua node
+void UpdateNodeSach(NodeSach *&node, Sach *sach)
+{
+  // if (sach != nullptr)
+  //   node->sach = *sach;
+  // else
+  //   printf("Khong co thong tin");
+}
+
+// xoa sach theo ma sach
+void DeleteNodeSach(NodeSach *First, char *masach)
 {
 }
-/*
-HIEU CHINH THONG TIN DOC GIA
-*/
