@@ -84,7 +84,6 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
     }
     InsertDocGia(TreeAVLDocGia, theDocGia);
   }
-  RanArr();
   FileDocGia.close();
 }
 //
