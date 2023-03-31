@@ -67,6 +67,7 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
   {
     getline(FileDocGia, data);
     theDocGia->MaThe = atoi(data.c_str());
+    ArrMTfromFile(mathe, theDocGia->MaThe);
     getline(FileDocGia, data);
     strcpy(theDocGia->Ho, data.c_str());
     getline(FileDocGia, data);
@@ -83,6 +84,7 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
     }
     InsertDocGia(TreeAVLDocGia, theDocGia);
   }
+  RanArr();
   FileDocGia.close();
 }
 //
