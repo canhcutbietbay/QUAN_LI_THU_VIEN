@@ -1,5 +1,56 @@
-int MT[90000];
-
+struct ArrRanMT
+{
+	int mt[90000];
+	bool used[90000];
+	int k = 0;
+	ArrRanMT()
+	{
+		for (int i = 10000; i < 100000; i++)
+		{
+			mt[i - 10000] = i;
+			used[i - 10000] = false;
+		}
+	}
+	int RanMT()
+	{
+		int ma;
+		srand(time(0));
+		ma = rand() % 90000 + k;
+	}
+} mathe = ArrRanMT();
+// ranArrMT
+void ArrMTfromFile(ArrRanMT &mathe, int ma)
+{
+	mathe.used[ma - 10000] = true;
+	(mathe.k)++;
+}
+void RanArr()
+{
+	int temp = 0;
+	for (int i = 0; i < 90000; i++)
+	{
+		if (mathe.used[i] == true)
+		{
+			int s = mathe.mt[i];
+			bool b = mathe.used[i];
+			mathe.mt[i] = mathe.mt[temp];
+			mathe.used[i] = mathe.used[temp];
+			mathe.mt[temp] = s;
+			mathe.used[temp] = b;
+			if (++temp == mathe.k)
+				break;
+		}
+	}
+}
+void RanNewMT(ArrRanMT &mathe)
+{
+	int r = mathe.RanMT();
+	int i = mathe.mt[mathe.k];
+	mathe.mt[mathe.k] = mathe.mt[r - 10000];
+	mathe.mt[r - 10000] = i;
+	(mathe.k)++;
+}
+//
 struct TheDocGia
 {
 	int MaThe;
@@ -22,6 +73,7 @@ struct TheDocGia
 	TheDocGia(char ho[20], char ten[11], int phai, int trangthai)
 	{
 		// random MaThe...
+
 		strcpy(Ho, ho);
 		strcpy(Ten, ten);
 		Phai = phai;
