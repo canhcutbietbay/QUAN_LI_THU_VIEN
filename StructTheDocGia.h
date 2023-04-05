@@ -1,3 +1,4 @@
+#include<math.h>
 struct ArrRanMT
 {
 	bool used[90000];
@@ -70,6 +71,54 @@ struct TheDocGia
 		TrangThai = trangthai;
 	}
 };
+#define MAX_SIZE_LIST_DOC_GIA 90000
+
+struct DSDocGia
+{
+	int n = 0;
+	TheDocGia *nodes[MAX_SIZE_LIST_DOC_GIA];
+
+	void InsertLastDocGia(DSDocGia &DSDG, TheDocGia *theDocGia)
+	{
+		if (DSDG.n > MAX_SIZE_LIST_DOC_GIA)
+			printf("DSDS day \n");
+		else
+		{
+			DSDG.nodes[DSDG.n] = theDocGia;
+			DSDG.n++;
+		}
+	}
+	int CompareDG(TheDocGia *a, TheDocGia *b){
+			if(strcmp(a->Ten, b->Ten) == 0){
+				return strcmp(a->Ho, b->Ho);
+			}else{
+				return strcmp(a->Ten, b->Ten);
+		}
+		return 0;
+	}
+	void SortDocGiaTheoTen(int l, int r)// Quick Sort
+	{ 
+		int i = l, j = r;
+		TheDocGia *pivot = nodes[(l + r) / 2];
+		TheDocGia *temp;
+		do
+		{
+			while (CompareDG(nodes[i], pivot) < 0) i++;
+			while (CompareDG(nodes[j], pivot) > 0) j--;
+			if (i <= j)
+			{
+				temp = nodes[i];
+				nodes[i] = nodes[j];
+				nodes[j] = temp;
+				i++;
+				j--;
+			}
+		} while (i <= j);
+
+		if (l < j) SortDocGiaTheoTen(l, j);
+		if (i < r) SortDocGiaTheoTen(i, r);
+	}
+};
 
 // Cay AVL
 struct NodeTheDocGia
@@ -109,7 +158,7 @@ NodeTheDocGia *Rotate_Right(NodeTheDocGia *root)
 /*
 Them vao cay
 */
-void InsertDocGia(NodeTheDocGia *TreeAVLDocGia, TheDocGia *docgia)
+void InsertDocGia(NodeTheDocGia *&TreeAVLDocGia, TheDocGia *docgia)
 {
 	NodeTheDocGia *fp, *p, *q, *fya, *ya, *s;
 	int imbal;
@@ -143,9 +192,9 @@ void InsertDocGia(NodeTheDocGia *TreeAVLDocGia, TheDocGia *docgia)
 	q->DocGia.Phai = docgia->Phai;
 	q->DocGia.TrangThai = docgia->TrangThai;
 	q->DocGia.DS_MT = nullptr;
-	// q->bf = 0;
-	// q->left = nullptr;
-	// q->right = nullptr;
+	q->bf = 0;
+	q->left = nullptr;
+	q->right = nullptr;
 	if (docgia->MaThe < fp->DocGia.MaThe)
 		fp->left = q;
 	else
@@ -194,9 +243,13 @@ void InsertDocGia(NodeTheDocGia *TreeAVLDocGia, TheDocGia *docgia)
 	if (s->bf == imbal) // Truong hop xoay don
 	{
 		if (imbal == 1) // xoay phai
+		{
 			p = Rotate_Right(ya);
+		}
 		else // xoay trai
+		{
 			p = Rotate_Left(ya);
+		}
 		ya->bf = 0;
 		s->bf = 0;
 	}
@@ -229,12 +282,9 @@ void InsertDocGia(NodeTheDocGia *TreeAVLDocGia, TheDocGia *docgia)
 		}
 		p->bf = 0;
 	}
-	if (fya == nullptr)
-		TreeAVLDocGia = p;
-	else if (ya == fya->right)
-		fya->right = p;
-	else
-		fya->left = p;
+	if (fya == nullptr) TreeAVLDocGia = p;
+	else if (ya == fya->right) fya->right = p;
+	else fya->left = p;
 }
 /*
 TAO CAY TIM KIEM AVL
@@ -251,13 +301,13 @@ NodeTheDocGia *Create_AVLTree(TheDocGia *root) // tao cay khi nhap data tu file
 		fr->DocGia.Phai = root->Phai;
 		fr->DocGia.TrangThai = root->TrangThai;
 		fr->DocGia.DS_MT = nullptr;
-		// fr->bf = 0;
-		// fr->left = nullptr;
-		// fr->right = nullptr;
+		fr->bf = 0;
+		fr->left = nullptr;
+		fr->right = nullptr;
 		return fr;
 	}
-	else
-		return;
+	//	else
+	//		return;
 }
 /*
 XOA NUT CAY AVL
@@ -268,3 +318,13 @@ void RemoveDocGia(NodeTheDocGia *TreeAVLDocGia, int mathe)
 /*
 HIEU CHINH THONG TIN DOC GIA
 */
+
+int treeLevel(NodeTheDocGia *TreeAVLDocGia){
+	if (TreeAVLDocGia == NULL) return -1;
+	return 1 + std::max(treeLevel(TreeAVLDocGia->left), treeLevel(TreeAVLDocGia->right));
+}
+bool checkAvl(NodeTheDocGia *TreeAVLDocGia){
+	if (TreeAVLDocGia == NULL) 	return true;
+	if (std::abs(treeLevel(TreeAVLDocGia->left) - treeLevel(TreeAVLDocGia->right)) > 1) return false;
+	return checkAvl(TreeAVLDocGia->left) && checkAvl(TreeAVLDocGia->right);
+}

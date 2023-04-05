@@ -1,14 +1,19 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <math.h>
+#include "time.h"
+#include <iomanip>
+#include<windows.h>
+#include <conio.h> 
 #include "StructDanhMucSach.h"
 #include "StructDauSach.h"
-#include "StructTheDocGia.h"
 #include "StructMuonTra.h"
-#include <iomanip>
+#include "StructTheDocGia.h"
 //
 using namespace std;
 //
+#define getch() _getch()
 void clrscr()
 {
   system("cls");
@@ -48,7 +53,10 @@ void GetDataDauSachFromFile(DS_DauSach &DSDS)
   FileDauSach.close();
 }
 //
-NodeTheDocGia TreeAVLDocGia;
+void InDocGiaTheoMaDocGia(NodeTheDocGia* &TreeAVLDocGia);
+
+NodeTheDocGia* TreeAVLDocGia;
+DSDocGia DSDG;
 void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
 {
   fstream FileDocGia;
@@ -62,9 +70,9 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
   int n;
   FileDocGia >> n;
   FileDocGia.ignore();
-  TheDocGia *theDocGia = new TheDocGia;
   for (int i = 0; i < n; i++)
   {
+    TheDocGia *theDocGia = new TheDocGia;
     getline(FileDocGia, data);
     theDocGia->MaThe = atoi(data.c_str());
     ArrMTfromFile(mathe, theDocGia->MaThe);
@@ -76,7 +84,7 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
     theDocGia->Phai = atoi(data.c_str());
     getline(FileDocGia, data);
     theDocGia->TrangThai = atoi(data.c_str());
-
+    DSDG.InsertLastDocGia(DSDG, theDocGia);
     if (i == 0)
     {
       TreeAVLDocGia = Create_AVLTree(theDocGia);
@@ -90,7 +98,37 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
 void GetDataFromFile()
 {
   GetDataDauSachFromFile(DSDS);
-  // GetDataDocGiaFromFile();
+  GetDataDocGiaFromFile(TreeAVLDocGia);
+}
+
+void WriteData(fstream &FileDocGia, NodeTheDocGia *&TreeAVLDocGia){
+  if (TreeAVLDocGia != nullptr){
+  FileDocGia << TreeAVLDocGia->DocGia.MaThe << endl;
+  FileDocGia << TreeAVLDocGia->DocGia.Ho << endl;
+  FileDocGia << TreeAVLDocGia->DocGia.Ten << endl;
+  FileDocGia << TreeAVLDocGia->DocGia.Phai << endl;
+  FileDocGia << TreeAVLDocGia->DocGia.TrangThai << endl;
+  if (TreeAVLDocGia->left != nullptr) WriteData(FileDocGia, TreeAVLDocGia->left);
+  if (TreeAVLDocGia->right != nullptr) WriteData(FileDocGia, TreeAVLDocGia->right);
+  }
+}
+
+void WriteDataDocGiaToFile(NodeTheDocGia *&TreeAVLDocGia){
+  fstream FileDocGia;
+  FileDocGia.open("data_docgia.txt", ios::out);
+  if (!FileDocGia.is_open())
+  {
+    printf("Loi mo File de doc \n");
+    return;
+  }
+  FileDocGia << DSDG.n << endl;
+  WriteData(FileDocGia, TreeAVLDocGia);
+  FileDocGia.close();
+
+}
+
+void WriteDataToFile() {
+  WriteDataDocGiaToFile(TreeAVLDocGia);
 }
 //
 void Menu()
@@ -123,7 +161,58 @@ void InDanhSachDauSach(DS_DauSach &DSDS)
     cout << DSDS.nodes[i]->ISBN << "||" << DSDS.nodes[i]->TenSach << "||" << DSDS.nodes[i]->SoTrang << "||" << DSDS.nodes[i]->TacGia << "||" << DSDS.nodes[i]->NXB << "||" << DSDS.nodes[i]->TheLoai << endl;
   }
 }
+
+void InDocGiaTheoMaDocGia(NodeTheDocGia* &TreeAVLDocGia) //Inorder
+{
+   if(TreeAVLDocGia != NULL)    
+{
+      InDocGiaTheoMaDocGia(TreeAVLDocGia->left);
+      cout << TreeAVLDocGia->DocGia.MaThe << "||" << TreeAVLDocGia->DocGia.Ho << "||" << TreeAVLDocGia->DocGia.Ten << "||" << TreeAVLDocGia->DocGia.Phai << "||" << TreeAVLDocGia->DocGia.TrangThai << endl;
+      InDocGiaTheoMaDocGia(TreeAVLDocGia->right);
+   }
+
+}
+
+void InDocGiaTheoTenDocGia(DSDocGia &DSDG) {
+ for (int i = 0; i < DSDG.n; ++i) {
+   cout << DSDG.nodes[i]->MaThe << "||" << DSDG.nodes[i]->Ho << "||"<< DSDG.nodes[i]->Ten << "||"<< DSDG.nodes[i]->Phai << "||"<< DSDG.nodes[i]->TrangThai<< endl;
+ }
+}
+
+void ThemDocGiaMoi (){
+    char ho[20], ten[11];
+    int phai = 0, trang_thai = 0;
+    cin.ignore();
+    cout << "Nhap ho va ten den:";
+    cin.getline(ho, 20);
+    cout << "Nhap ten:";
+    cin.getline(ten, 11);
+    cout << "Phai (0-Nam, 1 - Nu):";
+    cin >> phai;
+    cout << "Trang thai (0-Khoa, 1-Hoat dong): ";
+    cin >> trang_thai;
+    TheDocGia *theDocGia = new TheDocGia (ho, ten, phai, trang_thai);
+    InsertDocGia(TreeAVLDocGia, theDocGia);
+    DSDG.InsertLastDocGia(DSDG, theDocGia);
+    cout << "Them thanh cong" << endl;
+}
 //
+void XuLyMenu();
+void BackToMenu() {
+  Sleep(1000);
+  char c;
+  cout << "Nhan Enter de tro ve menu chinh!" << endl;
+  c = getch();   
+  if (c == 13) {
+    clrscr();
+    Menu();
+    XuLyMenu();
+  } else {
+    clrscr();
+    BackToMenu();
+  }
+}
+
 void XuLyMenu()
 {
   int input = ChonMenu();
@@ -131,7 +220,8 @@ void XuLyMenu()
   {
   case 1:
     clrscr();
-    cout << "1" << endl;
+    ThemDocGiaMoi();
+    BackToMenu();
     break;
   case 2:
     clrscr();
@@ -143,11 +233,14 @@ void XuLyMenu()
     break;
   case 4:
     clrscr();
-    cout << "4" << endl;
+    DSDG.SortDocGiaTheoTen(0, DSDG.n-1);
+    InDocGiaTheoTenDocGia(DSDG);
+    BackToMenu();
     break;
   case 5:
     clrscr();
-    cout << "5" << endl;
+    InDocGiaTheoMaDocGia(TreeAVLDocGia);
+    BackToMenu();
     break;
   case 6:
     clrscr();
@@ -156,8 +249,11 @@ void XuLyMenu()
   case 7:
     clrscr();
     InDanhSachDauSach(DSDS);
+    BackToMenu();
     break;
   case 99:
+    WriteDataToFile();
+    cout << "Write data successfully!" << endl;
     cout << "Thoat!!!\n";
     exit(1);
     break;
