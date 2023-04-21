@@ -147,7 +147,7 @@ void WriteDataDauSachToFile(DS_DauSach DSDS)
     FileDauSach << DSDS.nodes[i] ->SoTrang << endl;
     FileDauSach << DSDS.nodes[i] ->TacGia << endl;
     FileDauSach << DSDS.nodes[i] ->NXB << endl;
-    FileDauSach << DSDS.nodes[i] ->TenSach << endl;
+    FileDauSach << DSDS.nodes[i] ->TheLoai << endl;
   }
   FileDauSach.close();
 }
