@@ -85,12 +85,7 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
     getline(FileDocGia, data);
     theDocGia->TrangThai = atoi(data.c_str());
     DSDG.InsertLastDocGia(DSDG, theDocGia);
-    if (i == 0)
-    {
-      TreeAVLDocGia = Create_AVLTree(theDocGia);
-      continue;
-    }
-    InsertDocGia(TreeAVLDocGia, theDocGia);
+    InsertDocGia(TreeAVLDocGia, *theDocGia);
   }
   FileDocGia.close();
 }
@@ -141,13 +136,14 @@ void WriteDataDauSachToFile(DS_DauSach DSDS)
     return;
   }
   FileDauSach << DSDS.n << endl;
-  for (int i = 0; i < DSDS.n; ++i){
-    FileDauSach << DSDS.nodes[i] ->ISBN << endl;
-    FileDauSach << DSDS.nodes[i] ->TenSach << endl;
-    FileDauSach << DSDS.nodes[i] ->SoTrang << endl;
-    FileDauSach << DSDS.nodes[i] ->TacGia << endl;
-    FileDauSach << DSDS.nodes[i] ->NXB << endl;
-    FileDauSach << DSDS.nodes[i] ->TheLoai << endl;
+  for (int i = 0; i < DSDS.n; ++i)
+  {
+    FileDauSach << DSDS.nodes[i]->ISBN << endl;
+    FileDauSach << DSDS.nodes[i]->TenSach << endl;
+    FileDauSach << DSDS.nodes[i]->SoTrang << endl;
+    FileDauSach << DSDS.nodes[i]->TacGia << endl;
+    FileDauSach << DSDS.nodes[i]->NXB << endl;
+    FileDauSach << DSDS.nodes[i]->TheLoai << endl;
   }
   FileDauSach.close();
 }
@@ -249,10 +245,10 @@ void ThemDocGiaMoi()
   cout << "Trang thai (0-Khoa, 1-Hoat dong): ";
   cin >> trang_thai;
   TheDocGia *theDocGia = new TheDocGia(ho, ten, phai, trang_thai);
-  InsertDocGia(TreeAVLDocGia, theDocGia);
+  InsertDocGia(TreeAVLDocGia, *theDocGia);
   DSDG.InsertLastDocGia(DSDG, theDocGia);
   cout << "Them thanh cong" << endl;
-}
+};
 //
 void XuLyMenu();
 void BackToMenu()
