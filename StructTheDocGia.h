@@ -84,7 +84,7 @@ struct DSDocGia
 	void InsertLastDocGia(DSDocGia &DSDG, TheDocGia *theDocGia)
 	{
 		if (DSDG.n > MAX_SIZE_LIST_DOC_GIA)
-			printf("DSDS day \n");
+			printf("DSDG day \n");
 		else
 		{
 			DSDG.nodes[DSDG.n] = theDocGia;
@@ -348,7 +348,7 @@ HIEU CHINH THONG TIN DOC GIA
 
 void InDocGiaTheoMaDocGia(NodeTheDocGia *&TreeAVLDocGia) // Inorder
 {
-	if (TreeAVLDocGia != nullptr)
+	if (TreeAVLDocGia != NULL)
 	{
 		InDocGiaTheoMaDocGia(TreeAVLDocGia->left);
 		cout << TreeAVLDocGia->DocGia.MaThe << "||" << TreeAVLDocGia->DocGia.Ho << "||" << TreeAVLDocGia->DocGia.Ten << "||" << TreeAVLDocGia->DocGia.Phai << "||" << TreeAVLDocGia->DocGia.TrangThai << endl;
