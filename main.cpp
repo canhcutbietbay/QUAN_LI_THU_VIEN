@@ -57,6 +57,7 @@ void InDocGiaTheoMaDocGia(NodeTheDocGia *&TreeAVLDocGia);
 
 NodeTheDocGia *TreeAVLDocGia;
 DSDocGia DSDG;
+
 void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
 {
   fstream FileDocGia;
@@ -85,7 +86,7 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
     getline(FileDocGia, data);
     theDocGia->TrangThai = atoi(data.c_str());
     DSDG.InsertLastDocGia(DSDG, theDocGia);
-    InsertDocGia(TreeAVLDocGia, *theDocGia);
+    TreeAVLDocGia = InsertDocGia(TreeAVLDocGia, *theDocGia);
   }
   FileDocGia.close();
 }
@@ -98,16 +99,16 @@ void GetDataFromFile()
 
 void WriteData(fstream &FileDocGia, NodeTheDocGia *&TreeAVLDocGia)
 {
-  if (TreeAVLDocGia != nullptr)
+  if (TreeAVLDocGia != NULL)
   {
     FileDocGia << TreeAVLDocGia->DocGia.MaThe << endl;
     FileDocGia << TreeAVLDocGia->DocGia.Ho << endl;
     FileDocGia << TreeAVLDocGia->DocGia.Ten << endl;
     FileDocGia << TreeAVLDocGia->DocGia.Phai << endl;
     FileDocGia << TreeAVLDocGia->DocGia.TrangThai << endl;
-    if (TreeAVLDocGia->left != nullptr)
+    if (TreeAVLDocGia->left != NULL)
       WriteData(FileDocGia, TreeAVLDocGia->left);
-    if (TreeAVLDocGia->right != nullptr)
+    if (TreeAVLDocGia->right != NULL)
       WriteData(FileDocGia, TreeAVLDocGia->right);
   }
 }
@@ -192,7 +193,7 @@ void ThemDauSachMoi(DS_DauSach &DSDS)
   cin.ignore();
   cout << "Nhap ISBN:";
   cin.getline(ISBN, 15);
-  while (TimDauSach(DSDS, ISBN) != nullptr)
+  while (TimDauSach(DSDS, ISBN) != NULL)
   {
     cout << "ISBN da ton tai" << endl;
     cout << "Nhap ISBN:";
