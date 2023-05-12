@@ -4,8 +4,7 @@ struct DauSach
 {
     char ISBN[15], TenSach[25], TacGia[25], TheLoai[25];
     int SoTrang, NXB;
-    NodeSach *DS_Sach;
-
+    DM_Sach *DS_Sach;
     // constructor
     DauSach() {}
     DauSach(char isbn[], char tensach[], char tacgia[], char theloai[], int sotrang, int nxb)
@@ -16,6 +15,7 @@ struct DauSach
         strcpy(TheLoai, theloai);
         SoTrang = sotrang;
         NXB = nxb;
+        DS_Sach->count = 0;
     }
 
     // destructor
@@ -32,35 +32,44 @@ struct DS_DauSach
     ~DS_DauSach() {}
 };
 
-	// su dung khi doc file
-void InsertLastDauSach(DS_DauSach &DSDS, DauSach *dausach){
-	if(DSDS.n > MAX_SIZE_LIST_DAU_SACH)
-		printf("DSDS day \n");
-	else{
-		DSDS.nodes[DSDS.n] = dausach;
+// su dung khi doc file
+void InsertLastDauSach(DS_DauSach &DSDS, DauSach *dausach)
+{
+    if (DSDS.n > MAX_SIZE_LIST_DAU_SACH)
+        printf("DSDS day \n");
+    else
+    {
+        DSDS.nodes[DSDS.n] = dausach;
         DSDS.n++;
-	}
+    }
 }
 
-void InsertDauSach(DS_DauSach &DSDS, DauSach *dausach, int pos){
-    for(int i=DSDS.n-1; i>=pos; i--)
-        DSDS.nodes[i+1] = DSDS.nodes[i];
+void InsertDauSach(DS_DauSach &DSDS, DauSach *dausach, int pos)
+{
+    for (int i = DSDS.n - 1; i >= pos; i--)
+        DSDS.nodes[i + 1] = DSDS.nodes[i];
     DSDS.nodes[pos] = dausach;
     DSDS.n++;
 }
 
-void ThemDauSach(DS_DauSach &DSDS, DauSach *dausach){
-    if(DSDS.n > MAX_SIZE_LIST_DAU_SACH)
+void ThemDauSach(DS_DauSach &DSDS, DauSach *dausach)
+{
+    if (DSDS.n > MAX_SIZE_LIST_DAU_SACH)
         std::cout << "DSDS day \n";
-    else{
+    else
+    {
         int i;
-        for(i=0; i<DSDS.n; i++){
-            if(strcmp(dausach->TheLoai, DSDS.nodes[i]->TheLoai) < 0){
+        for (i = 0; i < DSDS.n; i++)
+        {
+            if (strcmp(dausach->TheLoai, DSDS.nodes[i]->TheLoai) < 0)
+            {
                 InsertDauSach(DSDS, dausach, i);
                 return;
             }
-            else if(strcmp(dausach->TheLoai, DSDS.nodes[i]->TheLoai) == 0){
-                if(strcmp(dausach->TenSach, DSDS.nodes[i]->TenSach) <= 0){
+            else if (strcmp(dausach->TheLoai, DSDS.nodes[i]->TheLoai) == 0)
+            {
+                if (strcmp(dausach->TenSach, DSDS.nodes[i]->TenSach) <= 0)
+                {
                     InsertDauSach(DSDS, dausach, i);
                     return;
                 }
@@ -71,11 +80,14 @@ void ThemDauSach(DS_DauSach &DSDS, DauSach *dausach){
     }
 }
 
-DauSach *TimDauSach(DS_DauSach DSDS, char ISBN[]){
-    for(int i=0; i<DSDS.n; i++){
-        if(strcmp(DSDS.nodes[i]->ISBN, ISBN) == 0){
+DauSach *TimDauSach(DS_DauSach DSDS, char ISBN[])
+{
+    for (int i = 0; i < DSDS.n; i++)
+    {
+        if (strcmp(DSDS.nodes[i]->ISBN, ISBN) == 0)
+        {
             return DSDS.nodes[i];
         }
     }
-    return nullptr;
+    return NULL;
 }
