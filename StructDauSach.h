@@ -2,9 +2,10 @@
 
 struct DauSach
 {
-    char ISBN[15], TenSach[25], TacGia[25], TheLoai[25];
+    char ISBN[30], TenSach[30], TacGia[30], TheLoai[30];
     int SoTrang, NXB;
-    DM_Sach *DS_Sach;
+    NodeSach *DS_Sach;
+
     // constructor
     DauSach() {}
     DauSach(char isbn[], char tensach[], char tacgia[], char theloai[], int sotrang, int nxb)
@@ -15,9 +16,16 @@ struct DauSach
         strcpy(TheLoai, theloai);
         SoTrang = sotrang;
         NXB = nxb;
-        DS_Sach->count = 0;
     }
-
+    void Init(char isbn[], char tensach[], char tacgia[], char theloai[], int sotrang, int nxb)
+    {
+        strcpy(ISBN, isbn);
+        strcpy(TenSach, tensach);
+        strcpy(TacGia, tacgia);
+        strcpy(TheLoai, theloai);
+        SoTrang = sotrang;
+        NXB = nxb;
+    }
     // destructor
     ~DauSach(){};
 };
@@ -80,14 +88,27 @@ void ThemDauSach(DS_DauSach &DSDS, DauSach *dausach)
     }
 }
 
-DauSach *TimDauSach(DS_DauSach DSDS, char ISBN[])
+void DeleteDauSach(DS_DauSach &DSDS, int pos)
 {
-    for (int i = 0; i < DSDS.n; i++)
-    {
-        if (strcmp(DSDS.nodes[i]->ISBN, ISBN) == 0)
-        {
+    for (int i = pos; i < DSDS.n - 1; ++i)
+        DSDS.nodes[i] = DSDS.nodes[i + 1];
+    DSDS.nodes[DSDS.n-1] = nullptr;
+    DSDS.n--;
+}
+
+DauSach *TimDauSach(DS_DauSach DSDS, char ISBN[]){
+    for(int i=0; i<DSDS.n; i++){
+        if(strcmp(DSDS.nodes[i]->ISBN, ISBN) == 0){
             return DSDS.nodes[i];
         }
     }
-    return NULL;
+    return nullptr;
+}
+int TimPosDauSach(DS_DauSach DSDS, char ISBN[]){
+    for(int i=0; i<DSDS.n; i++){
+        if(strcmp(DSDS.nodes[i]->ISBN, ISBN) == 0){
+            return i;
+        }
+    }
+    return -1;
 }

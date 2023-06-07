@@ -4,133 +4,124 @@ struct Sach
   char MaSach[15];
   int TrangThai;
   char ViTri[15];
-  // // construction
-  // Sach(){};
-  // Sach(char ms[], int tt, char vt[])
-  // {
-  //   strcpy(MaSach, ms);
-  //   TrangThai = tt;
-  //   strcpy(ViTri, vt);
-  // }
+  // construction
+  Sach(){};
+  Sach(char ms[], int tt, char vt[])
+  {
+    strcpy(MaSach, ms);
+    TrangThai = tt;
+    strcpy(ViTri, vt);
+  }
 
-  // ~Sach() {}
+  ~Sach() {}
 };
 // lien ket don
-struct DM_Sach
+struct NodeSach
 {
   Sach sach;
-  int count;
-  DM_Sach *next;
+  NodeSach *next;
+
+  ~NodeSach() {}
 };
 /*
  */
 // lenh khoi tao node
-void InsertFirst_NodeSach(DM_Sach *&First, Sach &sach);
-void InsertLast_NodeSach(DM_Sach *First, Sach &sach);
-void InsertAfter_NodeSach(DM_Sach *&node, Sach &sach);
+void InsertFirst_NodeSach(NodeSach *&First, Sach &sach);
+void InsertLast_NodeSach(NodeSach *First, Sach &sach);
+void InsertAfter_NodeSach(NodeSach *&node, Sach &sach);
 // lenh truy xuat
-DM_Sach *GetNodeSach(DM_Sach *First, int pos);
-DM_Sach *GetNodeSach(DM_Sach *First, char *masach);
-Sach *GetSach(DM_Sach *First, char *masach);
+NodeSach *GetNodeSach(NodeSach *First, int pos);
+NodeSach *GetNodeSach(NodeSach *First, char *masach);
+Sach *GetSach(NodeSach *First, char *masach);
 // lenh cap nhat sach cua node
-void UpdateNodeSach(DM_Sach *&node, Sach *sach);
+void UpdateNodeSach(NodeSach *&node, Sach *sach);
 // lenh xoa sach
-void DeleteNodeSach(DM_Sach *First, char *masach);
+void DeleteNodeSach(NodeSach *First, char *masach);
 /*
  */
-char *CreateMaSach(DauSach ds)
+
+// new NodeSach;
+NodeSach *CreateNodeSach(Sach &sach)
 {
-  char *ms;
-  char *s;
-  strcpy(ms, ds.ISBN);
-  strcat(ms, "-");
-  itoa(ds.DS_Sach->count + 1, s, 10);
-  strcat(ms, s);
-  return ms;
-}
-// new DM_Sach;
-DM_Sach *CreateNodeSach(DauSach ds, int trangthai, char *vitri)
-{
-  DM_Sach *node = new DM_Sach;
-  strcpy(node->sach.MaSach, CreateMaSach(ds));
-  node->sach.TrangThai = trangthai;
-  strcpy(node->sach.ViTri, vitri);
-  node->next = NULL;
-  (node->count)++;
+  NodeSach *node = new NodeSach;
+  node->sach = sach;
+  node->next = nullptr;
   return node;
 }
 
-void InsertSach(DauSach &ds, int soluong)
+// them NodeSach o dau
+void InsertFirst_NodeSach(NodeSach *&First, Sach &sach)
 {
-  if (soluong >= 1)
-    for (int i = 1; i <= soluong; i++)
-      ds.DS_Sach = CreateNodeSach();
-  // Chua xong ham nha
-};
-// them DM_Sach o dau
-// void InsertFirst_NodeSach(DM_Sach *&First, Sach &sach)
-// {
-//   DM_Sach *newSach = CreateNodeSach();
-//   newSach->next = First;
-//   First = newSach;
-// }
+  NodeSach *newSach = CreateNodeSach(sach);
+  newSach->next = First;
+  First = newSach;
+}
 
-// // them DM_Sach o vi tri
-// void InsertAfter_NodeSach(DM_Sach *&node, Sach &sach)
-// {
-//   DM_Sach *newSach = CreateNodeSach();
-//   newSach->next = node->next;
-//   node->next = newSach;
-// }
+// them NodeSach o vi tri
+void InsertAfter_NodeSach(NodeSach *&node, Sach &sach)
+{
+  NodeSach *newSach = CreateNodeSach(sach);
+  newSach->next = node->next;
+  node->next = newSach;
+}
 
-// // them DM_Sach o cuoi
-// void InsertLast_NodeSach(DM_Sach *First, Sach &sach)
-// {
-//   if (First == NULL)
-//     InsertFirst_NodeSach(First, sach);
-//   else
-//   {
-//     DM_Sach *last;
-//     for (last = First; last->next != NULL; last = last->next)
-//       ;
-//     InsertAfter_NodeSach(last, sach);
-//   }
-// }
+// them NodeSach o cuoi
+void InsertLast_NodeSach(NodeSach *First, Sach &sach)
+{
+  if (First == nullptr)
+    InsertFirst_NodeSach(First, sach);
+  else
+  {
+    NodeSach *last;
+    for (last = First; last->next != nullptr; last = last->next)
+      ;
+    InsertAfter_NodeSach(last, sach);
+  }
+}
 
-// // lay node sach o vi tri pos
-// DM_Sach *GetNodeSach(DM_Sach *First, int pos)
-// {
-//   DM_Sach *node = First;
-//   for (int i = 1; i != pos; i++) // ds tinh tu 1
-//     if (node->next == NULL)
-//       return NULL;
-//     else
-//       node = node->next;
-//   return node;
-// }
+// lay node sach o vi tri pos
+NodeSach *GetNodeSach(NodeSach *First, int pos)
+{
+  NodeSach *node = First;
+  for (int i = 1; i != pos; i++) // ds tinh tu 1
+    if (node->next == nullptr)
+      return nullptr;
+    else
+      node = node->next;
+  return node;
+}
 
 // lay node sach theo ma sach
-DM_Sach *GetNodeSach(DM_Sach *First, char *masach)
+NodeSach *GetNodeSach(NodeSach *First, char *masach)
 {
-  for (DM_Sach *node = First; node != NULL; node = node->next)
+  for (NodeSach *node = First; node != nullptr; node = node->next)
   {
     if (strcmp(node->sach.MaSach, masach) == 0)
       return node;
   }
-  return NULL;
+  return nullptr;
 }
 
 // lay sach theo ma sach
-Sach *GetSach(DM_Sach *First, char *masach)
+Sach *GetSach(NodeSach *First, char *masach)
 {
-  DM_Sach *node = GetNodeSach(First, masach);
+  NodeSach *node = GetNodeSach(First, masach);
   if (node)
     return &node->sach;
   else
-    return NULL;
+    return nullptr;
+}
+
+// cap nhat lai sach cua node
+void UpdateNodeSach(NodeSach *&node, Sach *sach)
+{
+  // if (sach != nullptr)
+  //   node->sach = *sach;
+  // else
+  //   printf("Khong co thong tin");
 }
 
 // xoa sach theo ma sach
-void DeleteNodeSach(DM_Sach *First, char *masach)
+void DeleteNodeSach(NodeSach *First, char *masach)
 {
 }

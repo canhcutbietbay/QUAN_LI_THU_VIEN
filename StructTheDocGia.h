@@ -48,8 +48,8 @@ int RanNewMT(ArrRanMT &mathe)
 struct TheDocGia
 {
 	int MaThe;
-	char Ho[20];
-	char Ten[11];
+	char Ho[30];
+	char Ten[30];
 	int Phai;
 	/*
 	 * 0: Nam
@@ -64,10 +64,10 @@ struct TheDocGia
 
 	// constructor
 	TheDocGia() {}
-	TheDocGia(char ho[20], char ten[11], int phai, int trangthai)
+	TheDocGia(int mathe, char ho[], char ten[], int phai, int trangthai)
 	{
 		// random MaThe...
-		MaThe = RanNewMT(mathe);
+		MaThe = mathe;
 		strcpy(Ho, ho);
 		strcpy(Ten, ten);
 		Phai = phai;
@@ -76,43 +76,53 @@ struct TheDocGia
 	}
 };
 //
-struct DSDocGia
+struct DS_DocGia
 {
 	int n = 0;
 	TheDocGia *nodes[MAX_SIZE_LIST_DOC_GIA];
-
-	void InsertLastDocGia(DSDocGia &DSDG, TheDocGia *theDocGia)
+	void InsertLastDocGia(DS_DocGia &DSDG, TheDocGia *theDocGia)
 	{
 		if (DSDG.n > MAX_SIZE_LIST_DOC_GIA)
-			printf("DSDG day \n");
+			printf("DSDS day \n");
 		else
 		{
 			DSDG.nodes[DSDG.n] = theDocGia;
 			DSDG.n++;
 		}
 	}
-	int CompareDG(TheDocGia *a, TheDocGia *b)
+	int CompareDG(TheDocGia *a, TheDocGia *b, int mode)
 	{
-		if (strcmp(a->Ten, b->Ten) == 0)
+		// mode 0: MaThe, mode 1: HoTen
+		switch (mode)
 		{
-			return strcmp(a->Ho, b->Ho);
+		case 0:
+			return a->MaThe - b->MaThe;
+			break;
+		case 1:
+			if (strcmp(a->Ten, b->Ten) == 0)
+			{
+				return strcmp(a->Ho, b->Ho);
+			}
+			else
+			{
+				return strcmp(a->Ten, b->Ten);
+			}
+			break;
 		}
-		else
-		{
-			return strcmp(a->Ten, b->Ten);
-		}
+
 		return 0;
 	}
-	void SortDocGiaTheoTen(int l, int r) // Quick Sort
+	void SortDocGia(int l, int r, int mode = 0) // Quick Sort
 	{
+		// mode 0: MaThe, mode 1: HoTen
 		int i = l, j = r;
 		TheDocGia *pivot = nodes[(l + r) / 2];
 		TheDocGia *temp;
 		do
 		{
-			while (CompareDG(nodes[i], pivot) < 0)
+			while (CompareDG(nodes[i], pivot, mode) < 0)
 				i++;
-			while (CompareDG(nodes[j], pivot) > 0)
+			while (CompareDG(nodes[j], pivot, mode) > 0)
 				j--;
 			if (i <= j)
 			{
@@ -125,9 +135,9 @@ struct DSDocGia
 		} while (i <= j);
 
 		if (l < j)
-			SortDocGiaTheoTen(l, j);
+			SortDocGia(l, j, mode);
 		if (i < r)
-			SortDocGiaTheoTen(i, r);
+			SortDocGia(i, r, mode);
 	}
 };
 /*
@@ -232,7 +242,6 @@ NodeTheDocGia *InsertDocGia(NodeTheDocGia *root, TheDocGia DocGia)
 
 	return root;
 }
-
 // Giá trị cân bằng - Balance
 int Balance(NodeTheDocGia *root)
 {
@@ -251,18 +260,35 @@ NodeTheDocGia *maxMaThe(NodeTheDocGia *root)
 
 	return current;
 }
+// Find Node
+NodeTheDocGia *findNode(NodeTheDocGia *root, int MaThe)
+{
+	if (MaThe < root->DocGia.MaThe)
+		return findNode(root->left, MaThe);
+	else if (MaThe > root->DocGia.MaThe)
+		return findNode(root->right, MaThe);
+	else
+		return root;
+}
 
+// Update Node
+void updateNode(NodeTheDocGia *root, TheDocGia DocGia)
+{
+	NodeTheDocGia *temp = new NodeTheDocGia;
+	temp = findNode(root, DocGia.MaThe);
+	temp->DocGia = DocGia;
+}
 // Deletion - AVL Tree
-NodeTheDocGia *deleteNode(NodeTheDocGia *root, TheDocGia DocGia)
+NodeTheDocGia *deleteNode(NodeTheDocGia *root, int MaThe)
 {
 	// 1. XÓA NODE - DELETE
 	if (root == NULL)
 		return root;
 
-	if (DocGia.MaThe > root->DocGia.MaThe)
-		root->right = deleteNode(root->right, DocGia);
-	else if (DocGia.MaThe < root->DocGia.MaThe)
-		root->left = deleteNode(root->left, DocGia);
+	if (MaThe > root->DocGia.MaThe)
+		root->right = deleteNode(root->right, MaThe);
+	else if (MaThe < root->DocGia.MaThe)
+		root->left = deleteNode(root->left, MaThe);
 
 	// Nếu MaThe có giá trị bằng với root->DocGia.MaThe
 	// Thì đây chính là NodeTheDocGia cần xóa
@@ -302,7 +328,7 @@ NodeTheDocGia *deleteNode(NodeTheDocGia *root, TheDocGia DocGia)
 			root->DocGia = temp->DocGia;
 
 			// Xóa temp như 2 TH trên - Delete the inorder successor
-			root->right = deleteNode(root->right, temp->DocGia);
+			root->left = deleteNode(root->left, temp->DocGia.MaThe);
 		}
 	}
 
@@ -348,10 +374,19 @@ HIEU CHINH THONG TIN DOC GIA
 
 void InDocGiaTheoMaDocGia(NodeTheDocGia *&TreeAVLDocGia) // Inorder
 {
-	if (TreeAVLDocGia != NULL)
+	if (TreeAVLDocGia != nullptr)
 	{
 		InDocGiaTheoMaDocGia(TreeAVLDocGia->left);
-		cout << TreeAVLDocGia->DocGia.MaThe << "||" << TreeAVLDocGia->DocGia.Ho << "||" << TreeAVLDocGia->DocGia.Ten << "||" << TreeAVLDocGia->DocGia.Phai << "||" << TreeAVLDocGia->DocGia.TrangThai << endl;
+		std::cout << TreeAVLDocGia->DocGia.MaThe << "||" << TreeAVLDocGia->DocGia.Ho << "||" << TreeAVLDocGia->DocGia.Ten << "||" << TreeAVLDocGia->DocGia.Phai << "||" << TreeAVLDocGia->DocGia.TrangThai << std::endl;
 		InDocGiaTheoMaDocGia(TreeAVLDocGia->right);
 	}
+}
+
+void GetFromTree(NodeTheDocGia *root, DS_DocGia &DSDG)
+{
+	if (root == NULL)
+		return;
+	GetFromTree(root->left, DSDG);
+	DSDG.InsertLastDocGia(DSDG, &root->DocGia);
+	GetFromTree(root->right, DSDG);
 }
