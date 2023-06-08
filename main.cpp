@@ -17,6 +17,7 @@ const int X_DS = w / 10, Y_DS = h / 7;
 const int XDS[7] = {10, X_DS * 1.5, X_DS * 4, X_DS * 7, X_DS * 8.5, X_DS * 9.5, X_DS * 10 - 10};
 const int XDMS[] = {10, X_DS * 4, X_DS * 7, X_DS * 10 - 10};
 const int XDG[] = {10, X_DS * 2, X_DS * 4, X_DS * 6, X_DS * 8, X_DS * 10 - 10};
+const int XXDG[] = {10, X_DS * 4, X_DS * 7, X_DS * 10 - 10};
 int mouseX = 0, mouseY = 0;
 bool isExit = 0;
 
@@ -230,6 +231,7 @@ void RunXemDauSach();
 void RunXoaDauSach();
 void RunSuaDauSach();
 void RunDocGia();
+void RunXemDocGia();
 void RunThemDocGia();
 void RunXoaDocGia();
 void RunSuaDocGia();
@@ -251,6 +253,8 @@ void SetMenuSelect(int MenuID)
 		RunSuaDauSach();
 	else if (MenuID == ButtonDocGia.ID)
 		RunDocGia();
+	else if (MenuID == ButtonXemDocGia.ID)
+		RunXemDocGia();
 	else if (MenuID == ButtonThemDocGia.ID)
 		RunThemDocGia();
 	else if (MenuID == ButtonXoaDocGia.ID)
@@ -470,7 +474,7 @@ void RunDocGia()
 	ButtonThemDocGia.draw();
 	ButtonXoaDocGia.draw();
 	ButtonSuaDocGia.draw();
-//	ButtonSearchDocGia.draw();
+	//	ButtonSearchDocGia.draw();
 	char Title[][25] = {"MA THE", "HO", "TEN", "PHAI", "TRANG THAI"};
 	setcolor(WHITE);
 	// Ve khung + title
@@ -489,6 +493,41 @@ void RunDocGia()
 	DrawItemDocGia(DSDG);		 // Ve item
 	DrawSelecteItemDocGia(DSDG); // Ve selected item
 }
+
+void RunXemDocGia()
+{
+	ClearScreen();
+	ButtonBack.draw();
+	ButtonPrev.draw();
+	ButtonNext.draw();
+	char Title[][25] = {"MA SACH", "NGAY MUON", "NGAY TRA"};
+	setcolor(WHITE);
+	rectangle(XXDG[0], Y_DS, XXDG[3], Y_DS * 5);
+	line(XXDG[0], Y_DS + 50, XXDG[3], Y_DS + 50);
+	for (int i = 0; i < 3; i++)
+	{
+		line(XXDG[i + 1], Y_DS, XXDG[i + 1], Y_DS * 5);
+		outtextxy(XXDG[i] + ((XXDG[i + 1] - XXDG[i]) / 2 - textwidth(Title[i]) / 2), (Y_DS + 25) - textheight("A") / 2, Title[i]);
+	}
+	char temp[] = {"DOC GIA"}, MaThe[10];
+	strcat(temp, ": ");
+	itoa(DSDG.nodes[CurrentItem - 1]->MaThe, MaThe, 10);
+	strcat(temp, MaThe);
+	outtextxy(w / 2 - textwidth(temp) / 2, textheight("A") - 10, temp);
+
+	// line(XDMS[0], Y_DS * 5, XDMS[6], Y_DS * 5);
+	// memset(NumOfPage, 0, sizeof NumOfPage);
+	// string temp;
+	// TotalPage = ceil(DSDS.n * 1.0 / 10);
+	// temp = to_string(CurrentPage);
+	// strcat(NumOfPage, temp.c_str());
+	// strcat(NumOfPage, "/");
+	// temp = to_string(TotalPage);
+	// strcat(NumOfPage, temp.c_str());
+	// outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
+	// DrawSelecteItem();
+}
+
 void RunThemDocGia()
 {
 	const int width = w / 3, height = h / 4;
@@ -818,6 +857,15 @@ void DocGiaEvent()
 			ButtonDocGiaHoTen.IsHover = 0;
 			SetMenuSelect(ButtonDocGia.ID);
 		}
+		else if (ButtonXemDocGia.isMouseHover(mouseX, mouseY))
+		{
+			if (CurrentItem == -1)
+			{
+				ThongBao("HAY CHON 1 DOC GIA");
+			}
+			else
+				SetMenuSelect(ButtonXemDocGia.ID);
+		}
 		else if (ButtonThemDocGia.isMouseHover(mouseX, mouseY))
 			SetMenuSelect(ButtonThemDocGia.ID);
 		else if (ButtonXoaDocGia.isMouseHover(mouseX, mouseY))
@@ -947,7 +995,17 @@ void XemDauSachEvent()
 			SetMenuSelect(ButtonDauSach.ID);
 	}
 }
-
+void XemDocGiaEvent()
+{
+	ButtonEffect(ButtonBack);
+	ButtonEffect(ButtonPrev);
+	ButtonEffect(ButtonNext);
+	if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		if (ButtonBack.isMouseHover(mouseX, mouseY))
+			SetMenuSelect(ButtonDocGia.ID);
+	}
+}
 void XoaDauSachEvent()
 {
 	ButtonEffect(ButtonDongY);
@@ -1363,6 +1421,8 @@ void Event()
 		SuaDauSachEvent();
 	else if (CurrentMenuId == ButtonDocGia.ID)
 		DocGiaEvent();
+	else if (CurrentMenuId == ButtonXemDocGia.ID)
+		XemDocGiaEvent();
 	else if (CurrentMenuId == ButtonThemDocGia.ID)
 		ThemDocGiaEvent();
 	else if (CurrentMenuId == ButtonXoaDocGia.ID)
