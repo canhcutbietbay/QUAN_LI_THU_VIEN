@@ -4,7 +4,7 @@ struct DauSach
 {
     char ISBN[30], TenSach[30], TacGia[30], TheLoai[30];
     int SoTrang, NXB;
-    NodeSach *DS_Sach;
+    DM_Sach *DS_Sach;
 
     // constructor
     DauSach() {}
@@ -92,21 +92,27 @@ void DeleteDauSach(DS_DauSach &DSDS, int pos)
 {
     for (int i = pos; i < DSDS.n - 1; ++i)
         DSDS.nodes[i] = DSDS.nodes[i + 1];
-    DSDS.nodes[DSDS.n-1] = nullptr;
+    DSDS.nodes[DSDS.n - 1] = nullptr;
     DSDS.n--;
 }
 
-DauSach *TimDauSach(DS_DauSach DSDS, char ISBN[]){
-    for(int i=0; i<DSDS.n; i++){
-        if(strcmp(DSDS.nodes[i]->ISBN, ISBN) == 0){
+DauSach *TimDauSach(DS_DauSach DSDS, char ISBN[])
+{
+    for (int i = 0; i < DSDS.n; i++)
+    {
+        if (strcmp(DSDS.nodes[i]->ISBN, ISBN) == 0)
+        {
             return DSDS.nodes[i];
         }
     }
     return nullptr;
 }
-int TimPosDauSach(DS_DauSach DSDS, char ISBN[]){
-    for(int i=0; i<DSDS.n; i++){
-        if(strcmp(DSDS.nodes[i]->ISBN, ISBN) == 0){
+int TimPosDauSach(DS_DauSach DSDS, char ISBN[])
+{
+    for (int i = 0; i < DSDS.n; i++)
+    {
+        if (strcmp(DSDS.nodes[i]->ISBN, ISBN) == 0)
+        {
             return i;
         }
     }
