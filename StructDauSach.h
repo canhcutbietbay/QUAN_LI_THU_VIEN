@@ -5,7 +5,7 @@ struct DauSach
     char ISBN[30], TenSach[30], TacGia[30], TheLoai[30];
     int SoTrang, NXB;
     DM_Sach *DS_Sach;
-    int soluong;
+    bool soluong = 0;
 
     // constructor
     DauSach() {}
@@ -17,7 +17,6 @@ struct DauSach
         strcpy(TheLoai, theloai);
         SoTrang = sotrang;
         NXB = nxb;
-        soluong = 0;
     }
     void Init(char isbn[], char tensach[], char tacgia[], char theloai[], int sotrang, int nxb)
     {
@@ -27,7 +26,6 @@ struct DauSach
         strcpy(TheLoai, theloai);
         SoTrang = sotrang;
         NXB = nxb;
-        soluong = 0;
     }
     // destructor
     ~DauSach(){};
