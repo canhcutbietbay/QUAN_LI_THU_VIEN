@@ -61,6 +61,9 @@ EditButton ButtonSuaSoTrang(115, w / 2 - w / 6 + 10, h / 2 - h / 4 + 70 + Defaul
 EditButton ButtonSuaTacGia(126, w / 2 - w / 6 + 10, h / 2 - h / 4 + 80 + DefaultButtonHeight * 3, w / 3 - 20, DefaultButtonHeight, "TAC GIA", "", "NHAP VAO TAC GIA");
 EditButton ButtonSuaNXB(127, w / 2 - w / 6 + 10, h / 2 - h / 4 + 90 + DefaultButtonHeight * 4, w / 3 - 20, DefaultButtonHeight, "NXB", "", "NHAP VAO NAM XUAT BAN");
 EditButton ButtonSuaTheLoai(128, w / 2 - w / 6 + 10, h / 2 - h / 4 + 100 + DefaultButtonHeight * 5, w / 3 - 20, DefaultButtonHeight, "THE LOAI", "", "NHAP VAO THEO LOAI");
+Button ButtonThemDMS(129, (w / 3) * 1 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "THEM", 0);
+Button ButtonXoaDMS(130, (w / 3) * 2 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "XOA", 0);
+Button ButtonSuaDMS(131, (w / 3) * 3 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "SUA", 0);
 
 // Button ButtonDongYSua(123, w / 3 + w / 9 - DefaultButtonWidth / 2, h / 2 - h / 4 + 200 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "DONG Y", 0);
 // Button ButtonHuyBoSua(124, w / 3 + w / 6 + DefaultButtonWidth / 2, h / 2 - h / 4 + 200 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "HUY BO", 0);
@@ -90,8 +93,9 @@ EditButton ButtonSuaTrangThai(216, w / 2 - w / 6 + 10, h / 2 - h / 4 + 120 + Def
 void InDanhSachDauSach(DS_DauSach &DSDS);
 void GetDataDauSachFromFile(DS_DauSach &DSDS)
 {
-	fstream FileDauSach;
+	fstream FileDauSach, FileDanhMucSach;
 	FileDauSach.open("data_dausach.txt", ios::in);
+	FileDanhMucSach.open("data_danhmucsach.txt", ios::in);
 	if (!FileDauSach.is_open())
 	{
 		printf("Loi mo File de doc \n");
@@ -116,9 +120,25 @@ void GetDataDauSachFromFile(DS_DauSach &DSDS)
 		dauSach->NXB = atoi(data.c_str());
 		getline(FileDauSach, data);
 		strcpy(dauSach->TheLoai, data.c_str());
+		FileDanhMucSach >> dauSach->TongSoLuong;
+		FileDanhMucSach.ignore();
+		DM_Sach *DMS = nullptr;
+		for (int j = 0; j < dauSach->TongSoLuong; ++j)
+		{
+			Sach *sach = new Sach;
+			getline(FileDanhMucSach, data);
+			strcpy(sach->MaSach, data.c_str());
+			getline(FileDanhMucSach, data);
+			sach->TrangThai = atoi(data.c_str());
+			getline(FileDanhMucSach, data);
+			strcpy(sach->ViTri, data.c_str());
+			InsertLast_DM_Sach(DMS, sach);
+		}
+		dauSach->DS_Sach = DMS;
 		InsertLastDauSach(DSDS, dauSach);
 	}
 	FileDauSach.close();
+	FileDanhMucSach.close();
 }
 
 NodeTheDocGia *TreeAVLDocGia;
@@ -210,7 +230,7 @@ void ThongBao(char Data[], int width = 400, int height = 150, int NextMenu = -1)
 char AppTitle[50] = "QUAN LY THU VIEN";
 char NumOfPage[10] = "";
 int CurrentPage = 1, TotalPage = 0;
-
+int CurrentPageDMS = 1;
 void DrawMenu()
 {
 	ClearScreen();
@@ -372,8 +392,6 @@ void RunDauSach()
 	{
 		DrawItemDauSach(ListSearchDauSach);
 		DrawSelecteItemDauSach(ListSearchDauSach);
-		// cout << ButtonSearchDauSach.UserInput << endl;
-		// InDanhSachDauSach(ListSearchDauSach);
 	}
 	else
 	{
@@ -552,37 +570,64 @@ void RunThemDocGia()
 }
 void RunXemDauSach()
 {
+	DauSach *dauSach;
+	if (strlen(ButtonSearchDauSach.UserInput) != 0)
+		dauSach = ListSearchDauSach.nodes[CurrentItem - 1];
+	else
+		dauSach = DSDS.nodes[CurrentItem - 1];
 	ClearScreen();
 	ButtonBack.draw();
 	ButtonPrev.draw();
 	ButtonNext.draw();
+	ButtonThemDMS.draw();
+	ButtonXoaDMS.draw();
+	ButtonSuaDMS.draw();
 	char Title[][25] = {"TEN SACH", "TRANG THAI", "VI TRI"};
 	setcolor(WHITE);
 	rectangle(XDMS[0], Y_DS, XDMS[3], Y_DS * 5);
 	line(XDMS[0], Y_DS + 50, XDMS[3], Y_DS + 50);
+	// Ve Khung
 	for (int i = 0; i < 3; i++)
 	{
 		line(XDMS[i + 1], Y_DS, XDMS[i + 1], Y_DS * 5);
 		outtextxy(XDMS[i] + ((XDMS[i + 1] - XDMS[i]) / 2 - textwidth(Title[i]) / 2), (Y_DS + 25) - textheight("A") / 2, Title[i]);
 	}
-	char temp[] = {"DANH MUC SACH"};
-	strcat(temp, ": ");
-	if (strlen(ButtonSearchDauSach.UserInput) != 0)
-		strcat(temp, ListSearchDauSach.nodes[CurrentItem - 1]->TenSach);
-	else
-		strcat(temp, DSDS.nodes[CurrentItem - 1]->TenSach);
-	outtextxy(w / 2 - textwidth(temp) / 2, textheight("A") - 10, temp);
-	// line(XDMS[0], Y_DS * 5, XDMS[6], Y_DS * 5);
-	// memset(NumOfPage, 0, sizeof NumOfPage);
-	// string temp;
-	// TotalPage = ceil(DSDS.n * 1.0 / 10);
-	// temp = to_string(CurrentPage);
-	// strcat(NumOfPage, temp.c_str());
-	// strcat(NumOfPage, "/");
-	// temp = to_string(TotalPage);
-	// strcat(NumOfPage, temp.c_str());
-	// outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
-	// DrawSelecteItem();
+	// Title
+	char title[] = {"DANH MUC SACH"};
+	strcat(title, ": ");
+	strcat(title, dauSach->TenSach);
+	outtextxy(w / 2 - textwidth(title) / 2, textheight("A") - 10, title);
+	// Content
+	char TrangThai[][20] = {"CHO MUON DUOC", "DA CO NGUOI MUON", "DA THANH LY"};
+	// for (int i = 1 + 10 * (CurrentPage - 1); i <= 10 + 10 * (CurrentPage - 1); i++)
+	// {
+	// 	if (i > DSDS.n)
+	// 		break;
+	// 	line(XDS[0], (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1) + 1)), XDS[6], (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1) + 1)));
+	// 	outtextxy(XDS[0] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDS.nodes[i - 1]->ISBN);
+	// 	outtextxy(XDS[1] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDS.nodes[i - 1]->TenSach);
+	// 	outtextxy(XDS[2] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDS.nodes[i - 1]->TacGia);
+	// 	outtextxy(XDS[3] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDS.nodes[i - 1]->TheLoai);
+	// 	itoa(DSDS.nodes[i - 1]->SoTrang, data, 10);
+	// 	outtextxy(XDS[4] + (XDS[5] - XDS[4]) / 2 - textwidth(data) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), data);
+	// 	itoa(DSDS.nodes[i - 1]->NXB, data, 10);
+	// 	outtextxy(XDS[5] + (XDS[6] - XDS[5]) / 2 - textwidth(data) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), data);
+	// }
+	memset(NumOfPage, 0, sizeof NumOfPage);
+	string temp;
+	TotalPage = ceil(dauSach->TongSoLuong * 1.0 / 10);
+	temp = to_string(CurrentPageDMS);
+	strcat(NumOfPage, temp.c_str());
+	strcat(NumOfPage, "/");
+	temp = to_string(TotalPage);
+	strcat(NumOfPage, temp.c_str());
+	outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
+	if (CurrentPageDMS > TotalPage)
+	{
+		while (CurrentPageDMS > TotalPage)
+			CurrentPageDMS--;
+		RunXemDauSach();
+	}
 }
 
 void RunXoaDauSach()
@@ -725,7 +770,7 @@ void RunSuaDocGia()
 	rectangle(w / 2 - width / 2, h / 3 - height / 2, w / 2 + width / 2, h * 2 / 3 + height / 2);
 	settextstyle(BOLD_FONT, HORIZ_DIR, 5);
 	setcolor(TEXT_TITLE_COLOR);
-	outtextxy(w / 2 - width / 2 + textwidth(Title) / 4, h / 3 - height / 2 + 10, Title);
+	outtextxy(w / 2 - textwidth(Title) / 2, h / 3 - height / 2 + 10, Title);
 	char temp[10];
 	itoa(DSDG.nodes[CurrentItem - 1]->MaThe, temp, 10);
 	strcpy(ButtonSuaMaThe.UserInput, temp);
@@ -806,7 +851,10 @@ void DauSachEvent()
 				ThongBao("HAY CHON 1 DAU SACH");
 			}
 			else
+			{
+				CurrentPageDMS = 1;
 				SetMenuSelect(ButtonXemDauSach.ID);
+			}
 		}
 		else if (ButtonXoaDauSach.isMouseHover(mouseX, mouseY))
 		{
@@ -993,6 +1041,18 @@ void XemDauSachEvent()
 	{
 		if (ButtonBack.isMouseHover(mouseX, mouseY))
 			SetMenuSelect(ButtonDauSach.ID);
+		else if (ButtonNext.isMouseHover(mouseX, mouseY))
+		{
+			if (CurrentPageDMS < TotalPage)
+				CurrentPageDMS++;
+			RunXemDauSach();
+		}
+		else if (ButtonPrev.isMouseHover(mouseX, mouseY))
+		{
+			if (CurrentPageDMS > 1)
+				CurrentPageDMS--;
+			RunXemDauSach();
+		}
 	}
 }
 void XemDocGiaEvent()
@@ -1430,12 +1490,26 @@ void Event()
 	else if (CurrentMenuId == ButtonSuaDocGia.ID)
 		SuaDocGiaEvent();
 }
-
+void InDMS()
+{
+	// NodeSach *node = new NodeSach;
+	for (int i = 0; i < DSDS.n; i++)
+	{
+		cout << DSDS.nodes[i]->TenSach << endl;
+		DM_Sach *temp = DSDS.nodes[i]->DS_Sach;
+		for (temp; temp != nullptr; temp = temp->next)
+		{
+			cout << temp->sach->MaSach << " " << temp->sach->TrangThai << " " << temp->sach->ViTri << endl;
+		}
+		cout << "-------------------" << endl;
+	}
+}
 int main()
 {
 	initwindow(w, h, AppTitle);
 	DrawMenu();
 	GetDataFromFile();
+	// InDMS();
 	while (1)
 	{
 		Event();
