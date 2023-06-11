@@ -1,3 +1,6 @@
+// #ifndef _STRUCTDAUSACH_H // Nếu chưa định nghĩa _STRUCTDAUSACH_H 
+// #define _STRUCTDAUSACH_H // thì định nghĩa _STRUCTDAUSACH_H 
+// #include "StructDanhMucSach.h"
 #define MAX_SIZE_LIST_DAU_SACH 100
 
 struct DauSach
@@ -120,3 +123,28 @@ int TimPosDauSach(DS_DauSach DSDS, char ISBN[])
     }
     return -1;
 }
+
+struct DS_DMS
+{
+  int n = 0;
+  Sach *nodes[MAX_SIZE_LIST_DMS];
+  void InsertLastDMS(DS_DMS &DSDMS, Sach *sach)
+  {
+    if (DSDMS.n > MAX_SIZE_LIST_DMS)
+      printf("DSDMS day \n");
+    else
+    {
+      DSDMS.nodes[DSDMS.n] = sach;
+      DSDMS.n++;
+    }
+  }
+};
+
+void GetDMS (DS_DMS &DSDMS, DauSach *dauSach){
+  DSDMS.n = 0;
+  if (dauSach->TongSoLuong == 0) return;
+  DM_Sach *temp = dauSach->DS_Sach;
+  for (temp; temp!=nullptr; temp=temp->next)
+    DSDMS.InsertLastDMS(DSDMS, temp->sach);
+}
+// #endif

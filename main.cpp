@@ -22,7 +22,7 @@ int mouseX = 0, mouseY = 0;
 bool isExit = 0;
 
 const int ContentHeight = (Y_DS * 5 - Y_DS - 50) / 10;
-int CurrentItem = -1;
+int CurrentItem = -1, CurrentItemDMS = -1;
 
 int ButtonHeight = 60, ButtonWidth = 300, ButtonSpace = 80, ButtonY = 200;
 Button ButtonDauSach(100, w / 2 - ButtonWidth / 2, ButtonY + ButtonSpace, ButtonWidth, ButtonHeight, "QUAN LY DAU SACH", 0);
@@ -61,16 +61,16 @@ EditButton ButtonSuaSoTrang(115, w / 2 - w / 6 + 10, h / 2 - h / 4 + 70 + Defaul
 EditButton ButtonSuaTacGia(126, w / 2 - w / 6 + 10, h / 2 - h / 4 + 80 + DefaultButtonHeight * 3, w / 3 - 20, DefaultButtonHeight, "TAC GIA", "", "NHAP VAO TAC GIA");
 EditButton ButtonSuaNXB(127, w / 2 - w / 6 + 10, h / 2 - h / 4 + 90 + DefaultButtonHeight * 4, w / 3 - 20, DefaultButtonHeight, "NXB", "", "NHAP VAO NAM XUAT BAN");
 EditButton ButtonSuaTheLoai(128, w / 2 - w / 6 + 10, h / 2 - h / 4 + 100 + DefaultButtonHeight * 5, w / 3 - 20, DefaultButtonHeight, "THE LOAI", "", "NHAP VAO THEO LOAI");
-Button ButtonThemDMS(129, (w / 3) * 1 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "THEM", 0);
-Button ButtonXoaDMS(130, (w / 3) * 2 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "XOA", 0);
-Button ButtonSuaDMS(131, (w / 3) * 3 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "SUA", 0);
+Button ButtonThemDMS(129, (w / 3) * 1 - DefaultButtonWidth / 2 - w / 6, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "THEM", 0);
+Button ButtonXoaDMS(130, (w / 3) * 2 - DefaultButtonWidth / 2 - w / 6, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "XOA", 0);
+Button ButtonSuaDMS(131, (w / 3) * 3 - DefaultButtonWidth / 2 - w / 6, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "SUA", 0);
 
 // Button ButtonDongYSua(123, w / 3 + w / 9 - DefaultButtonWidth / 2, h / 2 - h / 4 + 200 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "DONG Y", 0);
 // Button ButtonHuyBoSua(124, w / 3 + w / 6 + DefaultButtonWidth / 2, h / 2 - h / 4 + 200 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "HUY BO", 0);
 
 DS_DauSach DSDS; // global
 DS_DauSach ListSearchDauSach;
-
+DS_DMS DSDMS;
 // Doc Gia
 Button ButtonDocGiaHoTen(201, w / 2 - DefaultButtonWidth - 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "HO TEN", 0);
 Button ButtonDocGiaMaThe(202, w / 2 + 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "MA THE", 0);
@@ -285,7 +285,7 @@ void SetMenuSelect(int MenuID)
 
 void DrawSelecteItemDauSach(DS_DauSach DSDS)
 {
-	if (CurrentItem != -1 && (ceil(CurrentItem * 1.0 / 10) == CurrentPage))
+	if (CurrentItem > 0 && (ceil(CurrentItem * 1.0 / 10) == CurrentPage))
 	{
 		char data[15];
 		// Clear text
@@ -402,7 +402,7 @@ void RunDauSach()
 
 void DrawSelecteItemDocGia(DS_DocGia DSDG)
 {
-	if (CurrentItem != -1 && (ceil(CurrentItem * 1.0 / 10) == CurrentPage))
+	if (CurrentItem > 0 && (ceil(CurrentItem * 1.0 / 10) == CurrentPage))
 	{
 		char data[15];
 		char Phai[][15] = {"NAM", "NU"};
@@ -568,6 +568,45 @@ void RunThemDocGia()
 	ButtonThem.draw();
 	ButtonClearData.draw();
 }
+void DrawItemDMS(DS_DMS &DSDMS)
+{
+	// Content
+	char TrangThai[][20] = {"CHO MUON DUOC", "DA CO NGUOI MUON", "DA THANH LY"};
+	if (DSDMS.n)
+	{
+		for (int i = 1 + 10 * (CurrentPageDMS - 1); i <= 10 + 10 * (CurrentPageDMS - 1); i++)
+		{
+			if (i > DSDMS.n)
+				break;
+			line(XDMS[0], (Y_DS + ContentHeight * (i - 10 * (CurrentPageDMS - 1) + 1)), XDMS[3], (Y_DS + ContentHeight * (i - 10 * (CurrentPageDMS - 1) + 1)));
+			outtextxy(XDMS[0] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[i - 1]->MaSach);
+			outtextxy(XDMS[1] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSDMS.nodes[i - 1]->TrangThai]);
+			outtextxy(XDMS[2] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[i - 1]->ViTri);
+		}
+	}
+}
+void DrawSelectedItemDMS(DS_DMS &DSDMS)
+{
+	if (CurrentItemDMS > 0 && (ceil(CurrentItemDMS * 1.0 / 10) == CurrentPageDMS))
+	{
+		char TrangThai[][20] = {"CHO MUON DUOC", "DA CO NGUOI MUON", "DA THANH LY"};
+		// Clear text
+		ClearScreenXY(XDMS[0] + 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XDMS[1] - 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		ClearScreenXY(XDMS[1] + 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XDMS[2] - 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		ClearScreenXY(XDMS[2] + 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XDMS[3] - 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		// Fill with color
+		setfillstyle(SOLID_FILL, BG_BUTTON_SELECT);
+		floodfill(XDMS[0] + 1, Y_DS + 50 + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)), WHITE);
+		floodfill(XDMS[1] + 1, Y_DS + 50 + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)), WHITE);
+		floodfill(XDMS[2] + 1, Y_DS + 50 + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)), WHITE);
+		// Draw selected item
+		setbkcolor(BG_BUTTON_SELECT);
+		outtextxy(XDMS[0] + 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[CurrentItemDMS - 1]->MaSach);
+		outtextxy(XDMS[1] + 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSDMS.nodes[CurrentItemDMS - 1]->TrangThai]);
+		outtextxy(XDMS[2] + 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[CurrentItemDMS - 1]->ViTri);
+	}
+}
+
 void RunXemDauSach()
 {
 	DauSach *dauSach;
@@ -597,22 +636,7 @@ void RunXemDauSach()
 	strcat(title, ": ");
 	strcat(title, dauSach->TenSach);
 	outtextxy(w / 2 - textwidth(title) / 2, textheight("A") - 10, title);
-	// Content
-	char TrangThai[][20] = {"CHO MUON DUOC", "DA CO NGUOI MUON", "DA THANH LY"};
-	// for (int i = 1 + 10 * (CurrentPage - 1); i <= 10 + 10 * (CurrentPage - 1); i++)
-	// {
-	// 	if (i > DSDS.n)
-	// 		break;
-	// 	line(XDS[0], (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1) + 1)), XDS[6], (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1) + 1)));
-	// 	outtextxy(XDS[0] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDS.nodes[i - 1]->ISBN);
-	// 	outtextxy(XDS[1] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDS.nodes[i - 1]->TenSach);
-	// 	outtextxy(XDS[2] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDS.nodes[i - 1]->TacGia);
-	// 	outtextxy(XDS[3] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDS.nodes[i - 1]->TheLoai);
-	// 	itoa(DSDS.nodes[i - 1]->SoTrang, data, 10);
-	// 	outtextxy(XDS[4] + (XDS[5] - XDS[4]) / 2 - textwidth(data) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), data);
-	// 	itoa(DSDS.nodes[i - 1]->NXB, data, 10);
-	// 	outtextxy(XDS[5] + (XDS[6] - XDS[5]) / 2 - textwidth(data) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), data);
-	// }
+	GetDMS(DSDMS, dauSach); // Get DMS cua Dau Sach hien tai
 	memset(NumOfPage, 0, sizeof NumOfPage);
 	string temp;
 	TotalPage = ceil(dauSach->TongSoLuong * 1.0 / 10);
@@ -622,6 +646,8 @@ void RunXemDauSach()
 	temp = to_string(TotalPage);
 	strcat(NumOfPage, temp.c_str());
 	outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
+	DrawItemDMS(DSDMS);
+	DrawSelectedItemDMS(DSDMS);
 	if (CurrentPageDMS > TotalPage)
 	{
 		while (CurrentPageDMS > TotalPage)
@@ -667,7 +693,6 @@ void GetCurrentItem(int mouseY)
 	int temp = (mouseY - Y_DS) / ContentHeight;
 	if (CurrentMenuId == ButtonDauSach.ID)
 	{
-
 		if (strlen(ButtonSearchDauSach.UserInput) == 0)
 		{
 			if ((temp > 0) && (temp < 11) && (CurrentItem = temp + (CurrentPage - 1) * 10) <= DSDS.n)
@@ -689,6 +714,13 @@ void GetCurrentItem(int mouseY)
 			CurrentItem = temp + (CurrentPage - 1) * 10;
 		else
 			CurrentItem = -1;
+	}
+	else if (CurrentMenuId == ButtonXemDauSach.ID)
+	{
+		if ((temp > 0) && (temp < 11) && (CurrentItemDMS = temp + (CurrentPageDMS - 1) * 10) <= DSDMS.n)
+			CurrentItemDMS = temp + (CurrentPageDMS - 1) * 10;
+		else
+			CurrentItemDMS = -1;
 	}
 }
 
@@ -852,6 +884,7 @@ void DauSachEvent()
 			}
 			else
 			{
+				CurrentItemDMS = -1;
 				CurrentPageDMS = 1;
 				SetMenuSelect(ButtonXemDauSach.ID);
 			}
@@ -1051,6 +1084,12 @@ void XemDauSachEvent()
 		{
 			if (CurrentPageDMS > 1)
 				CurrentPageDMS--;
+			RunXemDauSach();
+		}
+		else
+		{
+			GetCurrentItem(mouseY);
+			cout << CurrentItemDMS << endl;
 			RunXemDauSach();
 		}
 	}

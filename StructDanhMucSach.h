@@ -1,4 +1,7 @@
-
+// #ifndef _STRUCTDANHMUCSACH_H // Nếu chưa định nghĩa _STRUCTDANHMUCSACH_H 
+// #define _STRUCTDANHMUCSACH_H // thì định nghĩa _STRUCTDANHMUCSACH_H 
+// #include "StructDauSach.h"
+#define MAX_SIZE_LIST_DMS 100
 struct Sach
 {
   int id = 0;
@@ -62,7 +65,8 @@ void InsertLast_DM_Sach(DM_Sach *&First, Sach *sach)
   else
   {
     DM_Sach *last;
-    for (last = First; last->next != nullptr; last = last->next);
+    for (last = First; last->next != nullptr; last = last->next)
+      ;
     InsertAfter_DM_Sach(last, sach);
   }
 }
@@ -91,7 +95,7 @@ DM_Sach *GetDM_Sach(DM_Sach *First, int id)
 // }
 
 // lay sach theo ma sach
-//Sach *GetSach(DM_Sach *First, char *masach)
+// Sach *GetSach(DM_Sach *First, char *masach)
 //{
 //  DM_Sach *node = GetDM_Sach(First, masach);
 //  if (node)
@@ -192,3 +196,5 @@ void DeleteDM_Sach(DM_Sach *First, char *masach)
 //     */
 //   }
 // }
+
+// #endif
