@@ -1,5 +1,5 @@
-// #ifndef _STRUCTDAUSACH_H // Nếu chưa định nghĩa _STRUCTDAUSACH_H 
-// #define _STRUCTDAUSACH_H // thì định nghĩa _STRUCTDAUSACH_H 
+// #ifndef _STRUCTDAUSACH_H // Nếu chưa định nghĩa _STRUCTDAUSACH_H
+// #define _STRUCTDAUSACH_H // thì định nghĩa _STRUCTDAUSACH_H
 // #include "StructDanhMucSach.h"
 #define MAX_SIZE_LIST_DAU_SACH 100
 
@@ -126,25 +126,99 @@ int TimPosDauSach(DS_DauSach DSDS, char ISBN[])
 
 struct DS_DMS
 {
-  int n = 0;
-  Sach *nodes[MAX_SIZE_LIST_DMS];
-  void InsertLastDMS(DS_DMS &DSDMS, Sach *sach)
-  {
-    if (DSDMS.n > MAX_SIZE_LIST_DMS)
-      printf("DSDMS day \n");
-    else
+    int n = 0;
+    Sach *nodes[MAX_SIZE_LIST_DMS];
+    void InsertLastDMS(DS_DMS &DSDMS, Sach *sach)
     {
-      DSDMS.nodes[DSDMS.n] = sach;
-      DSDMS.n++;
+        if (DSDMS.n > MAX_SIZE_LIST_DMS)
+            printf("DSDMS day \n");
+        else
+        {
+            DSDMS.nodes[DSDMS.n] = sach;
+            DSDMS.n++;
+        }
     }
-  }
 };
 
-void GetDMS (DS_DMS &DSDMS, DauSach *dauSach){
-  DSDMS.n = 0;
-  if (dauSach->TongSoLuong == 0) return;
-  DM_Sach *temp = dauSach->DS_Sach;
-  for (temp; temp!=nullptr; temp=temp->next)
-    DSDMS.InsertLastDMS(DSDMS, temp->sach);
+void GetDMS(DS_DMS &DSDMS, DauSach *dauSach)
+{
+    DSDMS.n = 0;
+    if (dauSach->TongSoLuong == 0)
+        return;
+    DM_Sach *temp = dauSach->DS_Sach;
+    for (temp; temp != nullptr; temp = temp->next)
+        DSDMS.InsertLastDMS(DSDMS, temp->sach);
 }
 // #endif
+DM_Sach *CreateMaSach(DauSach *&ds)
+{
+    DM_Sach *node = ds->DS_Sach;
+    // TH chua co sach
+    if (node == nullptr)
+    {
+        node = CreateDM_Sach();
+        node->sach->id = 1;
+        char *ms = ds->ISBN;
+        node->sach->MaSach = strcat(ms, "-01");
+        return node;
+    }
+    else
+        // TH id khong lien mach
+        while (node->next != nullptr)
+        {
+            if (node->next->sach->id - node->sach->id != 1)
+            {
+                DM_Sach *newnode = CreateDM_Sach();
+                newnode->next = node->next;
+                node->next = newnode;
+                newnode->sach->id = node->sach->id + 1;
+                char *ms = ds->ISBN;
+                char *cid;
+                if (newnode->sach->id < 10)
+                {
+                    ms = strcat(ms, "-0");
+                    itoa(newnode->id, cid, 10);
+                    newnode->sach->MaSach = strcat(ms, cid);
+                    return newnode;
+                }
+                else
+                {
+                    ms = strcat(ms, "-");
+                    itoa(newnode->id, cid, 10);
+                    newnode->sach->MaSach = strcat(ms, cid);
+                    return newnode;
+                }
+            }
+            node = node->next;
+        }
+    // TH them sach vao id ke tiep
+    DM_Sach *newnode = node->next;
+    newnode = CreateDM_Sach();
+    newnode->sach->id = node->sach->id + 1;
+    char *ms = ds->ISBN;
+    char *cid;
+    if (newnode->sach->id < 10)
+    {
+        ms = strcat(ms, "-0");
+        itoa(newnode->id, cid, 10);
+        newnode->sach->MaSach = strcat(ms, cid);
+        return newnode;
+    }
+    else
+    {
+        ms = strcat(ms, "-");
+        itoa(newnode->id, cid, 10);
+        newnode->sach->MaSach = strcat(ms, cid);
+        return newnode;
+    }
+}
+//
+void InsertSach(DauSach *&ds, int addval)
+{
+    while (addval > 0)
+    {
+        // show bang nhap tt,vt
+        // dung CreateMaSach de lay masach
+        // neu huy bo nhap thi DeleteDM_Sach(ds->DS_Sach, DM_Sach->Sach->MaSach) vua tao
+    }
+}
