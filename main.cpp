@@ -145,15 +145,21 @@ NodeTheDocGia *TreeAVLDocGia;
 DS_DocGia DSDG;
 void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
 {
-	fstream FileDocGia;
+	fstream FileDocGia, FileMuonTra;
 	FileDocGia.open("data_docgia.txt", ios::in);
 	if (!FileDocGia.is_open())
 	{
 		printf("Loi mo File de doc \n");
 		return;
 	}
+	FileMuonTra.open("data_muontra.txt", ios::in);
+	if (!FileMuonTra.is_open())
+	{
+		printf("Loi mo File de doc \n");
+		return;
+	}
 	string data;
-	int n;
+	int n, k;
 	FileDocGia >> n;
 	FileDocGia.ignore();
 	for (int i = 0; i < n; i++)
@@ -170,6 +176,39 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
 		theDocGia.Phai = atoi(data.c_str());
 		getline(FileDocGia, data);
 		theDocGia.TrangThai = atoi(data.c_str());
+		// data muontra
+		DS_MuonTra *DSMT = new DS_MuonTra;
+		getline(FileMuonTra, k);
+		theDocGia.TongSoLuong = k;
+		if (k)
+		{
+			for (int i = k, i > 0, i--)
+			{
+				MuonTra *node;
+				node = CreateNodeMuonTra(node);
+				getline(FileMuonTra, data);
+				strcpy(node->MaSach, data.c_str());
+				getline(FileMuonTra, node->TrangThai);
+				getline(FileMuonTra, data);
+				node->NgayMuon.Day = atoi(data.substr(0, 2));
+				node->NgayMuon.Month = atoi(data.substr(3, 2));
+				node->NgayMuon.Year = atoi(data.substr(6, 4));
+				getline(FileMuonTra, data);
+				if (data != "0")
+				{
+					node > NgayTra.Day = atoi(data.substr(0, 2));
+					node->NgayTra.Month = atoi(data.substr(3, 2));
+					node->NgayTra.Year = atoi(data.substr(6, 4));
+				}
+				else
+				{
+					node > NgayTra.Day = 0;
+					node->NgayTra.Month = 0;
+					node->NgayTra.Year = 0;
+				}
+				InsertLast_DM_MuonTra(DSMT, node);
+			}
+		}
 		TreeAVLDocGia = InsertDocGia(TreeAVLDocGia, theDocGia);
 	}
 	FileDocGia.close();
@@ -508,7 +547,7 @@ void RunDocGia()
 		DSDG.SortDocGia(0, DSDG.n - 1, 1);
 	else
 		DSDG.SortDocGia(0, DSDG.n - 1);
-	DrawItemDocGia(DSDG);		 // Ve item
+	DrawItemDocGia(DSDG);				 // Ve item
 	DrawSelecteItemDocGia(DSDG); // Ve selected item
 }
 

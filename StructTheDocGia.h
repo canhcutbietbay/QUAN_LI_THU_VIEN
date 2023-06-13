@@ -61,7 +61,8 @@ struct TheDocGia
 	 * 1: Hoat dong
 	 */
 	DS_MuonTra *DS_MT;
-
+	int TongSoLuong;
+	MuonTra *DS_Muon[3];
 	// constructor
 	TheDocGia() {}
 	TheDocGia(int mathe, char ho[], char ten[], int phai, int trangthai)
@@ -389,4 +390,27 @@ void GetFromTree(NodeTheDocGia *root, DS_DocGia &DSDG)
 	GetFromTree(root->left, DSDG);
 	DSDG.InsertLastDocGia(DSDG, &root->DocGia);
 	GetFromTree(root->right, DSDG);
+}
+
+DS_MuonTra *GetDSMuon(NodeTheDocGia *node)
+{
+	if (node == nullptr)
+		return;
+	else
+	{
+		NodeMuonTra *check = node->DocGia.DS_MT->First;
+		int k = 0;
+		while (check != nullptr)
+		{
+			if (check->value->TrangThai == 0)
+			{
+				node->DocGia.DS_Muon[k] = check->value;
+				k++;
+				if (k == 3)
+					break;
+			}
+			check = check->Right;
+		}
+		return node->DocGia.DS_Muon;
+	}
 }
