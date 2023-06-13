@@ -12,6 +12,9 @@
 #include "StructTheDocGia.h"
 
 using namespace std;
+/* MenuId
+	99 - Them Sach
+*/
 int CurrentMenuId = 0, LastCurrenMenuID = 0;
 const int X_DS = w / 10, Y_DS = h / 7;
 const int XDS[7] = {10, X_DS * 1.5, X_DS * 4, X_DS * 7, X_DS * 8.5, X_DS * 9.5, X_DS * 10 - 10};
@@ -22,7 +25,7 @@ int mouseX = 0, mouseY = 0;
 bool isExit = 0;
 
 const int ContentHeight = (Y_DS * 5 - Y_DS - 50) / 10;
-int CurrentItem = -1, CurrentItemDMS = -1;
+int CurrentItem = -1, CurrentItemDMS = -1, CurrentAddDMS = -1, TotalAddDMS = -1;
 
 int ButtonHeight = 60, ButtonWidth = 300, ButtonSpace = 80, ButtonY = 200;
 Button ButtonDauSach(100, w / 2 - ButtonWidth / 2, ButtonY + ButtonSpace, ButtonWidth, ButtonHeight, "QUAN LY DAU SACH", 0);
@@ -32,6 +35,7 @@ Button ButtonThongTin(400, w / 2 - ButtonWidth / 2, ButtonY + 4 * ButtonSpace, B
 Button ButtonThoat(500, w / 2 - ButtonWidth / 2, ButtonY + 5 * ButtonSpace, ButtonWidth, ButtonHeight, "THOAT", 0);
 
 int DefaultButtonHeight = 50, DefaultButtonWidth = 100;
+DM_Sach *SachTemp;
 EditButton *ButtonTemp = nullptr;
 Button ButtonBack(0, 10, 10, DefaultButtonWidth, DefaultButtonHeight, "BACK", 0);
 Button ButtonOKThongBao;
@@ -64,6 +68,10 @@ EditButton ButtonSuaTheLoai(128, w / 2 - w / 6 + 10, h / 2 - h / 4 + 100 + Defau
 Button ButtonThemDMS(129, (w / 3) * 1 - DefaultButtonWidth / 2 - w / 6, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "THEM", 0);
 Button ButtonXoaDMS(130, (w / 3) * 2 - DefaultButtonWidth / 2 - w / 6, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "XOA", 0);
 Button ButtonSuaDMS(131, (w / 3) * 3 - DefaultButtonWidth / 2 - w / 6, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "SUA", 0);
+EditButton ButtonThemSoLuong(132, w / 2 - w / 6 + 10, h / 2 - 100, w / 3 - 20, DefaultButtonHeight, "SO LUONG", "", "NHAP VAO SO LUONG");
+EditButton ButtonThemMaSach(133, w / 2 - w / 6 + 10, h / 3 + 30 + DefaultButtonHeight * 1, w / 3 - 20, DefaultButtonHeight, "MA SACH", "", "NHAP VAO MA SACH");
+EditButton ButtonThemTrangThaiSach(134, w / 2 - w / 6 + 10, h / 3 + 40 + DefaultButtonHeight * 2, w / 3 - 20, DefaultButtonHeight, "TRANG THAI", "", "NHAP VAO TRANG THAI");
+EditButton ButtonThemViTriSach(135, w / 2 - w / 6 + 10, h / 3 + 50 + DefaultButtonHeight * 3, w / 3 - 20, DefaultButtonHeight, "VI TRI", "", "NHAP VAO VI TRI");
 
 // Button ButtonDongYSua(123, w / 3 + w / 9 - DefaultButtonWidth / 2, h / 2 - h / 4 + 200 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "DONG Y", 0);
 // Button ButtonHuyBoSua(124, w / 3 + w / 6 + DefaultButtonWidth / 2, h / 2 - h / 4 + 200 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "HUY BO", 0);
@@ -91,6 +99,12 @@ EditButton ButtonSuaTrangThai(216, w / 2 - w / 6 + 10, h / 2 - h / 4 + 120 + Def
 // EditButton ButtonSearchDocGia(216, w / 2 - w / 6, 50, w / 3, 50, "TIM DOC GIA", "", "NHAP MA DOC GIA");
 
 void InDanhSachDauSach(DS_DauSach &DSDS);
+string GetNumberFromMaSach(string MaSach)
+{
+
+	string res = MaSach.substr(MaSach.length() - 2, 2);
+	return res;
+}
 void GetDataDauSachFromFile(DS_DauSach &DSDS)
 {
 	fstream FileDauSach, FileDanhMucSach;
@@ -127,6 +141,7 @@ void GetDataDauSachFromFile(DS_DauSach &DSDS)
 		{
 			Sach *sach = new Sach;
 			getline(FileDanhMucSach, data);
+			sach->id = atoi(GetNumberFromMaSach(data).c_str());
 			strcpy(sach->MaSach, data.c_str());
 			getline(FileDanhMucSach, data);
 			sach->TrangThai = atoi(data.c_str());
@@ -145,21 +160,15 @@ NodeTheDocGia *TreeAVLDocGia;
 DS_DocGia DSDG;
 void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
 {
-	fstream FileDocGia, FileMuonTra;
+	fstream FileDocGia;
 	FileDocGia.open("data_docgia.txt", ios::in);
 	if (!FileDocGia.is_open())
 	{
 		printf("Loi mo File de doc \n");
 		return;
 	}
-	FileMuonTra.open("data_muontra.txt", ios::in);
-	if (!FileMuonTra.is_open())
-	{
-		printf("Loi mo File de doc \n");
-		return;
-	}
 	string data;
-	int n, k;
+	int n;
 	FileDocGia >> n;
 	FileDocGia.ignore();
 	for (int i = 0; i < n; i++)
@@ -176,39 +185,6 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
 		theDocGia.Phai = atoi(data.c_str());
 		getline(FileDocGia, data);
 		theDocGia.TrangThai = atoi(data.c_str());
-		// data muontra
-		DS_MuonTra *DSMT = new DS_MuonTra;
-		getline(FileMuonTra, k);
-		theDocGia.TongSoLuong = k;
-		if (k)
-		{
-			for (int i = k, i > 0, i--)
-			{
-				MuonTra *node;
-				node = CreateNodeMuonTra(node);
-				getline(FileMuonTra, data);
-				strcpy(node->MaSach, data.c_str());
-				getline(FileMuonTra, node->TrangThai);
-				getline(FileMuonTra, data);
-				node->NgayMuon.Day = atoi(data.substr(0, 2));
-				node->NgayMuon.Month = atoi(data.substr(3, 2));
-				node->NgayMuon.Year = atoi(data.substr(6, 4));
-				getline(FileMuonTra, data);
-				if (data != "0")
-				{
-					node > NgayTra.Day = atoi(data.substr(0, 2));
-					node->NgayTra.Month = atoi(data.substr(3, 2));
-					node->NgayTra.Year = atoi(data.substr(6, 4));
-				}
-				else
-				{
-					node > NgayTra.Day = 0;
-					node->NgayTra.Month = 0;
-					node->NgayTra.Year = 0;
-				}
-				InsertLast_DM_MuonTra(DSMT, node);
-			}
-		}
 		TreeAVLDocGia = InsertDocGia(TreeAVLDocGia, theDocGia);
 	}
 	FileDocGia.close();
@@ -291,6 +267,8 @@ void RunXoaDauSach();
 void RunSuaDauSach();
 void RunDocGia();
 void RunXemDocGia();
+void RunThemDMS();
+void RunThemSach();
 void RunThemDocGia();
 void RunXoaDocGia();
 void RunSuaDocGia();
@@ -306,6 +284,10 @@ void SetMenuSelect(int MenuID)
 		RunThemDauSach();
 	else if (MenuID == ButtonXemDauSach.ID)
 		RunXemDauSach();
+	else if (MenuID == 99)
+		RunThemSach();
+	else if (MenuID == ButtonThemDMS.ID)
+		RunThemDMS();
 	else if (MenuID == ButtonXoaDauSach.ID)
 		RunXoaDauSach();
 	else if (MenuID == ButtonSuaDauSach.ID)
@@ -438,7 +420,55 @@ void RunDauSach()
 		DrawSelecteItemDauSach(DSDS);
 	}
 }
+void RunThemDMS()
+{
+	CurrentAddDMS = 1;
+	TotalAddDMS = -1;
+	const int width = w / 3, height = h / 8;
+	char Title[50] = "THEM SACH";
+	ClearScreenXY(w / 2 - width / 2, h / 3 - height / 2, w / 2 + width / 2, h * 2 / 3 + height / 2);
+	setcolor(WHITE);
+	rectangle(w / 2 - width / 2, h / 3 - height / 2, w / 2 + width / 2, h * 2 / 3 + height / 2);
+	settextstyle(BOLD_FONT, HORIZ_DIR, 5);
+	setcolor(TEXT_TITLE_COLOR);
+	// outtextxy(w / 2 - width / 2 + textwidth(Title) / 4, h / 3 - height / 2 + 10, Title);
+	outtextxy(w / 2 - textwidth(Title) / 2, h / 3 - height / 2 + 10, Title);
+	ButtonThemSoLuong.draw();
+	ButtonDongY.Init(0, w / 3 + w / 9 - DefaultButtonWidth / 2, h / 2 - h / 4 + 160 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "DONG Y", 0);
+	ButtonHuyBo.Init(0, w / 3 + w / 6 + DefaultButtonWidth / 2, h / 2 - h / 4 + 160 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "HUY BO", 0);
+	ButtonDongY.draw();
+	ButtonHuyBo.draw();
+}
 
+void RunThemSach()
+{
+	const int width = w / 3, height = h / 8;
+	char Title[50] = "THEM SACH";
+	ClearScreenXY(w / 2 - width / 2, h / 3 - height / 2, w / 2 + width / 2, h * 2 / 3 + height / 2);
+	setcolor(WHITE);
+	rectangle(w / 2 - width / 2, h / 3 - height / 2, w / 2 + width / 2, h * 2 / 3 + height / 2);
+	settextstyle(BOLD_FONT, HORIZ_DIR, 5);
+	setcolor(TEXT_TITLE_COLOR);
+	char NumPerTotal[10], data[10];
+	memset(NumPerTotal, 0, sizeof NumPerTotal);
+	char *maSach = CreateMaSach(DSDS.nodes[CurrentItem - 1]);
+	itoa(CurrentAddDMS, data, 10);
+	strcat(NumPerTotal, data);
+	strcat(NumPerTotal, "/");
+	itoa(TotalAddDMS, data, 10);
+	strcat(NumPerTotal, data);
+	outtextxy(w / 2 - textwidth(Title) / 2, h / 3 - height / 2 + 10, Title);
+	outtextxy(w / 2 - textwidth(NumPerTotal) / 2, h / 2 - h / 4 + 100 + DefaultButtonHeight * 6, NumPerTotal);
+	strcpy(ButtonThemMaSach.UserInput, maSach);
+	strcpy(ButtonThemTrangThaiSach.UserInput, "CHO MUON DUOC");
+	ButtonThemMaSach.draw();
+	ButtonThemTrangThaiSach.draw();
+	ButtonThemViTriSach.draw();
+	ButtonDongY.Init(0, w / 3 + w / 9 - DefaultButtonWidth / 2, h / 2 - h / 4 + 160 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "DONG Y", 0);
+	ButtonHuyBo.Init(0, w / 3 + w / 6 + DefaultButtonWidth / 2, h / 2 - h / 4 + 160 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "HUY BO", 0);
+	ButtonDongY.draw();
+	ButtonHuyBo.draw();
+}
 void DrawSelecteItemDocGia(DS_DocGia DSDG)
 {
 	if (CurrentItem > 0 && (ceil(CurrentItem * 1.0 / 10) == CurrentPage))
@@ -547,7 +577,7 @@ void RunDocGia()
 		DSDG.SortDocGia(0, DSDG.n - 1, 1);
 	else
 		DSDG.SortDocGia(0, DSDG.n - 1);
-	DrawItemDocGia(DSDG);				 // Ve item
+	DrawItemDocGia(DSDG);		 // Ve item
 	DrawSelecteItemDocGia(DSDG); // Ve selected item
 }
 
@@ -590,7 +620,7 @@ void RunThemDocGia()
 	const int width = w / 3, height = h / 4;
 	char Title[50] = "THEM DOC GIA";
 	ClearScreenXY(w / 2 - width / 2, h / 3 - height / 2, w / 2 + width / 2, h * 2 / 3 + height / 2);
-	setfillstyle(SOLID_FILL, BLUE);
+	setcolor(WHITE);
 	rectangle(w / 2 - width / 2, h / 3 - height / 2, w / 2 + width / 2, h * 2 / 3 + height / 2);
 	settextstyle(BOLD_FONT, HORIZ_DIR, 5);
 	setcolor(TEXT_TITLE_COLOR);
@@ -792,7 +822,8 @@ void RunSuaDauSach()
 	rectangle(w / 2 - width / 2, h / 3 - height / 2, w / 2 + width / 2, h * 2 / 3 + height / 2);
 	settextstyle(BOLD_FONT, HORIZ_DIR, 5);
 	setcolor(TEXT_TITLE_COLOR);
-	outtextxy(w / 2 - width / 2 + textwidth(Title) / 4, h / 3 - height / 2 + 10, Title);
+	// outtextxy(w / 2 - width / 2 + textwidth(Title) / 4, h / 3 - height / 2 + 10, Title);
+	outtextxy(w / 2 - textwidth(Title) / 2, h / 3 - height / 2 + 10, Title);
 	char temp[10];
 	if (strlen(ButtonSearchDauSach.UserInput) == 0)
 	{
@@ -1109,6 +1140,9 @@ void XemDauSachEvent()
 	ButtonEffect(ButtonBack);
 	ButtonEffect(ButtonPrev);
 	ButtonEffect(ButtonNext);
+	ButtonEffect(ButtonThemDMS);
+	ButtonEffect(ButtonXoaDMS);
+	ButtonEffect(ButtonSuaDMS);
 	if (GetAsyncKeyState(VK_LBUTTON))
 	{
 		if (ButtonBack.isMouseHover(mouseX, mouseY))
@@ -1125,11 +1159,79 @@ void XemDauSachEvent()
 				CurrentPageDMS--;
 			RunXemDauSach();
 		}
+		else if (ButtonThemDMS.isMouseHover(mouseX, mouseY))
+			SetMenuSelect(ButtonThemDMS.ID);
 		else
 		{
 			GetCurrentItem(mouseY);
-			cout << CurrentItemDMS << endl;
 			RunXemDauSach();
+		}
+	}
+}
+void ThemDMSEvent()
+{
+	ButtonEffect(ButtonDongY);
+	ButtonEffect(ButtonHuyBo);
+	if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		if (ButtonHuyBo.isMouseHover(mouseX, mouseY))
+		{
+			ButtonTemp = nullptr;
+			ClearEditButtonData(ButtonThemSoLuong);
+			SetMenuSelect(ButtonXemDauSach.ID);
+		}
+		else if (ButtonDongY.isMouseHover(mouseX, mouseY))
+		{
+			if (strlen(ButtonThemSoLuong.UserInput) != 0)
+			{
+				ButtonTemp = nullptr;
+				TotalAddDMS = atoi(ButtonThemSoLuong.UserInput);
+				ClearEditButtonData(ButtonThemSoLuong);
+				SetMenuSelect(99);
+			}
+			else
+				ThongBao("NHAP SO LUONG SACH");
+		}
+		else if (ButtonThemSoLuong.isMouseHover(mouseX, mouseY))
+		{
+			CLearLastCharInput();
+			ButtonTemp = &ButtonThemSoLuong;
+		}
+	}
+}
+void ThemSachEvent()
+{
+	ButtonEffect(ButtonDongY);
+	ButtonEffect(ButtonHuyBo);
+	if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		if (ButtonHuyBo.isMouseHover(mouseX, mouseY))
+			SetMenuSelect(ButtonXemDauSach.ID);
+		else if (ButtonDongY.isMouseHover(mouseX, mouseY))
+		{
+			ClearEditButtonData(ButtonThemViTriSach);
+			ButtonTemp = nullptr;
+			Sach *sach = new Sach;
+			strcpy(sach->MaSach, ButtonThemMaSach.UserInput);
+			sach->TrangThai = atoi(ButtonThemTrangThaiSach.UserInput);
+			strcpy(sach->ViTri, ButtonThemViTriSach.UserInput);
+			string str(sach->MaSach);
+			sach->id = atoi(GetNumberFromMaSach(str).c_str());
+			cout << sach->id << " " << sach->MaSach << " " << sach->TrangThai << " " << sach->ViTri << endl; 
+			if (CurrentAddDMS < TotalAddDMS)
+			{
+				CurrentAddDMS++;
+				ThongBao("THEM THANH CONG", 400, 150, 99);
+			}
+			else
+			{
+				ThongBao("THEM THANH CONG", 400, 150, ButtonXemDauSach.ID);
+			}
+		}
+		else if (ButtonThemViTriSach.isMouseHover(mouseX, mouseY))
+		{
+			CLearLastCharInput();
+			ButtonTemp = &ButtonThemViTriSach;
 		}
 	}
 }
@@ -1416,6 +1518,14 @@ boolean CheckInput(char c)
 		if (ButtonTemp->ID == ButtonSearchDauSach.ID)
 			return true;
 	}
+	else if (CurrentMenuId == ButtonThemDMS.ID)
+	{
+		if (ButtonTemp->ID == ButtonThemSoLuong.ID)
+		{
+			if (c > 48 && c <= 57)
+				return true;
+		}
+	}
 	else if (CurrentMenuId == ButtonThemDauSach.ID)
 	{
 		if (ButtonTemp->ID == ButtonThemISBN.ID)
@@ -1543,6 +1653,8 @@ void Event()
 	mouseY = mousey();
 	if (CurrentMenuId == 0)
 		MenuEvent();
+	else if (CurrentMenuId == ButtonOKThongBao.ID)
+		ThongBaoEvent();
 	else if (CurrentMenuId == ButtonDauSach.ID)
 		DauSachEvent();
 	else if (CurrentMenuId == ButtonThemDauSach.ID)
@@ -1551,8 +1663,10 @@ void Event()
 		SearchDauSachEvent();
 	else if (CurrentMenuId == ButtonXemDauSach.ID)
 		XemDauSachEvent();
-	else if (CurrentMenuId == ButtonOKThongBao.ID)
-		ThongBaoEvent();
+	else if (CurrentMenuId == ButtonThemDMS.ID)
+		ThemDMSEvent();
+	else if (CurrentMenuId == 99)
+		ThemSachEvent();
 	else if (CurrentMenuId == ButtonXoaDauSach.ID)
 		XoaDauSachEvent();
 	else if (CurrentMenuId == ButtonSuaDauSach.ID)
@@ -1577,7 +1691,7 @@ void InDMS()
 		DM_Sach *temp = DSDS.nodes[i]->DS_Sach;
 		for (temp; temp != nullptr; temp = temp->next)
 		{
-			cout << temp->sach->MaSach << " " << temp->sach->TrangThai << " " << temp->sach->ViTri << endl;
+			cout << temp->sach->id << " " << temp->sach->MaSach << " " << temp->sach->TrangThai << " " << temp->sach->ViTri << endl;
 		}
 		cout << "-------------------" << endl;
 	}

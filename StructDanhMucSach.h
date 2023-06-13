@@ -9,6 +9,12 @@ struct Sach
   int TrangThai;
   char ViTri[30];
   // construction
+  Sach () {}
+  Sach (char maSach[15], int trangThai, char viTri[30]) {
+    strcpy(MaSach, maSach);
+    TrangThai = trangThai;
+    strcpy(ViTri, viTri);
+  }
 };
 // lien ket don
 struct DM_Sach
@@ -82,47 +88,4 @@ DM_Sach *GetDM_Sach(DM_Sach *First, int id)
       node = node->next;
   return node;
 }
-
-// lay node sach theo ma sach
-// DM_Sach *GetDM_Sach(DM_Sach *First, char *masach)
-// {
-//   for (DM_Sach *node = First; node != nullptr; node = node->next)
-//   {
-//     if (strcmp(node->sach.MaSach, masach) == 0)
-//       return node;
-//   }
-//   return nullptr;
-// }
-
-// lay sach theo ma sach
-// Sach *GetSach(DM_Sach *First, char *masach)
-//{
-//  DM_Sach *node = GetDM_Sach(First, masach);
-//  if (node)
-//    return node->sach;
-//  else
-//    return nullptr;
-//}
-
-// xoa sach theo ma sach
-void DeleteDM_Sach(DM_Sach *&First, char *masach)
-{
-  DM_Sach *node = First;
-  if (strcmp(First->sach->MaSach, masach) == 0)
-  {
-    First = nullptr;
-    delete node;
-  }
-  else
-    for (node->next != nullptr, node = node->next)
-    {
-      if (strcmp(node->next->sach->MaSach, masach) == 0)
-      {
-        DM_Sach *nodedel = node->next;
-        node->next = node->next->next;
-        delete nodedel;
-      }
-    }
-}
-
 // #endif

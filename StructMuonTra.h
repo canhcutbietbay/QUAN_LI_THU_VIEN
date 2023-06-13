@@ -138,7 +138,7 @@ bool MuonQuaHan(DateTime *NgayMuon, DateTime *NgayTra);
 //
 bool MuonQuaHan(DateTime *NgayMuon, DateTime *NgayTra)
 {
-    if (NgayTra->Ngay != 0)
+    if (NgayTra->Day != 0)
         return false;
     else if (NgayMuon->GetSoNgayMuon() > 7)
         return true;
@@ -172,36 +172,43 @@ bool MuonQuaHan(DateTime *NgayMuon, DateTime *NgayTra)
 //     }
 // }
 //
-int DK_MuonSach(NodeMuonTra *firstnode)
-{
-    if (firstnode == nullptr)
-        return 0;
-    else
-    {
-        NodeMuonTra *node = firstnode;
-        int DangMuon = 0;
-        for (node->Right != nullptr, node = node->Right)
-        {
-            if (node->value->TrangThai == 0)
-            {
-                DangMuon++;
-                int k = 0;
-                while (1)
-                {
-                    if (ms[k] == node->value->MaSach[k])
-                        if (ms[k] == '-')
-                            return 3;
-                        else
-                            k++;
-                    else
-                        break;
-                }
-            }
-            if (MuonQuaHan(node->value->NgayMuon, node->value->NgayTra))
-                return 2;
-        }
-        if (DangMuon == 3)
-            return 1;
-        return 0;
-    }
-}
+
+/*
+    1-3 sach
+    2- 1 sach qua 7 ngay
+    3- chung 1 dau sach
+*/
+
+// int DK_MuonSach(NodeMuonTra *firstnode)
+// {
+//     if (firstnode == nullptr)
+//         return 0;
+//     else
+//     {
+//         NodeMuonTra *node = firstnode;
+//         int DangMuon = 0;
+//         for (node->Right != nullptr, node = node->Right)
+//         {
+//             if (node->value->TrangThai == 0)
+//             {
+//                 DangMuon++;
+//                 int k = 0;
+//                 while (1)
+//                 {
+//                     if (ms[k] == node->value->MaSach[k])
+//                         if (ms[k] == '-')
+//                             return 3;
+//                         else
+//                             k++;
+//                     else
+//                         break;
+//                 }
+//             }
+//             if (MuonQuaHan(node->value->NgayMuon, node->value->NgayTra))
+//                 return 2;
+//         }
+//         if (DangMuon == 3)
+//             return 1;
+//         return 0;
+//     }
+// }
