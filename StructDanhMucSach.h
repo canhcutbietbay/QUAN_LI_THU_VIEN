@@ -9,8 +9,9 @@ struct Sach
   int TrangThai;
   char ViTri[30];
   // construction
-  Sach () {}
-  Sach (char maSach[15], int trangThai, char viTri[30]) {
+  Sach() {}
+  Sach(char maSach[15], int trangThai, char viTri[30])
+  {
     strcpy(MaSach, maSach);
     TrangThai = trangThai;
     strcpy(ViTri, viTri);
@@ -63,6 +64,19 @@ void InsertAfter_DM_Sach(DM_Sach *&node, Sach *sach)
   node->next = newSach;
 }
 
+void InsertAfter_DM_Sach(DauSach *&node, Sach *sach)
+{
+  if (node->DS_Sach == nullptr)
+    InsertFirst_DM_Sach(node->DS_Sach, sach);
+  else
+  {
+    DM_Sach *find = node->DS_Sach;
+    for (int i = 0; i < node->DS_Sach->id; i++)
+      find = find->next;
+    InsertAfter_DM_Sach(node->DS_Sach, sach);
+    node->TongSoLuong++;
+  }
+}
 // them NodeSach o cuoi
 void InsertLast_DM_Sach(DM_Sach *&First, Sach *sach)
 {
