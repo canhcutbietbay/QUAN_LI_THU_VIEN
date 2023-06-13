@@ -414,6 +414,7 @@ void GetFromTree(NodeTheDocGia *root, DS_DocGia &DSDG)
 	GetFromTree(root->right, DSDG);
 }
 
+<<<<<<< Updated upstream
 void GetDSMuon(NodeTheDocGia *node)
 {
 	if (node == nullptr)
@@ -431,3 +432,27 @@ void GetDSMuon(NodeTheDocGia *node)
 		}
 	}
 }
+=======
+// DS_MuonTra *GetDSMuon(NodeTheDocGia *node)
+// {
+// 	if (node == nullptr)
+// 		return;
+// 	else
+// 	{
+// 		NodeMuonTra *check = node->DocGia.DS_MT->First;
+// 		int k = 0;
+// 		while (check != nullptr)
+// 		{
+// 			if (check->value->TrangThai == 0)
+// 			{
+// 				node->DocGia.DS_Muon[k] = check->value;
+// 				k++;
+// 				if (k == 3)
+// 					break;
+// 			}
+// 			check = check->Right;
+// 		}
+// 		return node->DocGia.DS_Muon;
+// 	}
+// }
+>>>>>>> Stashed changes
