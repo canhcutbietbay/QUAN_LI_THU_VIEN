@@ -105,24 +105,24 @@ DM_Sach *GetDM_Sach(DM_Sach *First, int id)
 //}
 
 // xoa sach theo ma sach
-void DeleteDM_Sach(DM_Sach *&First, char *masach)
-{
-  DM_Sach *node = First;
-  if (strcmp(First->sach->id, masach) == 0)
-  {
-    First = nullptr;
-    delete node;
-  }
-  else
-    for (node->next != nullptr, node = node->next)
-    {
-      if (strcmp(node->next->sach->id, masach) == 0)
-      {
-        DM_Sach *nodedel = node->next;
-        node->next = node->next->next;
-        delete nodedel;
-      }
-    }
-}
+//void DeleteDM_Sach(DM_Sach *&First, char *masach)
+//{
+//  DM_Sach *node = First;
+//  if (strcmp(First->sach->id, masach) == 0)
+//  {
+//    First = nullptr;
+//    delete node;
+//  }
+//  else
+//    for (node->next != nullptr, node = node->next)
+//    {
+//      if (strcmp(node->next->sach->id, masach) == 0)
+//      {
+//        DM_Sach *nodedel = node->next;
+//        node->next = node->next->next;
+//        delete nodedel;
+//      }
+//    }
+//}
 
 // #endif

@@ -150,16 +150,17 @@ void GetDMS(DS_DMS &DSDMS, DauSach *dauSach)
         DSDMS.InsertLastDMS(DSDMS, temp->sach);
 }
 // #endif
-DM_Sach *CreateMaSach(DauSach *&ds)
+DM_Sach *CreateMaSach(DauSach *&ds, Sach *sach)
 {
     DM_Sach *node = ds->DS_Sach;
     // TH chua co sach
     if (node == nullptr)
     {
-        node = CreateDM_Sach();
+        node = CreateDM_Sach(sach);
         node->sach->id = 1;
         char *ms = ds->ISBN;
-        node->sach->MaSach = strcat(ms, "-01");
+        strcat(ms, "-01");
+        strcpy(node->sach->MaSach, ms);
         return node;
     }
     else
@@ -168,7 +169,7 @@ DM_Sach *CreateMaSach(DauSach *&ds)
         {
             if (node->next->sach->id - node->sach->id != 1)
             {
-                DM_Sach *newnode = CreateDM_Sach();
+                DM_Sach *newnode = CreateDM_Sach(sach);
                 newnode->next = node->next;
                 node->next = newnode;
                 newnode->sach->id = node->sach->id + 1;
@@ -177,15 +178,17 @@ DM_Sach *CreateMaSach(DauSach *&ds)
                 if (newnode->sach->id < 10)
                 {
                     ms = strcat(ms, "-0");
-                    itoa(newnode->id, cid, 10);
-                    newnode->sach->MaSach = strcat(ms, cid);
+                    itoa(newnode->sach->id, cid, 10);
+                    strcat(ms, cid);
+                    strcpy(node->sach->MaSach, ms);
                     return newnode;
                 }
                 else
                 {
                     ms = strcat(ms, "-");
-                    itoa(newnode->id, cid, 10);
-                    newnode->sach->MaSach = strcat(ms, cid);
+                    itoa(newnode->sach->id, cid, 10);
+                    strcat(ms, cid);
+                    strcpy(node->sach->MaSach, ms);
                     return newnode;
                 }
             }
@@ -193,22 +196,24 @@ DM_Sach *CreateMaSach(DauSach *&ds)
         }
     // TH them sach vao id ke tiep
     DM_Sach *newnode = node->next;
-    newnode = CreateDM_Sach();
+    newnode = CreateDM_Sach(sach);
     newnode->sach->id = node->sach->id + 1;
     char *ms = ds->ISBN;
     char *cid;
     if (newnode->sach->id < 10)
     {
         ms = strcat(ms, "-0");
-        itoa(newnode->id, cid, 10);
-        newnode->sach->MaSach = strcat(ms, cid);
+        itoa(newnode->sach->id, cid, 10);
+        strcat(ms, cid);
+        strcpy(node->sach->MaSach, ms);
         return newnode;
     }
     else
     {
         ms = strcat(ms, "-");
-        itoa(newnode->id, cid, 10);
-        newnode->sach->MaSach = strcat(ms, cid);
+        itoa(newnode->sach->id, cid, 10);
+        strcat(ms, cid);
+        strcpy(node->sach->MaSach, ms);
         return newnode;
     }
 }
