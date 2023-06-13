@@ -45,6 +45,29 @@ int RanNewMT(ArrRanMT &mathe)
 	return (i + 9999);
 }
 //
+struct DSMT
+{
+	int n;
+	MuonTra *nodes[3];
+	DSMT()
+	{
+		n = 0;
+	}
+	~DSMT() {}
+};
+
+// su dung khi doc file
+void InsertLastDSMT(DSMT &DSMuon, MuonTra *muontra)
+{
+	if (DSMT.n > 3)
+		printf("DSMuon day \n");
+	else
+	{
+		DSMT.nodes[DSMT.n] = muontra;
+		DSMT.n++;
+	}
+}
+//
 struct TheDocGia
 {
 	int MaThe;
@@ -61,8 +84,7 @@ struct TheDocGia
 	 * 1: Hoat dong
 	 */
 	DS_MuonTra *DS_MT;
-	int TongSoLuong;
-	MuonTra *DS_Muon[3];
+	DSMT *Muon;
 	// constructor
 	TheDocGia() {}
 	TheDocGia(int mathe, char ho[], char ten[], int phai, int trangthai)
@@ -392,25 +414,20 @@ void GetFromTree(NodeTheDocGia *root, DS_DocGia &DSDG)
 	GetFromTree(root->right, DSDG);
 }
 
-DS_MuonTra *GetDSMuon(NodeTheDocGia *node)
+void GetDSMuon(NodeTheDocGia *node)
 {
 	if (node == nullptr)
 		return;
 	else
 	{
 		NodeMuonTra *check = node->DocGia.DS_MT->First;
-		int k = 0;
 		while (check != nullptr)
 		{
 			if (check->value->TrangThai == 0)
 			{
-				node->DocGia.DS_Muon[k] = check->value;
-				k++;
-				if (k == 3)
-					break;
+				InsertLastDSMT(node->DocGia.Muon, check->value);
+				check = check->Right;
 			}
-			check = check->Right;
 		}
-		return node->DocGia.DS_Muon;
 	}
 }
