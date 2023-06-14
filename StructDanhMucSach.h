@@ -39,16 +39,7 @@ void DeleteDM_Sach(DM_Sach *First, char *masach);
 DM_Sach *MaSach(DM_Sach dms, int addval);
 /*
  */
-// check
-bool inside(char* S, char* s)
-{
-    int k=0;
-    while (S[k] == s[k])
-        if (S[k+1] == '-')
-            return true;
-        else k++;
-    return false;
-}
+
 // new DM_Sach;
 DM_Sach *CreateDM_Sach(Sach *sach)
 {
@@ -98,17 +89,15 @@ DM_Sach *GetDM_Sach(DM_Sach *First, int id)
       node = node->next;
   return node;
 }
-// xet nodesach
-int checknodeSach(DM_Sach *dms, char* masach)
-{
-  DM_Sach *temp = dms;
-  while (temp)
-  {
-    if (!strcmp(masach, temp->sach->MaSach))
-      return temp->sach->TrangThai;
-    temp = temp->next;
-  }
-  return 3;
-}
-
+// // lay node sach voi masach
+// DM_Sach *GetDM_Sach(DM_Sach *First, char* masach)
+// {
+//   DM_Sach *node = First;
+//   while (node) // ds tinh tu 1
+//     if (!strcmp(masach, node->sach->MaSach))
+//       return node;
+//     else
+//       node = node->next;
+//   return node;
+// }
 // #endif

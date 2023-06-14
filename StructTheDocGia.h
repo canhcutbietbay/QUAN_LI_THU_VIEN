@@ -455,3 +455,145 @@ void GetFromTree(NodeTheDocGia *root, DS_DocGia &DSDG)
 // 	}
 // }
 // }
+/*
+------------------
+MUON & TRA SACH
+------------------
+*/
+// xet nodesach
+// int checknodeSach(DM_Sach *dms, char* masach)
+// {
+//   DM_Sach *temp = dms;
+//   while (temp)
+//   {
+//     if (!strcmp(masach, temp->sach->MaSach))
+//       return temp->sach->TrangThai;
+//     temp = temp->next;
+//   }
+//   return 3;
+// }
+
+// // Muon Qua Han
+// bool MuonQuaHan(DateTime *NgayMuon, DateTime *NgayTra)
+// {
+//     if (NgayTra->Day != 0)
+//         return false;
+//     else if (NgayMuon->GetSoNgayMuon() > 7)
+//         return true;
+//     else
+//         return false;
+// }
+// // check
+// bool inside(char* S, char* s)
+// {
+//     int k=0;
+//     while (S[k] == s[k])
+//         if (S[k+1] == '-')
+//             return true;
+//         else k++;
+//     return false;
+// }
+// int TTSach(DS_DauSach ds, char* masach)
+// {
+//     for (int i=0; i < ds.n; i++)
+//     {
+//         if (inside(masach, ds.nodes[i]->isbn))
+//         return checknodeSach(ds.nodes[i]->DS_Sach, masach);
+//     }
+// }
+// // lay dau sach tu masach
+// DM_Sach *GetSach(DS_DauSach ds, char* masach)
+// {
+//     for (int i=0; i < ds.n; i++)
+//     {
+//         if (inside(masach, ds.nodes[i]->isbn))
+//         	return GetDM_Sach(ds.nodes[i]->DS_Sach, masach);
+//     }
+// 	return nullptr;
+// }
+// /*
+//     0- co the muon sach
+//     1- muon 3 sach
+//     2- muon 1 sach qua 7 ngay
+//     3- chung 1 dau sach
+//     4- sach da cho muon
+//     5- sach da thanh li
+//     6- khong co masach nay
+// */
+
+// int DK_MuonSach(NodeMuonTra *firstnode, char* ms, DS_DauSach DSDS)
+// {
+//     if (firstnode == nullptr)
+//     {
+//         int tt = TTSach(DSDS, masach);
+//         return (tt == 0) ? 0 : (tt+3);
+//     }
+//     else
+//     {
+//         NodeMuonTra *node = new NodeMuonTra;
+//         node = firstnode;
+//         int DangMuon = 0;
+//         for (;node != nullptr; node = node->Right)
+//         {
+//             if (node->value->TrangThai == 0)
+//             {
+//                 DangMuon++;
+//                 if (inside(ms, node->value->MaSach))
+//                     return 3;
+//                 if (MuonQuaHan(&(node->value->NgayMuon), &(node->value->NgayTra)))
+//                 return 2;
+//             }
+//         }
+//         if (DangMuon == 3)
+//             return 1;
+//         int tt = TTSach(DSDS, masach);
+//         return (tt == 0) ? 0 : (tt+3); 
+//     }
+// }
+// // MUONSACH
+// int MuonSach(TheDocGia *thedocgia, char* masach, DS_DauSach &DSDS)
+// {
+// 	if (thedocgia->TrangThai == 0)
+// 		return;// THE BI KHOA
+// 	int TH = DK_MuonSach(thedocgia->DS_MT->First, masach, DSDS);
+// 	if (TH == 0)
+// 	{
+// 		//lay sach muon
+// 		DM_Sach *SachMuon = GetSach(DSDS, masach);
+// 		//doi trang thai sach thanh DA DUOC MUON
+// 		SachMuon->sach->TrangThai = 1;
+// 		//thiet lap muon tra 
+// 		MuonTra *newnode = new MuonTra;
+// 		newnode->MaSach = masach;
+// 		newnode->TrangThai = 0;
+// 		newnode->NgayMuon.GetTimeNow();
+// 		newnode->NgayTra.Day = newnode->NgayTra.Month = newnode->NgayTra.Year = 0;
+// 		//them vao DSMT
+// 		InsertLast_DM_MuonTra(thedocgia->DS_MT, newnode);
+// 		//them vao DSMUON
+// 		thedocgia->Muon->nodes[thedocgia->Muon->n] = newnode;
+// 		thedocgia->Muon->n++;
+// 	}
+// 	else return TH;
+// }
+// // TRASACH
+// int TraSach(TheDocGia *thedocgia, char* masach, DS_DauSach &DSDS)
+// {
+// 	NodeMuonTra *find = thedocgia->DS_MT->First;
+// 	// tim sach da muon
+// 	while (find)
+// 		if (!strcmp(masach, find->value->MaSach))
+// 		{
+// 			// chinh sua DSMT & Muon cua DocGia
+// 			find->value->TrangThai = 1;
+// 			find->value->NgayTra.GetTimeNow();
+// 			thedocgia->Muon->nodes[thedocgia->Muon->n - 1] = nullptr;
+// 			thedocgia->Muon->n--;
+// 			// tra sach ve trang thai co the muon
+// 			DM_Sach *SachTra = GetSach(DSDS, masach);
+// 			SachTra->sach->TrangThai = 0;
+// 			return 1;
+// 		}
+// 		else find = find->Right;
+// 	return 0;
+// }
