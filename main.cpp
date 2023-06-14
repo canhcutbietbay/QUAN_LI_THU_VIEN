@@ -195,31 +195,31 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
 		FileMuonTra >> theDocGia.TongSoLuong;
 		FileMuonTra.ignore();
 		DS_MuonTra *DSMT = new DS_MuonTra;
-			for (int j = 0; j < theDocGia.TongSoLuong; ++j)
+		for (int j = 0; j < theDocGia.TongSoLuong; ++j)
+		{
+			MuonTra *node = new MuonTra;
+			getline(FileMuonTra, data);
+			strcpy(node->MaSach, data.c_str());
+			getline(FileMuonTra, data);
+			node->TrangThai = atoi(data.c_str());
+			getline(FileMuonTra, data);
+			node->NgayMuon.Day = atoi(data.substr(0, 2).c_str());
+			node->NgayMuon.Month = atoi(data.substr(3, 2).c_str());
+			node->NgayMuon.Year = atoi(data.substr(6, 4).c_str());
+			getline(FileMuonTra, data);
+			if (data != "0")
 			{
-				MuonTra *node = new MuonTra;
-				getline(FileMuonTra, data);
-				strcpy(node->MaSach, data.c_str());
-				getline(FileMuonTra, data);
-				node->TrangThai = atoi(data.c_str());
-				getline(FileMuonTra, data);
-				node->NgayMuon.Day = atoi(data.substr(0, 2).c_str());
-				node->NgayMuon.Month = atoi(data.substr(3, 2).c_str());
-				node->NgayMuon.Year = atoi(data.substr(6, 4).c_str());
-				getline(FileMuonTra, data);
-				if (data != "0")
-				{
-					node->NgayTra.Day = atoi(data.substr(0, 2).c_str());
-					node->NgayTra.Month = atoi(data.substr(3, 2).c_str());
-					node->NgayTra.Year = atoi(data.substr(6, 4).c_str());
-				}
-				else
-				{
-					node->NgayTra.Day = 0;
-					node->NgayTra.Month = 0;
-					node->NgayTra.Year = 0;
-				}
-				InsertLast_DM_MuonTra(DSMT, node);
+				node->NgayTra.Day = atoi(data.substr(0, 2).c_str());
+				node->NgayTra.Month = atoi(data.substr(3, 2).c_str());
+				node->NgayTra.Year = atoi(data.substr(6, 4).c_str());
+			}
+			else
+			{
+				node->NgayTra.Day = 0;
+				node->NgayTra.Month = 0;
+				node->NgayTra.Year = 0;
+			}
+			InsertLast_DM_MuonTra(DSMT, node);
 		}
 		theDocGia.DS_MT = DSMT;
 		TreeAVLDocGia = InsertDocGia(TreeAVLDocGia, theDocGia);
@@ -744,10 +744,6 @@ void RunXemDauSach()
 	strcat(title, dauSach->TenSach);
 	outtextxy(w / 2 - textwidth(title) / 2, textheight("A") - 10, title);
 	GetDMS(DSDMS, dauSach); // Get DMS cua Dau Sach hien tai
-	for (int i = 0; i < DSDMS.n; ++i){
-		cout << DSDMS.nodes[i]->MaSach << " " << DSDMS.nodes[i]->TrangThai << " " << DSDMS.nodes[i]->id << endl;
-	}
-	cout << "--------------" << endl;
 	memset(NumOfPage, 0, sizeof NumOfPage);
 	string temp;
 	TotalPage = ceil(dauSach->TongSoLuong * 1.0 / 10);
@@ -759,12 +755,12 @@ void RunXemDauSach()
 	outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
 	DrawItemDMS(DSDMS);
 	DrawSelectedItemDMS(DSDMS);
-	if (CurrentPageDMS > TotalPage)
-	{
-		while (CurrentPageDMS > TotalPage)
-			CurrentPageDMS--;
-		RunXemDauSach();
-	}
+	// if (CurrentPageDMS > TotalPage)
+	// {
+	// 	while (CurrentPageDMS > TotalPage)
+	// 		CurrentPageDMS--;
+	// 	RunXemDauSach();
+	// }
 }
 
 void RunXoaDauSach()
@@ -1247,7 +1243,8 @@ void ThemSachEvent()
 	ButtonEffect(ButtonHuyBo);
 	if (GetAsyncKeyState(VK_LBUTTON))
 	{
-		if (ButtonHuyBo.isMouseHover(mouseX, mouseY)){
+		if (ButtonHuyBo.isMouseHover(mouseX, mouseY))
+		{
 			ButtonTemp = nullptr;
 			SetMenuSelect(ButtonXemDauSach.ID);
 		}
@@ -1261,8 +1258,8 @@ void ThemSachEvent()
 			strcpy(sach->ViTri, ButtonThemViTriSach.UserInput);
 			string str(sach->MaSach);
 			sach->id = atoi(GetNumberFromMaSach(str).c_str());
-			cout << sach->id << " " << sach->MaSach << " " << sach->TrangThai << " " << sach->ViTri << endl;
-			InsertAfter_DM_Sach(DSDS.nodes[CurrentItem-1], sach);
+			// cout << sach->id << " " << sach->MaSach << " " << sach->TrangThai << " " << sach->ViTri << endl;
+			InsertAfter_DM_Sach(DSDS.nodes[CurrentItem - 1], sach);
 			if (CurrentAddDMS < TotalAddDMS)
 			{
 				CurrentAddDMS++;

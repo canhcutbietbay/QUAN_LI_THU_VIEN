@@ -152,23 +152,23 @@ void GetDMS(DS_DMS &DSDMS, DauSach *dauSach)
 
 void InsertAfter_DM_Sach(DauSach *&node, Sach *sach)
 {
-  if (node->DS_Sach == nullptr)
-    InsertFirst_DM_Sach(node->DS_Sach, sach);
-  else
-  {
-    DM_Sach *find = node->DS_Sach;
-    for (int i = 0; i < sach->id-1; i++)
-      find = find->next;
-    InsertAfter_DM_Sach(find, sach);
     node->TongSoLuong++;
-  }
+    if (node->DS_Sach == nullptr)
+        InsertFirst_DM_Sach(node->DS_Sach, sach);
+    else
+    {
+        DM_Sach *find = node->DS_Sach;
+        for (int i = 0; i < sach->id - 1; i++)
+            find = find->next;
+        InsertAfter_DM_Sach(find, sach);
+    }
 }
 
 char *CreateMaSach(DauSach *&ds)
 {
     DM_Sach *node = ds->DS_Sach;
     char *ms = new char;
-    ms = ds->ISBN;
+    strcpy(ms, ds->ISBN);
     char cid[3];
     // TH chua co sach
     if (node == nullptr)

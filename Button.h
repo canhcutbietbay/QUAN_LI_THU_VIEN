@@ -92,7 +92,6 @@ struct EditButton{
 		// Ve background 
 		setfillstyle(SOLID_FILL, BG_EDITTEXT_COLOR);
 		bar(xPos+150, yPos, xPos+Width, yPos+Height);
-
 		if(strlen(UserInput) == 0){
 			// Ve hint 
 			setcolor(TEXT_EDIITEXT_HINT_COLOR);
