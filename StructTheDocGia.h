@@ -57,16 +57,16 @@ struct DSMT
 };
 
 // su dung khi doc file
-void InsertLastDSMT(DSMT &DSMuon, MuonTra *muontra)
-{
-	if (DSMT.n > 3)
-		printf("DSMuon day \n");
-	else
-	{
-		DSMT.nodes[DSMT.n] = muontra;
-		DSMT.n++;
-	}
-}
+// void InsertLastDSMT(DSMT &DSMuon, MuonTra *muontra)
+// {
+// 	if (DSMT.n > 3)
+// 		printf("DSMuon day \n");
+// 	else
+// 	{
+// 		DSMT.nodes[DSMT.n] = muontra;
+// 		DSMT.n++;
+// 	}
+// }
 //
 struct TheDocGia
 {
@@ -83,6 +83,7 @@ struct TheDocGia
 	 * 0: Khoa
 	 * 1: Hoat dong
 	 */
+	int TongSoLuong;
 	DS_MuonTra *DS_MT;
 	DSMT *Muon;
 	// constructor
@@ -414,25 +415,23 @@ void GetFromTree(NodeTheDocGia *root, DS_DocGia &DSDG)
 	GetFromTree(root->right, DSDG);
 }
 
-<<<<<<< Updated upstream
-void GetDSMuon(NodeTheDocGia *node)
-{
-	if (node == nullptr)
-		return;
-	else
-	{
-		NodeMuonTra *check = node->DocGia.DS_MT->First;
-		while (check != nullptr)
-		{
-			if (check->value->TrangThai == 0)
-			{
-				InsertLastDSMT(node->DocGia.Muon, check->value);
-				check = check->Right;
-			}
-		}
-	}
-}
-=======
+// void GetDSMuon(NodeTheDocGia *node)
+// {
+// 	if (node == nullptr)
+// 		return;
+// 	else
+// 	{
+// 		NodeMuonTra *check = node->DocGia.DS_MT->First;
+// 		while (check != nullptr)
+// 		{
+// 			if (check->value->TrangThai == 0)
+// 			{
+// 				InsertLastDSMT(node->DocGia.Muon, check->value);
+// 				check = check->Right;
+// 			}
+// 		}
+// 	}
+// }
 // DS_MuonTra *GetDSMuon(NodeTheDocGia *node)
 // {
 // 	if (node == nullptr)
@@ -455,4 +454,4 @@ void GetDSMuon(NodeTheDocGia *node)
 // 		return node->DocGia.DS_Muon;
 // 	}
 // }
->>>>>>> Stashed changes
+// }

@@ -55,8 +55,8 @@ struct MuonTra
 struct NodeMuonTra
 {
     MuonTra *value;
-    NodeMuonTra *Left;
-    NodeMuonTra *Right;
+    NodeMuonTra *Left = nullptr;
+    NodeMuonTra *Right = nullptr;
 };
 struct DS_MuonTra
 {
@@ -66,7 +66,7 @@ struct DS_MuonTra
 
 NodeMuonTra *CreateNodeMuonTra(MuonTra *muonTra)
 {
-    NodeMuonTra *NewNode;
+    NodeMuonTra *NewNode = new NodeMuonTra;
     NewNode->value = muonTra;
     NewNode->Left = NewNode->Right = nullptr;
     return NewNode;

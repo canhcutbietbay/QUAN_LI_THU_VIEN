@@ -160,15 +160,21 @@ NodeTheDocGia *TreeAVLDocGia;
 DS_DocGia DSDG;
 void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
 {
-	fstream FileDocGia;
+	fstream FileDocGia, FileMuonTra;
 	FileDocGia.open("data_docgia.txt", ios::in);
 	if (!FileDocGia.is_open())
 	{
 		printf("Loi mo File de doc \n");
 		return;
 	}
+	FileMuonTra.open("data_muontra.txt", ios::in);
+	if (!FileMuonTra.is_open())
+	{
+		printf("Loi mo File de doc \n");
+		return;
+	}
 	string data;
-	int n;
+	int n, temp;
 	FileDocGia >> n;
 	FileDocGia.ignore();
 	for (int i = 0; i < n; i++)
@@ -185,9 +191,40 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
 		theDocGia.Phai = atoi(data.c_str());
 		getline(FileDocGia, data);
 		theDocGia.TrangThai = atoi(data.c_str());
+		FileMuonTra >> theDocGia.TongSoLuong;
+		FileMuonTra.ignore();
+		DS_MuonTra *DSMT = new DS_MuonTra;
+			for (int j = 0; j < theDocGia.TongSoLuong; ++j)
+			{
+				MuonTra *node = new MuonTra;
+				getline(FileMuonTra, data);
+				strcpy(node->MaSach, data.c_str());
+				getline(FileMuonTra, data);
+				node->TrangThai = atoi(data.c_str());
+				getline(FileMuonTra, data);
+				node->NgayMuon.Day = atoi(data.substr(0, 2).c_str());
+				node->NgayMuon.Month = atoi(data.substr(3, 2).c_str());
+				node->NgayMuon.Year = atoi(data.substr(6, 4).c_str());
+				getline(FileMuonTra, data);
+				if (data != "0")
+				{
+					node->NgayTra.Day = atoi(data.substr(0, 2).c_str());
+					node->NgayTra.Month = atoi(data.substr(3, 2).c_str());
+					node->NgayTra.Year = atoi(data.substr(6, 4).c_str());
+				}
+				else
+				{
+					node->NgayTra.Day = 0;
+					node->NgayTra.Month = 0;
+					node->NgayTra.Year = 0;
+				}
+				InsertLast_DM_MuonTra(DSMT, node);
+		}
+		theDocGia.DS_MT = DSMT;
 		TreeAVLDocGia = InsertDocGia(TreeAVLDocGia, theDocGia);
 	}
 	FileDocGia.close();
+	FileMuonTra.close();
 }
 void GetDataFromFile()
 {
@@ -1217,7 +1254,7 @@ void ThemSachEvent()
 			strcpy(sach->ViTri, ButtonThemViTriSach.UserInput);
 			string str(sach->MaSach);
 			sach->id = atoi(GetNumberFromMaSach(str).c_str());
-			cout << sach->id << " " << sach->MaSach << " " << sach->TrangThai << " " << sach->ViTri << endl; 
+			cout << sach->id << " " << sach->MaSach << " " << sach->TrangThai << " " << sach->ViTri << endl;
 			if (CurrentAddDMS < TotalAddDMS)
 			{
 				CurrentAddDMS++;
@@ -1696,12 +1733,28 @@ void InDMS()
 		cout << "-------------------" << endl;
 	}
 }
+void InMuonTra(NodeTheDocGia *&TreeAVLDocGia) // Inorder
+{
+	if (TreeAVLDocGia != nullptr)
+	{
+		InMuonTra(TreeAVLDocGia->left);
+		NodeMuonTra *node = TreeAVLDocGia->DocGia.DS_MT->First;
+		cout << TreeAVLDocGia->DocGia.Ten << endl;
+		for (node; node != nullptr; node = node->Right)
+		{
+			cout << node->value->MaSach << " " << node->value->TrangThai << endl;
+		}
+		cout << "--------------------" << endl;
+		InMuonTra(TreeAVLDocGia->right);
+	}
+}
 int main()
 {
 	initwindow(w, h, AppTitle);
 	DrawMenu();
 	GetDataFromFile();
 	// InDMS();
+	InMuonTra(TreeAVLDocGia);
 	while (1)
 	{
 		Event();
