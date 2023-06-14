@@ -173,42 +173,50 @@ bool MuonQuaHan(DateTime *NgayMuon, DateTime *NgayTra)
 // }
 //
 
+int TTSach(DS_DauSach ds, char* masach)
+{
+    for (int i=0; i < ds.n; i++)
+    {
+        if (inside(masach, ds.nodes[i]->isbn))
+        return checknodeSach(ds.nodes[i]->DS_Sach, masach);
+    }
+}
 /*
-    1-3 sach
-    2- 1 sach qua 7 ngay
+    0- co the muon sach
+    1- muon 3 sach
+    2- muon 1 sach qua 7 ngay
     3- chung 1 dau sach
+    4- sach da cho muon
+    5- sach da thanh li
+    6- khong co masach nay
 */
 
-// int DK_MuonSach(NodeMuonTra *firstnode)
-// {
-//     if (firstnode == nullptr)
-//         return 0;
-//     else
-//     {
-//         NodeMuonTra *node = firstnode;
-//         int DangMuon = 0;
-//         for (node->Right != nullptr, node = node->Right)
-//         {
-//             if (node->value->TrangThai == 0)
-//             {
-//                 DangMuon++;
-//                 int k = 0;
-//                 while (1)
-//                 {
-//                     if (ms[k] == node->value->MaSach[k])
-//                         if (ms[k] == '-')
-//                             return 3;
-//                         else
-//                             k++;
-//                     else
-//                         break;
-//                 }
-//             }
-//             if (MuonQuaHan(node->value->NgayMuon, node->value->NgayTra))
-//                 return 2;
-//         }
-//         if (DangMuon == 3)
-//             return 1;
-//         return 0;
-//     }
-// }
+int DK_MuonSach(NodeMuonTra *firstnode, char* ms, DS_DauSach DSDS)
+{
+    if (firstnode == nullptr)
+    {
+        int tt = TTSach(DSDS, masach);
+        return (tt == 0) ? 0 : (tt+3);
+    }
+    else
+    {
+        NodeMuonTra *node = new NodeMuonTra;
+        node = firstnode;
+        int DangMuon = 0;
+        for (;node != nullptr; node = node->Right)
+        {
+            if (node->value->TrangThai == 0)
+            {
+                DangMuon++;
+                if (inside(ms, node->value->MaSach))
+                    return 3;
+                if (MuonQuaHan(&(node->value->NgayMuon), &(node->value->NgayTra)))
+                return 2;
+            }
+        }
+        if (DangMuon == 3)
+            return 1;
+        int tt = TTSach(DSDS, masach);
+        return (tt == 0) ? 0 : (tt+3); 
+    }
+}
