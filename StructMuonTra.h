@@ -145,33 +145,6 @@ bool MuonQuaHan(DateTime *NgayMuon, DateTime *NgayTra)
     else
         return false;
 }
-//
-// bool CungDauSach(NodeMuonTra *firstnode, char *ms)
-// {
-//     if (firstnode == nullptr)
-//         return false;
-//     else
-//     {
-//         NodeMuonTra *node = firstnode;
-//         for (node->Right != nullptr, node = node->Right)
-//         {
-//             if (node->value->TrangThai == 0)
-//                 while (1)
-//                 {
-//                     int k = 0;
-//                     if (ms[k] == node->value->MaSach[k])
-//                         if (ms[k] == '-')
-//                             return true;
-//                         else
-//                             k++;
-//                     else
-//                         break;
-//                 }
-//         }
-//         return false;
-//     }
-// }
-//
 
 /*
     1-3 sach
@@ -179,7 +152,7 @@ bool MuonQuaHan(DateTime *NgayMuon, DateTime *NgayTra)
     3- chung 1 dau sach
 */
 
-// int DK_MuonSach(NodeMuonTra *firstnode)
+// int DK_MuonSach(NodeMuonTra *firstnode, char*ms)
 // {
 //     if (firstnode == nullptr)
 //         return 0;
@@ -203,9 +176,9 @@ bool MuonQuaHan(DateTime *NgayMuon, DateTime *NgayTra)
 //                     else
 //                         break;
 //                 }
+//                 if (MuonQuaHan(node->value->NgayMuon, node->value->NgayTra))
+//                  return 2;
 //             }
-//             if (MuonQuaHan(node->value->NgayMuon, node->value->NgayTra))
-//                 return 2;
 //         }
 //         if (DangMuon == 3)
 //             return 1;
