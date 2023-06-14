@@ -99,6 +99,7 @@ EditButton ButtonSuaTrangThai(216, w / 2 - w / 6 + 10, h / 2 - h / 4 + 120 + Def
 // EditButton ButtonSearchDocGia(216, w / 2 - w / 6, 50, w / 3, 50, "TIM DOC GIA", "", "NHAP MA DOC GIA");
 
 void InDanhSachDauSach(DS_DauSach &DSDS);
+void InDMS();
 string GetNumberFromMaSach(string MaSach)
 {
 
@@ -743,6 +744,10 @@ void RunXemDauSach()
 	strcat(title, dauSach->TenSach);
 	outtextxy(w / 2 - textwidth(title) / 2, textheight("A") - 10, title);
 	GetDMS(DSDMS, dauSach); // Get DMS cua Dau Sach hien tai
+	for (int i = 0; i < DSDMS.n; ++i){
+		cout << DSDMS.nodes[i]->MaSach << " " << DSDMS.nodes[i]->TrangThai << " " << DSDMS.nodes[i]->id << endl;
+	}
+	cout << "--------------" << endl;
 	memset(NumOfPage, 0, sizeof NumOfPage);
 	string temp;
 	TotalPage = ceil(dauSach->TongSoLuong * 1.0 / 10);
@@ -1242,8 +1247,10 @@ void ThemSachEvent()
 	ButtonEffect(ButtonHuyBo);
 	if (GetAsyncKeyState(VK_LBUTTON))
 	{
-		if (ButtonHuyBo.isMouseHover(mouseX, mouseY))
+		if (ButtonHuyBo.isMouseHover(mouseX, mouseY)){
+			ButtonTemp = nullptr;
 			SetMenuSelect(ButtonXemDauSach.ID);
+		}
 		else if (ButtonDongY.isMouseHover(mouseX, mouseY))
 		{
 			ClearEditButtonData(ButtonThemViTriSach);
@@ -1255,6 +1262,7 @@ void ThemSachEvent()
 			string str(sach->MaSach);
 			sach->id = atoi(GetNumberFromMaSach(str).c_str());
 			cout << sach->id << " " << sach->MaSach << " " << sach->TrangThai << " " << sach->ViTri << endl;
+			InsertAfter_DM_Sach(DSDS.nodes[CurrentItem-1], sach);
 			if (CurrentAddDMS < TotalAddDMS)
 			{
 				CurrentAddDMS++;
@@ -1754,7 +1762,7 @@ int main()
 	DrawMenu();
 	GetDataFromFile();
 	// InDMS();
-	InMuonTra(TreeAVLDocGia);
+	// InMuonTra(TreeAVLDocGia);
 	while (1)
 	{
 		Event();

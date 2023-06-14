@@ -9,8 +9,9 @@ struct Sach
   int TrangThai;
   char ViTri[30];
   // construction
-  Sach () {}
-  Sach (char maSach[15], int trangThai, char viTri[30]) {
+  Sach() {}
+  Sach(char maSach[15], int trangThai, char viTri[30])
+  {
     strcpy(MaSach, maSach);
     TrangThai = trangThai;
     strcpy(ViTri, viTri);

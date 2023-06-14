@@ -81,7 +81,6 @@ struct EditButton{
 		IsHover = false;
 		IsChoose = false;
 	}
-	
 	void draw(){
 		setbkcolor(BG_COLOR);
 

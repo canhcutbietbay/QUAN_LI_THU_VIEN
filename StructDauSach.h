@@ -149,75 +149,20 @@ void GetDMS(DS_DMS &DSDMS, DauSach *dauSach)
     for (temp; temp != nullptr; temp = temp->next)
         DSDMS.InsertLastDMS(DSDMS, temp->sach);
 }
-// #endif
-// DM_Sach *CreateMaSach(DauSach *&ds, Sach *sach = nullptr)
-// {
-//     DM_Sach *node = ds->DS_Sach;
-//     // TH chua co sach
-//     if (node == nullptr)
-//     {
-//         node = CreateDM_Sach(sach);
-//         node->sach->id = 1;
-//         char *ms = ds->ISBN;
-//         strcat(ms, "-01");
-//         strcpy(node->sach->MaSach, ms);
-//         return node;
-//     }
-//     else
-//         // TH id khong lien mach
-//         while (node->next != nullptr)
-//         {
-//             if (node->next->sach->id - node->sach->id != 1)
-//             {
-//                 DM_Sach *newnode = CreateDM_Sach(sach);
-//                 newnode->next = node->next;
-//                 node->next = newnode;
-//                 newnode->sach->id = node->sach->id + 1;
-//                 char *ms = ds->ISBN;
-//                 char *cid;
-//                 if (newnode->sach->id < 10)
-//                 {
-//                     ms = strcat(ms, "-0");
-//                     itoa(newnode->sach->id, cid, 10);
-//                     strcat(ms, cid);
-//                     strcpy(node->sach->MaSach, ms);
-//                     return newnode;
-//                 }
-//                 else
-//                 {
-//                     ms = strcat(ms, "-");
-//                     itoa(newnode->sach->id, cid, 10);
-//                     strcat(ms, cid);
-//                     strcpy(node->sach->MaSach, ms);
-//                     return newnode;
-//                 }
-//             }
-//             node = node->next;
-//         }
-//     // TH them sach vao id ke tiep
-//     DM_Sach *newnode;
-//     node->next = newnode;
-//     // newnode = CreateDM_Sach(sach);
-//     newnode->sach->id = node->sach->id + 1;
-//     char *ms = ds->ISBN;
-//     char *cid;
-//     if (newnode->sach->id < 10)
-//     {
-//         ms = strcat(ms, "-0");
-//         itoa(newnode->sach->id, cid, 10);
-//         strcat(ms, cid);
-//         strcpy(node->sach->MaSach, ms);
-//         return newnode;
-//     }
-//     else
-//     {
-//         ms = strcat(ms, "-");
-//         itoa(newnode->sach->id, cid, 10);
-//         strcat(ms, cid);
-//         strcpy(node->sach->MaSach, ms);
-//         return newnode;
-//     }
-// }
+
+void InsertAfter_DM_Sach(DauSach *&node, Sach *sach)
+{
+  if (node->DS_Sach == nullptr)
+    InsertFirst_DM_Sach(node->DS_Sach, sach);
+  else
+  {
+    DM_Sach *find = node->DS_Sach;
+    for (int i = 0; i < sach->id-1; i++)
+      find = find->next;
+    InsertAfter_DM_Sach(find, sach);
+    node->TongSoLuong++;
+  }
+}
 
 char *CreateMaSach(DauSach *&ds)
 {
@@ -228,7 +173,7 @@ char *CreateMaSach(DauSach *&ds)
     // TH chua co sach
     if (node == nullptr)
     {
-        strcat(ms, "-01");
+        strcat(ms, "-00");
         return ms;
     }
     else
