@@ -174,7 +174,35 @@ struct NodeTheDocGia
 	NodeTheDocGia *right = NULL;
 	int height = 0;
 };
+/*
 
+*/
+struct DS_QuaHan
+{
+	int MaThe;
+	char HoTen[51];
+	char MaSach[15];
+	char TenSach[30];
+	DateTime NgayMuon;
+	int SoNgayQuaHan;
+	DS_QuaHan *next;
+	//
+	DS_QuaHan() {}
+	DS_QuaHan(int mathe, char hoten[51], char masach[15], char tensach[30], DateTime ngaymuon, int songayquahan)
+	{
+		MaThe = mathe;
+		strcpy(HoTen, hoten);
+		strcpy(MaSach, masach);
+		strcpy(TenSach, tensach);
+		NgayMuon = ngaymuon;
+		SoNgayQuaHan = songayquahan;
+	}
+	~DS_QuaHan() {}
+	//
+};
+/*
+
+*/
 int max(int a, int b)
 {
 	if (a > b)
@@ -395,7 +423,6 @@ NodeTheDocGia *deleteNode(NodeTheDocGia *root, int MaThe)
 /*
 HIEU CHINH THONG TIN DOC GIA
 */
-
 void InDocGiaTheoMaDocGia(NodeTheDocGia *&TreeAVLDocGia) // Inorder
 {
 	if (TreeAVLDocGia != nullptr)
@@ -405,7 +432,7 @@ void InDocGiaTheoMaDocGia(NodeTheDocGia *&TreeAVLDocGia) // Inorder
 		InDocGiaTheoMaDocGia(TreeAVLDocGia->right);
 	}
 }
-
+//
 void GetFromTree(NodeTheDocGia *root, DS_DocGia &DSDG)
 {
 	if (root == NULL)
@@ -414,7 +441,9 @@ void GetFromTree(NodeTheDocGia *root, DS_DocGia &DSDG)
 	DSDG.InsertLastDocGia(DSDG, &root->DocGia);
 	GetFromTree(root->right, DSDG);
 }
+/*
 
+*/
 // void GetDSMuon(NodeTheDocGia *node)
 // {
 // 	if (node == nullptr)
@@ -422,7 +451,7 @@ void GetFromTree(NodeTheDocGia *root, DS_DocGia &DSDG)
 // 	else
 // 	{
 // 		NodeMuonTra *check = node->DocGia.DS_MT->First;
-// 		while (check != nullptr)
+// 		while (check)
 // 		{
 // 			if (check->value->TrangThai == 0)
 // 			{
@@ -454,13 +483,8 @@ void GetFromTree(NodeTheDocGia *root, DS_DocGia &DSDG)
 // 		return node->DocGia.DS_Muon;
 // 	}
 // }
-// }
-/*
-------------------
-MUON & TRA SACH
-------------------
-*/
-// xet nodesach
+//
+//xet nodesach
 // int checknodeSach(DM_Sach *dms, char* masach)
 // {
 //   DM_Sach *temp = dms;
@@ -550,6 +574,146 @@ MUON & TRA SACH
 //         return (tt == 0) ? 0 : (tt+3); 
 //     }
 // }
+// /*
+// -----------
+// DANH SACH QUA HAN
+// -----------
+// */
+// DS_QuaHan *CreateDSQH()
+// {
+//   DS_QuaHan *node = new DS_QuaHan;
+//   node->next = nullptr;
+//   return node;
+// }
+// DS_QuaHan *CreateDS_QuaHan(DS_DauSach &DSDS, DS_DocGia &DSDG)
+// {
+// 	DS_QuaHan *first, *insert, *bf;
+// 	first = insert = bf = nullptr;
+// 	// Nhap tat ca sach dang muon
+// 	for (int i=0; i< DSDG.n; i++)
+// 	{
+// 		for (int j=0; j < DSDG.nodes[i]->Muon->n; j++)
+// 		{
+// 			DS_QuaHan *node = CreateDS_QuaHan();
+// 			int k=0;
+// 			while (!inside(DSDG.nodes[i]->Muon->nodes[j]->MaSach, DSDS.nodes[k]->ISBN))
+// 				k++;
+// 			node->MaThe = DSDG.nodes[i]->MaThe;
+// 			char temp[51];
+// 			strcat(strcpy(temp, DSDG.nodes[i]->Ho), " ");
+// 			strcpy(node->HoTen, strcat(temp, DSDG.nodes[i]->Ten));
+// 			strcpy(node->MaSach, DSDG.nodes[i]->Muon->nodes[j]->MaSach);
+// 			strcpy(node->TenSach, DSDS.nodes[k]->TenSach);
+// 			node->NgayMuon = DSDG.nodes[i]->Muon->nodes[j]->NgayMuon;
+// 			node->SoNgayQuaHan = DSDG.nodes[i]->Muon->nodes[j]->NgayMuon.GetSoNgayMuon();
+// 			node->next = nullptr;
+// 			// sort & insert
+// 			*bf = nullptr;
+// 			insert = first;
+// 			if (first)
+// 			{
+// 				while (1)
+// 				{
+// 					if (!bf) 
+// 					{
+// 						if (node->SoNgayQuaHan > insert->SoNgayQuaHan)
+// 						{
+// 							node->next = insert;
+// 							bf->next = node;
+// 							break;
+// 						}
+// 						bf = insert;
+// 						insert = insert->next;
+// 						if (!insert)
+// 						{
+// 							node->next = insert;
+// 							bf->next = node;
+// 							break;
+// 						}
+// 					}
+// 					else 
+// 					{
+// 						if (node->SoNgayQuaHan > insert->SoNgayQuaHan)
+// 						{
+// 							node->next = insert;
+// 							first = node;
+// 							break;
+// 						}
+// 						bf = insert;
+// 						insert = insert->next;
+// 						if (!insert)
+// 						{
+// 							node->next = insert;
+// 							first->next = node;
+// 							break;
+// 						}
+// 					}
+// 				}
+// 			}
+// 			else first = node;
+// 		}
+// 	}
+// 	return first;
+// }
+// void UpdateDS_QuaHan_KhiMuon(DS_QuaHan *&first, DS_DauSach &DSDS, TheDocGia *thedocgia, char* masach)
+// {
+// 	DS_QuaHan *insert;
+// 	if (!first)
+// 	{
+// 		first = CreateDSQH();
+// 		insert = first;
+// 	}
+// 	else
+// 	{ 
+// 		insert = first; 
+// 		while (insert->next)
+// 		{
+// 			insert->SoNgayQuaHan = insert->NgayMuon.GetSoNgayMuon();
+// 			insert = insert->next;
+// 		}
+// 		insert->next = CreateDSQH();
+// 		insert = insert->next;
+// 	}
+// 	char temp[51];
+// 	insert->MaThe = thedocgia->MaThe;
+// 	strcat(strcpy(temp, thedocgia->Ho), " ");
+// 	strcpy(insert->HoTen, strcat(temp, thedocgia->Ten));
+// 	strcpy(insert->MaSach, masach);
+// 	for (int i=0; i < DSDS.n; i++)
+// 		if(inside(masach,DSDS.nodes[i]->ISBN))
+// 		{
+// 			strcpy(insert->TenSach, DSDS.nodes[i]->TenSach);
+// 			break;
+// 		}
+// 	insert->NgayMuon.GetTimeNow();
+// 	insert->SoNgayQuaHan = insert->NgayMuon.GetSoNgayMuon();
+// 	insert->next=nullptr;
+// }
+// void *UpdateDS_QuaHan_KhiTra(DS_QuaHan *&first, DS_DauSach &DSDS, TheDocGia *thedocgia, char* masach)
+// {
+// 	if (first)
+// 	{
+// 		DS_QuaHan *del = first, *bf = nullptr;
+// 		while (strcmp(del->MaSach, masach))
+// 		{
+// 			del->SoNgayQuaHan = del->NgayMuon.GetSoNgayMuon();
+// 			bf = del;
+// 			del = del->next;
+// 		}
+// 		if (del == first)
+// 			first = del->next;
+// 		else 
+// 		{
+// 			bf = del->next;
+// 			delete del;
+// 		}
+// 	}
+// }
+// /*
+// ------------------
+// MUON & TRA SACH
+// ------------------
+// */
 // // MUONSACH
 // int MuonSach(TheDocGia *thedocgia, char* masach, DS_DauSach &DSDS)
 // {
