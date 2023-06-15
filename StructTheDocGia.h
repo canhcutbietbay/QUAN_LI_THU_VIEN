@@ -441,7 +441,7 @@ bool MuonQuaHan(DateTime *NgayMuon, DateTime *NgayTra)
 	else
 		return false;
 }
-// // check
+// check
 bool inside(char *S, char *s)
 {
 	int k = 0;
@@ -452,6 +452,7 @@ bool inside(char *S, char *s)
 			k++;
 	return false;
 }
+// Trang thai sach
 int TTSach(DS_DauSach ds, char *masach)
 {
 	for (int i = 0; i < ds.n; i++)
@@ -459,6 +460,7 @@ int TTSach(DS_DauSach ds, char *masach)
 		if (inside(masach, ds.nodes[i]->ISBN))
 			return checknodeSach(ds.nodes[i]->DS_Sach, masach);
 	}
+	return 3;
 }
 // // lay dau sach tu masach
 DM_Sach *GetSach(DS_DauSach ds, char *masach)
@@ -511,7 +513,7 @@ int DK_MuonSach(NodeMuonTra *firstnode, char *ms, DS_DauSach DSDS)
 	}
 }
 
-// // MUONSACH
+// MUONSACH
 int MuonSach(TheDocGia *thedocgia, char *masach, DS_DauSach &DSDS)
 {
 	if (thedocgia->TrangThai == 0)

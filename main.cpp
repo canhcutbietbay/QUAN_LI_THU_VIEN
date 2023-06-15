@@ -1,11 +1,14 @@
+// Thu vien C++
 #include <graphics.h>
-#include "Define.h"
-#include "Button.h"
 #include <iostream>
 #include <fstream>
 #include <string.h>
 #include <math.h>
 #include "time.h"
+
+// File ngoai
+#include "Define.h"
+#include "Button.h"
 #include "StructDanhMucSach.h"
 #include "StructDauSach.h"
 #include "StructMuonTra.h"
@@ -71,13 +74,10 @@ EditButton ButtonSuaTheLoai(128, w / 2 - w / 6 + 10, h / 2 - h / 4 + 100 + Defau
 Button ButtonThemDMS(129, (w / 3) * 1 - DefaultButtonWidth / 2 - w / 6, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "THEM", 0);
 Button ButtonXoaDMS(130, (w / 3) * 2 - DefaultButtonWidth / 2 - w / 6, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "XOA", 0);
 Button ButtonSuaDMS(131, (w / 3) * 3 - DefaultButtonWidth / 2 - w / 6, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "SUA", 0);
-EditButton ButtonThemSoLuong(132, w / 2 - w / 6 + 10, h / 2 - 100, w / 3 - 20, DefaultButtonHeight, "SO LUONG", "", "NHAP VAO SO LUONG");
+EditButton ButtonThemSoLuong(132, w / 2 - w / 6 + 10, h / 2 - DefaultButtonHeight / 2, w / 3 - 20, DefaultButtonHeight, "SO LUONG", "", "NHAP VAO SO LUONG");
 EditButton ButtonThemMaSach(133, w / 2 - w / 6 + 10, h / 3 + 30 + DefaultButtonHeight * 1, w / 3 - 20, DefaultButtonHeight, "MA SACH", "", "NHAP VAO MA SACH");
 EditButton ButtonThemTrangThaiSach(134, w / 2 - w / 6 + 10, h / 3 + 40 + DefaultButtonHeight * 2, w / 3 - 20, DefaultButtonHeight, "TRANG THAI", "", "NHAP VAO TRANG THAI");
 EditButton ButtonThemViTriSach(135, w / 2 - w / 6 + 10, h / 3 + 50 + DefaultButtonHeight * 3, w / 3 - 20, DefaultButtonHeight, "VI TRI", "", "NHAP VAO VI TRI");
-
-// Button ButtonDongYSua(123, w / 3 + w / 9 - DefaultButtonWidth / 2, h / 2 - h / 4 + 200 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "DONG Y", 0);
-// Button ButtonHuyBoSua(124, w / 3 + w / 6 + DefaultButtonWidth / 2, h / 2 - h / 4 + 200 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "HUY BO", 0);
 
 DS_DauSach DSDS; // global
 DS_DauSach ListSearchDauSach;
@@ -85,8 +85,8 @@ DS_DMS DSDMS;
 DS_MT DSMT;
 DS_QuaHan DSQH;
 // Doc Gia
-Button ButtonDocGiaHoTen(201, w / 2 - DefaultButtonWidth - 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "HO TEN", 0);
-Button ButtonDocGiaMaThe(202, w / 2 + 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "MA THE", 0);
+Button ButtonDocGiaMaThe(201, w / 2 - DefaultButtonWidth - 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "MA THE", 0);
+Button ButtonDocGiaHoTen(202, w / 2 + 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "HO TEN", 0);
 Button ButtonXemDocGia(203, (w / 4) * 1 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "XEM", 0);
 Button ButtonThemDocGia(204, (w / 4) * 2 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "THEM", 0);
 Button ButtonXoaDocGia(205, (w / 4) * 3 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "XOA", 0);
@@ -315,8 +315,6 @@ int SubCurrentPage = 1;
 void DrawMenu()
 {
 	ClearScreen();
-	CurrentItem = -1;
-	CurrentPage = 1;
 	settextstyle(BOLD_FONT, HORIZ_DIR, 7);
 	setcolor(TEXT_TITLE_COLOR);
 	outtextxy(w / 2 - textwidth(AppTitle) / 2, 100, AppTitle);
@@ -519,8 +517,6 @@ void RunTop10()
 {
 	ClearScreen();
 	ButtonBack.draw();
-	ButtonPrev.draw();
-	ButtonNext.draw();
 	ButtonThongKeQuaHan.draw();
 	ButtonThongKeTop10.draw();
 	char Title[][25] = {"ISBN", "TEN SACH", "SO LUOT MUON"};
@@ -559,10 +555,10 @@ void RunThongTin()
 {
 	ClearScreen();
 	ButtonBack.draw();
-		// ve giao dien
-	setcolor(YELLOW);	// chon mau chu
-	settextstyle(BOLD_FONT, HORIZ_DIR, 3);		// chon font chu, huong ve chu (direction), size chu
-	
+	// ve giao dien
+	setcolor(YELLOW);					   // chon mau chu
+	settextstyle(BOLD_FONT, HORIZ_DIR, 3); // chon font chu, huong ve chu (direction), size chu
+
 	char uni[] = "Hoc vien Cong nghe Buu Chinh Vien Thong - TPHCM";
 	char nam[] = "-- 2023 --";
 	char title[] = "* Mon hoc : ";
@@ -574,23 +570,23 @@ void RunThongTin()
 	char sv[] = "* Sinh vien :";
 	char author1[] = "1. Nguyen Tan Loc - N21DCCN049 - D21CQCN01-N";
 	char author2[] = "2. Huynh Ngoc Tan - N21DCCN074 - D21CQCN01-N";
-	
+
 	settextstyle(BOLD_FONT, HORIZ_DIR, 5);
-	outtextxy(w/2-textwidth(uni)/2, 50, uni);
-	outtextxy(w/2-textwidth(nam)/2, h-250, nam);
-	
+	outtextxy(w / 2 - textwidth(uni) / 2, 50, uni);
+	outtextxy(w / 2 - textwidth(nam) / 2, h - 250, nam);
+
 	settextstyle(BOLD_FONT, HORIZ_DIR, 3);
-	outtextxy(w/2-500, 200, title);
-	outtextxy(w/2-500, 280, gv);
-	outtextxy(w/2-500, 360, doan);
-	outtextxy(w/2-500, 440, sv);
-	
-	outtextxy(w/2-250, 200, title2);
-	outtextxy(w/2-250, 280, gv2);
-	outtextxy(w/2-250, 360, doan2);
-	
-	outtextxy(w/2-250, 440, author1);
-	outtextxy(w/2-250, 520, author2);
+	outtextxy(w / 2 - 500, 200, title);
+	outtextxy(w / 2 - 500, 280, gv);
+	outtextxy(w / 2 - 500, 360, doan);
+	outtextxy(w / 2 - 500, 440, sv);
+
+	outtextxy(w / 2 - 250, 200, title2);
+	outtextxy(w / 2 - 250, 280, gv2);
+	outtextxy(w / 2 - 250, 360, doan2);
+
+	outtextxy(w / 2 - 250, 440, author1);
+	outtextxy(w / 2 - 250, 520, author2);
 }
 void RunDauSach()
 {
@@ -630,18 +626,17 @@ void RunThemDMS()
 {
 	CurrentAddDMS = 1;
 	TotalAddDMS = -1;
-	const int width = w / 3, height = h / 8;
+	const int width = w / 3, height = 300;
 	char Title[50] = "THEM SACH";
-	ClearScreenXY(w / 2 - width / 2, h / 3 - height / 2, w / 2 + width / 2, h * 2 / 3 + height / 2);
+	ClearScreenXY(w / 2 - width / 2, h / 2 - height / 2, w / 2 + width / 2, h / 2 + height / 2);
 	setcolor(WHITE);
-	rectangle(w / 2 - width / 2, h / 3 - height / 2, w / 2 + width / 2, h * 2 / 3 + height / 2);
+	rectangle(w / 2 - width / 2, h / 2 - height / 2, w / 2 + width / 2, h / 2 + height / 2);
 	settextstyle(BOLD_FONT, HORIZ_DIR, 5);
 	setcolor(TEXT_TITLE_COLOR);
-	// outtextxy(w / 2 - width / 2 + textwidth(Title) / 4, h / 3 - height / 2 + 10, Title);
-	outtextxy(w / 2 - textwidth(Title) / 2, h / 3 - height / 2 + 10, Title);
+	outtextxy(w / 2 - textwidth(Title) / 2, h / 2 - height / 2 + 10, Title);
 	ButtonThemSoLuong.draw();
-	ButtonDongY.Init(0, w / 3 + w / 9 - DefaultButtonWidth / 2, h / 2 - h / 4 + 160 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "DONG Y", 0);
-	ButtonHuyBo.Init(0, w / 3 + w / 6 + DefaultButtonWidth / 2, h / 2 - h / 4 + 160 + DefaultButtonHeight * 6, DefaultButtonWidth, DefaultButtonHeight, "HUY BO", 0);
+	ButtonDongY.Init(0, w / 2 - DefaultButtonWidth / 2 - w / 12, h / 2 + height / 2 - DefaultButtonHeight - 10, DefaultButtonWidth, DefaultButtonHeight, "DONG Y", 0);
+	ButtonHuyBo.Init(0, w / 2 - DefaultButtonWidth / 2 + w / 12, h / 2 + height / 2 - DefaultButtonHeight - 10, DefaultButtonWidth, DefaultButtonHeight, "HUY BO", 0);
 	ButtonDongY.draw();
 	ButtonHuyBo.draw();
 }
@@ -815,8 +810,8 @@ void DrawSelectedItemMuonTra(DS_MT DSMT)
 		ClearScreenXY(XXDG[0] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[1] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
 		ClearScreenXY(XXDG[1] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[2] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
 		ClearScreenXY(XXDG[2] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[3] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
-		ClearScreenXY(XXDG[3] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[3] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
-		ClearScreenXY(XXDG[4] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[3] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		ClearScreenXY(XXDG[3] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[4] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		ClearScreenXY(XXDG[4] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[5] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
 		// Fill with color
 		setfillstyle(SOLID_FILL, BG_BUTTON_SELECT);
 		floodfill(XXDG[0] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
@@ -919,9 +914,9 @@ void DrawItemDMS(DS_DMS &DSDMS)
 			if (i > DSDMS.n)
 				break;
 			line(XDMS[0], (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1) + 1)), XDMS[3], (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1) + 1)));
-			outtextxy(XDMS[0] + 10, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[i - 1]->MaSach);
-			outtextxy(XDMS[1] + 10, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSDMS.nodes[i - 1]->TrangThai]);
-			outtextxy(XDMS[2] + 10, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[i - 1]->ViTri);
+			outtextxy(XDMS[0] + (XDMS[1] - XDMS[0]) / 2 - textwidth(DSDMS.nodes[i - 1]->MaSach) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[i - 1]->MaSach);
+			outtextxy(XDMS[1] + (XDMS[2] - XDMS[1]) / 2 - textwidth(TrangThai[DSDMS.nodes[i - 1]->TrangThai]) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSDMS.nodes[i - 1]->TrangThai]);
+			outtextxy(XDMS[2] + (XDMS[3] - XDMS[2]) / 2 - textwidth(DSDMS.nodes[i - 1]->ViTri) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[i - 1]->ViTri);
 		}
 	}
 }
@@ -941,9 +936,9 @@ void DrawSelectedItemDMS(DS_DMS &DSDMS)
 		floodfill(XDMS[2] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
 		// Draw selected item
 		setbkcolor(BG_BUTTON_SELECT);
-		outtextxy(XDMS[0] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[SubCurrentItem - 1]->MaSach);
-		outtextxy(XDMS[1] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSDMS.nodes[SubCurrentItem - 1]->TrangThai]);
-		outtextxy(XDMS[2] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[SubCurrentItem - 1]->ViTri);
+		outtextxy(XDMS[0] + (XDMS[1] - XDMS[0]) / 2 - textwidth(DSDMS.nodes[SubCurrentItem - 1]->MaSach) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[SubCurrentItem - 1]->MaSach);
+		outtextxy(XDMS[1] + (XDMS[2] - XDMS[1]) / 2 - textwidth(TrangThai[DSDMS.nodes[SubCurrentItem - 1]->TrangThai]) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSDMS.nodes[SubCurrentItem - 1]->TrangThai]);
+		outtextxy(XDMS[2] + (XDMS[3] - XDMS[2]) / 2 - textwidth(DSDMS.nodes[SubCurrentItem - 1]->ViTri) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[SubCurrentItem - 1]->ViTri);
 	}
 }
 
@@ -961,7 +956,7 @@ void RunXemDauSach()
 	ButtonThemDMS.draw();
 	ButtonXoaDMS.draw();
 	ButtonSuaDMS.draw();
-	char Title[][25] = {"TEN SACH", "TRANG THAI", "VI TRI"};
+	char Title[][25] = {"MA SACH", "TRANG THAI", "VI TRI"};
 	setcolor(WHITE);
 	rectangle(XDMS[0], Y_DS, XDMS[3], Y_DS * 5);
 	line(XDMS[0], Y_DS + 50, XDMS[3], Y_DS + 50);
@@ -990,12 +985,6 @@ void RunXemDauSach()
 	outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
 	DrawItemDMS(DSDMS);
 	DrawSelectedItemDMS(DSDMS);
-	// if (SubCurrentPage > TotalPage)
-	// {
-	// 	while (SubCurrentPage > TotalPage)
-	// 		SubCurrentPage--;
-	// 	RunXemDauSach();
-	// }
 }
 
 void RunXoaDauSach()
@@ -1102,7 +1091,6 @@ void RunSuaDauSach()
 	rectangle(w / 2 - width / 2, h / 3 - height / 2, w / 2 + width / 2, h * 2 / 3 + height / 2);
 	settextstyle(BOLD_FONT, HORIZ_DIR, 5);
 	setcolor(TEXT_TITLE_COLOR);
-	// outtextxy(w / 2 - width / 2 + textwidth(Title) / 4, h / 3 - height / 2 + 10, Title);
 	outtextxy(w / 2 - textwidth(Title) / 2, h / 3 - height / 2 + 10, Title);
 	char temp[10];
 	if (strlen(ButtonSearchDauSach.UserInput) == 0)
@@ -1120,6 +1108,7 @@ void RunSuaDauSach()
 		strcpy(ButtonSuaNXB.UserInput, temp);
 		ButtonSuaNXB.draw();
 		strcpy(ButtonSuaTheLoai.UserInput, DSDS.nodes[CurrentItem - 1]->TheLoai);
+		ButtonSuaTheLoai.draw();
 	}
 	else
 	{
@@ -1394,18 +1383,32 @@ void ThemDauSachEvent()
 		}
 		else if (ButtonThem.isMouseHover(mouseX, mouseY))
 		{
-			// Them Dau Sach moi
-			DauSach *dausach = new DauSach(ButtonThemISBN.UserInput, ButtonThemTenSach.UserInput, ButtonThemTacGia.UserInput, ButtonThemTheLoai.UserInput, atoi(ButtonThemSoTrang.UserInput), atoi(ButtonThemNXB.UserInput));
-			ThemDauSach(DSDS, dausach);
-			ClearEditButtonData(ButtonThemISBN);
-			ClearEditButtonData(ButtonThemTenSach);
-			ClearEditButtonData(ButtonThemSoTrang);
-			ClearEditButtonData(ButtonThemTacGia);
-			ClearEditButtonData(ButtonThemNXB);
-			ClearEditButtonData(ButtonThemTheLoai);
 			ButtonTemp = nullptr;
-			ThongBao("THEM DAU SACH THANH CONG");
-			SearchDauSach(ButtonSearchDauSach.UserInput);
+			// Them Dau Sach moi
+			if (strlen(ButtonThemISBN.UserInput) == 0 ||
+				strlen(ButtonThemTenSach.UserInput) == 0 ||
+				strlen(ButtonThemTacGia.UserInput) == 0 ||
+				strlen(ButtonThemTheLoai.UserInput) == 0 ||
+				strlen(ButtonThemSoTrang.UserInput) == 0 ||
+				strlen(ButtonThemNXB.UserInput) == 0)
+				ThongBao("KHONG DUOC DE TRONG");
+			else if (DSDS.n == MAX_SIZE_DAUSACH)
+				ThongBao("DAU SACH DA DAT DEN GIOI HAN");
+			else if (TimDauSach(DSDS, ButtonThemISBN.UserInput) == nullptr)
+			{
+				DauSach *dausach = new DauSach(ButtonThemISBN.UserInput, ButtonThemTenSach.UserInput, ButtonThemTacGia.UserInput, ButtonThemTheLoai.UserInput, atoi(ButtonThemSoTrang.UserInput), atoi(ButtonThemNXB.UserInput));
+				ThemDauSach(DSDS, dausach);
+				ClearEditButtonData(ButtonThemISBN);
+				ClearEditButtonData(ButtonThemTenSach);
+				ClearEditButtonData(ButtonThemSoTrang);
+				ClearEditButtonData(ButtonThemTacGia);
+				ClearEditButtonData(ButtonThemNXB);
+				ClearEditButtonData(ButtonThemTheLoai);
+				ThongBao("THEM DAU SACH THANH CONG");
+				SearchDauSach(ButtonSearchDauSach.UserInput);
+			}
+			else
+				ThongBao("TRUNG ISBN");
 		}
 		else if (ButtonClearData.isMouseHover(mouseX, mouseY))
 		{
@@ -1473,6 +1476,14 @@ void ThemDMSEvent()
 				ClearEditButtonData(ButtonThemSoLuong);
 				if (!TotalAddDMS)
 					ThongBao("SO LUONG PHAI > 0");
+				else if (TotalAddDMS > MAX_SIZE_LIST_DMS - DSDMS.n)
+				{
+					char ConLai[5], mess[] = "CHI CON LAI: ";
+					itoa(MAX_SIZE_LIST_DMS - DSDMS.n, ConLai, 10);
+					strcat(mess, ConLai);
+					strcat(mess, " VI TRI");
+					ThongBao(mess);
+				}
 				else
 					SetMenuSelect(99);
 			}
@@ -1499,25 +1510,30 @@ void ThemSachEvent()
 		}
 		else if (ButtonDongY.isMouseHover(mouseX, mouseY))
 		{
-			ClearEditButtonData(ButtonThemViTriSach);
-			ButtonTemp = nullptr;
-			Sach *sach = new Sach;
-			strcpy(sach->MaSach, ButtonThemMaSach.UserInput);
-			sach->TrangThai = atoi(ButtonThemTrangThaiSach.UserInput);
-			strcpy(sach->ViTri, ButtonThemViTriSach.UserInput);
-			string str(sach->MaSach);
-			sach->id = atoi(GetNumberFromMaSach(str).c_str());
-			// cout << sach->id << " " << sach->MaSach << " " << sach->TrangThai << " " << sach->ViTri << endl;
-			InsertAfter_DM_Sach(DSDS.nodes[CurrentItem - 1], sach);
-			if (CurrentAddDMS < TotalAddDMS)
+			if (strlen(ButtonThemViTriSach.UserInput) != 0)
 			{
-				CurrentAddDMS++;
-				ThongBao("THEM THANH CONG", 400, 150, 99);
+
+				Sach *sach = new Sach;
+				strcpy(sach->MaSach, ButtonThemMaSach.UserInput);
+				sach->TrangThai = atoi(ButtonThemTrangThaiSach.UserInput);
+				strcpy(sach->ViTri, ButtonThemViTriSach.UserInput);
+				string str(sach->MaSach);
+				sach->id = atoi(GetNumberFromMaSach(str).c_str());
+				ClearEditButtonData(ButtonThemViTriSach);
+				ButtonTemp = nullptr;
+				InsertAfter_DM_Sach(DSDS.nodes[CurrentItem - 1], sach);
+				if (CurrentAddDMS < TotalAddDMS)
+				{
+					CurrentAddDMS++;
+					ThongBao("THEM THANH CONG", 400, 150, 99);
+				}
+				else
+				{
+					ThongBao("THEM THANH CONG", 400, 150, ButtonXemDauSach.ID);
+				}
 			}
 			else
-			{
-				ThongBao("THEM THANH CONG", 400, 150, ButtonXemDauSach.ID);
-			}
+				ThongBao("KHONG DUOC DE TRONG");
 		}
 		else if (ButtonThemViTriSach.isMouseHover(mouseX, mouseY))
 		{
@@ -1619,13 +1635,27 @@ void XoaDauSachEvent()
 		{
 			if (strlen(ButtonSearchDauSach.UserInput) != 0)
 			{
-				DeleteDauSach(DSDS, TimPosDauSach(DSDS, ListSearchDauSach.nodes[CurrentItem - 1]->ISBN));
-				DeleteDauSach(ListSearchDauSach, CurrentItem - 1);
+				if (ListSearchDauSach.nodes[CurrentItem - 1]->DS_Sach == nullptr)
+				{
+					DeleteDauSach(DSDS, TimPosDauSach(DSDS, ListSearchDauSach.nodes[CurrentItem - 1]->ISBN));
+					DeleteDauSach(ListSearchDauSach, CurrentItem - 1);
+					CurrentItem = -1;
+					ThongBao("XOA THANH CONG", 400, 150, ButtonDauSach.ID);
+				}
+				else
+					ThongBao("KHONG THE XOA", 400, 150, ButtonDauSach.ID);
 			}
 			else
-				DeleteDauSach(DSDS, CurrentItem - 1);
-			CurrentItem = -1;
-			ThongBao("XOA THANH CONG", 400, 150, ButtonDauSach.ID);
+			{
+				if (DSDS.nodes[CurrentItem - 1]->DS_Sach == nullptr)
+				{
+					DeleteDauSach(DSDS, CurrentItem - 1);
+					CurrentItem = -1;
+					ThongBao("XOA THANH CONG", 400, 150, ButtonDauSach.ID);
+				}
+				else
+					ThongBao("KHONG THE XOA", 400, 150, ButtonDauSach.ID);
+			}
 		}
 		else if (ButtonHuyBo.isMouseHover(mouseX, mouseY))
 			SetMenuSelect(ButtonDauSach.ID);
@@ -1639,9 +1669,14 @@ void XoaDocGiaEvent()
 	{
 		if (ButtonDongY.isMouseHover(mouseX, mouseY))
 		{
-			TreeAVLDocGia = deleteNode(TreeAVLDocGia, DSDG.nodes[CurrentItem - 1]->MaThe);
-			CurrentItem = -1;
-			ThongBao("XOA THANH CONG", 400, 150, ButtonDocGia.ID);
+			if (DSDG.nodes[CurrentItem - 1]->DS_MT->First != nullptr)
+				ThongBao("KHONG THE XOA", 400, 150, ButtonDocGia.ID);
+			else
+			{
+				TreeAVLDocGia = deleteNode(TreeAVLDocGia, DSDG.nodes[CurrentItem - 1]->MaThe);
+				CurrentItem = -1;
+				ThongBao("XOA THANH CONG", 400, 150, ButtonDocGia.ID);
+			}
 		}
 		else if (ButtonHuyBo.isMouseHover(mouseX, mouseY))
 			SetMenuSelect(ButtonDocGia.ID);
@@ -1664,11 +1699,6 @@ void SuaDauSachEvent()
 			ClearEditButtonData(ButtonSuaTheLoai);
 			SetMenuSelect(ButtonDauSach.ID);
 			ButtonTemp = nullptr;
-		}
-		else if (ButtonSuaISBN.isMouseHover(mouseX, mouseY))
-		{
-			CLearLastCharInput();
-			ButtonTemp = &ButtonSuaISBN;
 		}
 		else if (ButtonSuaTenSach.isMouseHover(mouseX, mouseY))
 		{
@@ -1697,17 +1727,27 @@ void SuaDauSachEvent()
 		}
 		else if (ButtonDongY.isMouseHover(mouseX, mouseY))
 		{
-			if (strlen(ButtonSearchDauSach.UserInput) == 0)
-			{
-				DSDS.nodes[CurrentItem - 1]->Init(ButtonSuaISBN.UserInput, ButtonSuaTenSach.UserInput, ButtonSuaTacGia.UserInput, ButtonSuaTheLoai.UserInput, atoi(ButtonSuaSoTrang.UserInput), atoi(ButtonSuaNXB.UserInput));
-			}
+			ButtonTemp = nullptr;
+			if (strlen(ButtonSuaISBN.UserInput) == 0 ||
+				strlen(ButtonSuaTenSach.UserInput) == 0 ||
+				strlen(ButtonSuaTacGia.UserInput) == 0 ||
+				strlen(ButtonSuaTheLoai.UserInput) == 0 ||
+				strlen(ButtonSuaSoTrang.UserInput) == 0 ||
+				strlen(ButtonSuaNXB.UserInput) == 0)
+				ThongBao("KHONG DUOC DE TRONG");
 			else
 			{
-				ListSearchDauSach.nodes[CurrentItem - 1]->Init(ButtonSuaISBN.UserInput, ButtonSuaTenSach.UserInput, ButtonSuaTacGia.UserInput, ButtonSuaTheLoai.UserInput, atoi(ButtonSuaSoTrang.UserInput), atoi(ButtonSuaNXB.UserInput));
-				DSDS.nodes[TimPosDauSach(DSDS, ListSearchDauSach.nodes[CurrentItem - 1]->ISBN)]->Init(ButtonSuaISBN.UserInput, ButtonSuaTenSach.UserInput, ButtonSuaTacGia.UserInput, ButtonSuaTheLoai.UserInput, atoi(ButtonSuaSoTrang.UserInput), atoi(ButtonSuaNXB.UserInput));
+				if (strlen(ButtonSearchDauSach.UserInput) == 0)
+				{
+					DSDS.nodes[CurrentItem - 1]->Init(ButtonSuaISBN.UserInput, ButtonSuaTenSach.UserInput, ButtonSuaTacGia.UserInput, ButtonSuaTheLoai.UserInput, atoi(ButtonSuaSoTrang.UserInput), atoi(ButtonSuaNXB.UserInput));
+				}
+				else
+				{
+					ListSearchDauSach.nodes[CurrentItem - 1]->Init(ButtonSuaISBN.UserInput, ButtonSuaTenSach.UserInput, ButtonSuaTacGia.UserInput, ButtonSuaTheLoai.UserInput, atoi(ButtonSuaSoTrang.UserInput), atoi(ButtonSuaNXB.UserInput));
+					DSDS.nodes[TimPosDauSach(DSDS, ListSearchDauSach.nodes[CurrentItem - 1]->ISBN)]->Init(ButtonSuaISBN.UserInput, ButtonSuaTenSach.UserInput, ButtonSuaTacGia.UserInput, ButtonSuaTheLoai.UserInput, atoi(ButtonSuaSoTrang.UserInput), atoi(ButtonSuaNXB.UserInput));
+				}
+				ThongBao("SUA THANH CONG", 400, 150, ButtonDauSach.ID);
 			}
-			ThongBao("SUA THANH CONG", 400, 150, ButtonDauSach.ID);
-			ButtonTemp = nullptr;
 		}
 	}
 }
@@ -1792,10 +1832,19 @@ void SuaDocGiaEvent()
 		}
 		else if (ButtonDongY.isMouseHover(mouseX, mouseY))
 		{
-			TheDocGia DocGia(atoi(ButtonSuaMaThe.UserInput), ButtonSuaHo.UserInput, ButtonSuaTen.UserInput, atoi(ButtonSuaPhai.UserInput), atoi(ButtonSuaTrangThai.UserInput), DSDG.nodes[CurrentItem - 1]->DS_MT, DSDG.nodes[CurrentItem - 1]->TongSoLuong);
-			updateNode(TreeAVLDocGia, DocGia);
-			ThongBao("SUA THANH CONG", 400, 150, ButtonDocGia.ID);
 			ButtonTemp = nullptr;
+			if (strlen(ButtonSuaMaThe.UserInput) == 0 ||
+				strlen(ButtonSuaHo.UserInput) == 0 ||
+				strlen(ButtonSuaTen.UserInput) == 0 ||
+				strlen(ButtonSuaPhai.UserInput) == 0 ||
+				strlen(ButtonSuaTrangThai.UserInput) == 0)
+				ThongBao("KHONG DUOC DE TRONG");
+			else
+			{
+				TheDocGia DocGia(atoi(ButtonSuaMaThe.UserInput), ButtonSuaHo.UserInput, ButtonSuaTen.UserInput, atoi(ButtonSuaPhai.UserInput), atoi(ButtonSuaTrangThai.UserInput), DSDG.nodes[CurrentItem - 1]->DS_MT, DSDG.nodes[CurrentItem - 1]->TongSoLuong);
+				updateNode(TreeAVLDocGia, DocGia);
+				ThongBao("SUA THANH CONG", 400, 150, ButtonDocGia.ID);
+			}
 		}
 	}
 }
@@ -1834,16 +1883,27 @@ void ThemDocGiaEvent()
 		}
 		else if (ButtonThem.isMouseHover(mouseX, mouseY))
 		{
-			// Them Doc Gia moi
-			TheDocGia theDocGia(atoi(ButtonThemMaThe.UserInput), ButtonThemHo.UserInput, ButtonThemTen.UserInput, atoi(ButtonThemPhai.UserInput), atoi(ButtonThemTrangThai.UserInput));
-			TreeAVLDocGia = InsertDocGia(TreeAVLDocGia, theDocGia);
-			ClearEditButtonData(ButtonThemMaThe);
-			ClearEditButtonData(ButtonThemHo);
-			ClearEditButtonData(ButtonThemTen);
-			ClearEditButtonData(ButtonThemPhai);
-			ClearEditButtonData(ButtonThemTrangThai);
-			ButtonTemp = nullptr;
-			ThongBao("THEM DOC GIA THANH CONG");
+			if (strlen(ButtonThemMaThe.UserInput) == 0 ||
+				strlen(ButtonThemHo.UserInput) == 0 ||
+				strlen(ButtonThemTen.UserInput) == 0 ||
+				strlen(ButtonThemPhai.UserInput) == 0 ||
+				strlen(ButtonThemTrangThai.UserInput) == 0)
+				ThongBao("KHONG DUOC DE TRONG");
+			else if (DSDS.n == MAX_SIZE_DAUSACH)
+				ThongBao("DOC GIA DA DAT DEN GIOI HAN");
+			else
+			{
+				// Them Doc Gia moi
+				TheDocGia theDocGia(atoi(ButtonThemMaThe.UserInput), ButtonThemHo.UserInput, ButtonThemTen.UserInput, atoi(ButtonThemPhai.UserInput), atoi(ButtonThemTrangThai.UserInput));
+				TreeAVLDocGia = InsertDocGia(TreeAVLDocGia, theDocGia);
+				ClearEditButtonData(ButtonThemMaThe);
+				ClearEditButtonData(ButtonThemHo);
+				ClearEditButtonData(ButtonThemTen);
+				ClearEditButtonData(ButtonThemPhai);
+				ClearEditButtonData(ButtonThemTrangThai);
+				ButtonTemp = nullptr;
+				ThongBao("THEM DOC GIA THANH CONG");
+			}
 		}
 		else if (ButtonClearData.isMouseHover(mouseX, mouseY))
 		{
@@ -1879,10 +1939,14 @@ void MenuEvent()
 	{
 		if (ButtonDauSach.isMouseHover(mouseX, mouseY))
 		{
+			CurrentItem = -1;
+			CurrentPage = 1;
 			SetMenuSelect(ButtonDauSach.ID);
 		}
 		if (ButtonDocGia.isMouseHover(mouseX, mouseY))
 		{
+			CurrentItem = -1;
+			CurrentPage = 1;
 			SetMenuSelect(ButtonDocGia.ID);
 		}
 		if (ButtonThongKe.isMouseHover(mouseX, mouseY))
@@ -1903,25 +1967,47 @@ void MenuEvent()
 void MoveToNextEditTextButton()
 {
 	CLearLastCharInput();
-	if (ButtonTemp->ID == ButtonThemISBN.ID)
+	if (CurrentMenuId == ButtonThemDauSach.ID)
 	{
-		ButtonTemp = &ButtonThemTenSach;
+		if (ButtonTemp->ID == ButtonThemISBN.ID)
+			ButtonTemp = &ButtonThemTenSach;
+		else if (ButtonTemp->ID == ButtonThemTenSach.ID)
+			ButtonTemp = &ButtonThemSoTrang;
+		else if (ButtonTemp->ID == ButtonThemSoTrang.ID)
+			ButtonTemp = &ButtonThemTacGia;
+		else if (ButtonTemp->ID == ButtonThemTacGia.ID)
+			ButtonTemp = &ButtonThemNXB;
+		else if (ButtonTemp->ID == ButtonThemNXB.ID)
+			ButtonTemp = &ButtonThemTheLoai;
 	}
-	else if (ButtonTemp->ID == ButtonThemTenSach.ID)
+	else if (CurrentMenuId == ButtonSuaDauSach.ID)
 	{
-		ButtonTemp = &ButtonThemSoTrang;
+		if (ButtonTemp->ID == ButtonSuaTenSach.ID)
+			ButtonTemp = &ButtonSuaSoTrang;
+		else if (ButtonTemp->ID == ButtonSuaSoTrang.ID)
+			ButtonTemp = &ButtonSuaTacGia;
+		else if (ButtonTemp->ID == ButtonSuaTacGia.ID)
+			ButtonTemp = &ButtonSuaNXB;
+		else if (ButtonTemp->ID == ButtonSuaNXB.ID)
+			ButtonTemp = &ButtonSuaTheLoai;
 	}
-	else if (ButtonTemp->ID == ButtonThemSoTrang.ID)
+	else if (CurrentMenuId == ButtonThemDocGia.ID)
 	{
-		ButtonTemp = &ButtonThemTacGia;
+		if (ButtonTemp->ID == ButtonThemHo.ID)
+			ButtonTemp = &ButtonThemTen;
+		else if (ButtonTemp->ID == ButtonThemTen.ID)
+			ButtonTemp = &ButtonThemPhai;
+		else if (ButtonTemp->ID == ButtonThemPhai.ID)
+			ButtonTemp = &ButtonThemTrangThai;
 	}
-	else if (ButtonTemp->ID == ButtonThemTacGia.ID)
+	else if (CurrentMenuId == ButtonSuaDocGia.ID)
 	{
-		ButtonTemp = &ButtonThemNXB;
-	}
-	else if (ButtonTemp->ID == ButtonThemNXB.ID)
-	{
-		ButtonTemp = &ButtonThemTheLoai;
+		if (ButtonTemp->ID == ButtonSuaHo.ID)
+			ButtonTemp = &ButtonSuaTen;
+		else if (ButtonTemp->ID == ButtonSuaTen.ID)
+			ButtonTemp = &ButtonSuaPhai;
+		else if (ButtonTemp->ID == ButtonSuaPhai.ID)
+			ButtonTemp = &ButtonSuaTrangThai;
 	}
 }
 
@@ -1939,6 +2025,11 @@ boolean CheckInput(char c)
 			if (c >= 48 && c <= 57)
 				return true;
 		}
+	}
+	else if (CurrentMenuId == 99)
+	{
+		if (ButtonTemp->ID == ButtonThemViTriSach.ID)
+			return true;
 	}
 	else if (CurrentMenuId == ButtonThemDauSach.ID)
 	{
@@ -1963,9 +2054,7 @@ boolean CheckInput(char c)
 	}
 	else if (CurrentMenuId == ButtonSuaDauSach.ID)
 	{
-		if (ButtonTemp->ID == ButtonSuaISBN.ID)
-			return true;
-		else if (ButtonTemp->ID == ButtonSuaTenSach.ID)
+		if (ButtonTemp->ID == ButtonSuaTenSach.ID)
 			return true;
 		else if (ButtonTemp->ID == ButtonSuaSoTrang.ID)
 		{
