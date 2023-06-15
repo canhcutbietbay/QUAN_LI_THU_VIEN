@@ -21,6 +21,9 @@ const int XDS[7] = {10, X_DS * 1.5, X_DS * 4, X_DS * 7, X_DS * 8.5, X_DS * 9.5, 
 const int XDMS[] = {10, X_DS * 4, X_DS * 7, X_DS * 10 - 10};
 const int XDG[] = {10, X_DS * 2, X_DS * 4, X_DS * 6, X_DS * 8, X_DS * 10 - 10};
 const int XXDG[] = {10, X_DS * 2, X_DS * 4.5, X_DS * 7, X_DS * 8.5, X_DS * 10 - 10};
+const int XQH[] = {10, X_DS * 1.5, X_DS * 3.5, X_DS * 5, X_DS * 7.5, X_DS * 9, X_DS * 10 - 10};
+const int XT10[] = {10, X_DS * 4, X_DS * 7, X_DS * 10 - 10};
+
 int mouseX = 0, mouseY = 0;
 bool isExit = 0;
 
@@ -80,6 +83,7 @@ DS_DauSach DSDS; // global
 DS_DauSach ListSearchDauSach;
 DS_DMS DSDMS;
 DS_MT DSMT;
+DS_QuaHan DSQH;
 // Doc Gia
 Button ButtonDocGiaHoTen(201, w / 2 - DefaultButtonWidth - 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "HO TEN", 0);
 Button ButtonDocGiaMaThe(202, w / 2 + 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "MA THE", 0);
@@ -100,7 +104,9 @@ EditButton ButtonSuaTrangThai(216, w / 2 - w / 6 + 10, h / 2 - h / 4 + 120 + Def
 Button ButtonMuonSach(216, (w / 2) * 1 - DefaultButtonWidth / 2 - w / 4, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "MUON", 0);
 Button ButtonTraSach(217, (w / 2) * 2 - DefaultButtonWidth / 2 - w / 4, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "TRA", 0);
 EditButton ButtonNhapMaSach(218, w / 2 - w / 6 + 10, h / 2 - DefaultButtonHeight / 2, w / 3 - 20, DefaultButtonHeight, "MA SACH", "", "NHAP MA SACH");
-
+// Thong ke
+Button ButtonThongKeQuaHan(301, w / 2 - DefaultButtonWidth - 10 - 25, Y_DS - 75, DefaultButtonWidth + 25, DefaultButtonHeight, "QUA HAN", 0);
+Button ButtonThongKeTop10(302, w / 2 + 10, Y_DS - 75, DefaultButtonWidth + 25, DefaultButtonHeight, "TOP 10", 0);
 void InDanhSachDauSach(DS_DauSach &DSDS);
 void InDMS();
 void InMuonTra(NodeTheDocGia *&TreeAVLDocGia);
@@ -333,6 +339,10 @@ void RunThemSach();
 void RunThemDocGia();
 void RunXoaDocGia();
 void RunSuaDocGia();
+void RunThongKe();
+void RunQuaHan();
+void RunTop10();
+void RunThongTin();
 void SetMenuSelect(int MenuID)
 {
 	if (CurrentMenuId != MenuID)
@@ -365,6 +375,10 @@ void SetMenuSelect(int MenuID)
 		RunXoaDocGia();
 	else if (MenuID == ButtonSuaDocGia.ID)
 		RunSuaDocGia();
+	else if (MenuID == ButtonThongKe.ID)
+		RunThongKe();
+	else if (MenuID == ButtonThongTin.ID)
+		RunThongTin();
 }
 
 void DrawSelecteItemDauSach(DS_DauSach DSDS)
@@ -430,12 +444,6 @@ void DrawItemDauSach(DS_DauSach DSDS)
 	temp = to_string(TotalPage);
 	strcat(NumOfPage, temp.c_str());
 	outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
-	// if (CurrentPage > TotalPage)
-	// {
-	// 	while (CurrentPage > TotalPage)
-	// 		CurrentPage--;
-	// 	RunDauSach();
-	// }
 }
 
 void SearchDauSach(char TenSach[])
@@ -451,6 +459,139 @@ void SearchDauSach(char TenSach[])
 	}
 }
 
+void DrawItemQuaHan(DS_QuaHan DSQH)
+{
+	char data[15];
+	if (DSQH.n == 0)
+		return;
+	for (int i = 1 + 10 * (CurrentPage - 1); i <= 10 + 10 * (CurrentPage - 1); i++)
+	{
+		if (i > DSQH.n)
+			break;
+		line(XQH[0], (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1) + 1)), XQH[6], (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1) + 1)));
+		itoa(DSQH.nodes[i - 1]->MaThe, data, 10);
+		outtextxy(XQH[0] + (XQH[1] - XQH[0]) / 2 - textwidth(data) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), data);
+		outtextxy(XQH[1] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSQH.nodes[i - 1]->HoTen);
+		outtextxy(XQH[2] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSQH.nodes[i - 1]->MaSach);
+		outtextxy(XQH[3] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSQH.nodes[i - 1]->TenSach);
+		outtextxy(XQH[4] + (XQH[5] - XQH[4]) / 2 - textwidth(DSQH.nodes[i - 1]->NgayMuon.res) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSQH.nodes[i - 1]->NgayMuon.res);
+		itoa(DSQH.nodes[i - 1]->SoNgayQuaHan, data, 10);
+		outtextxy(XQH[5] + (XQH[6] - XQH[5]) / 2 - textwidth(data) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), data);
+	}
+}
+
+void RunQuaHan()
+{
+	ClearScreen();
+	ButtonBack.draw();
+	ButtonPrev.draw();
+	ButtonNext.draw();
+	ButtonThongKeQuaHan.draw();
+	ButtonThongKeTop10.draw();
+	char Title[][25] = {"MA THE", "HO TEN", "MA SACH", "TEN SACH", "NGAY MUON", "SO NGAY QH"};
+	setcolor(WHITE);
+	// Ve khung + title
+	char title[] = "THONG KE";
+	outtextxy(w / 2 - textwidth(title) / 2, textheight("A") - 10, title);
+	rectangle(XQH[0], Y_DS, XQH[6], Y_DS * 5);
+	line(XQH[0], Y_DS + 50, XQH[6], Y_DS + 50);
+	for (int i = 0; i < 6; i++)
+	{
+		line(XQH[i + 1], Y_DS, XQH[i + 1], Y_DS * 5);
+		outtextxy(XQH[i] + ((XQH[i + 1] - XQH[i]) / 2 - textwidth(Title[i]) / 2), (Y_DS + 25) - textheight("A") / 2, Title[i]);
+	}
+	DSQH.n = 0;
+	GetFromTree(TreeAVLDocGia, DSQH, DSDS);
+	DrawItemQuaHan(DSQH);
+	memset(NumOfPage, 0, sizeof NumOfPage);
+	string temp;
+	TotalPage = ceil(DSQH.n * 1.0 / 10);
+	if (TotalPage == 0)
+		TotalPage = 1;
+	temp = to_string(CurrentPage);
+	strcat(NumOfPage, temp.c_str());
+	strcat(NumOfPage, "/");
+	temp = to_string(TotalPage);
+	strcat(NumOfPage, temp.c_str());
+	outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
+}
+void RunTop10()
+{
+	ClearScreen();
+	ButtonBack.draw();
+	ButtonPrev.draw();
+	ButtonNext.draw();
+	ButtonThongKeQuaHan.draw();
+	ButtonThongKeTop10.draw();
+	char Title[][25] = {"ISBN", "TEN SACH", "SO LUOT MUON"};
+	setcolor(WHITE);
+	// Ve khung + title
+	char title[] = "THONG KE";
+	outtextxy(w / 2 - textwidth(title) / 2, textheight("A") - 10, title);
+	rectangle(XT10[0], Y_DS, XT10[3], Y_DS * 5);
+	line(XT10[0], Y_DS + 50, XT10[3], Y_DS + 50);
+	for (int i = 0; i < 3; i++)
+	{
+		line(XT10[i + 1], Y_DS, XT10[i + 1], Y_DS * 5);
+		outtextxy(XT10[i] + ((XT10[i + 1] - XT10[i]) / 2 - textwidth(Title[i]) / 2), (Y_DS + 25) - textheight("A") / 2, Title[i]);
+	}
+}
+void RunThongKe()
+{
+	if (ButtonThongKeTop10.IsHover == 0)
+	{
+		ButtonThongKeQuaHan.IsHover = true;
+		ButtonThongKeQuaHan.IsChoose = 1;
+		ButtonThongKeTop10.IsChoose = 0;
+	}
+	else
+	{
+		ButtonThongKeQuaHan.IsHover = false;
+		ButtonThongKeQuaHan.IsChoose = 0;
+		ButtonThongKeTop10.IsChoose = 1;
+	}
+	if (ButtonThongKeQuaHan.IsChoose)
+		RunQuaHan();
+	else
+		RunTop10();
+}
+void RunThongTin()
+{
+	ClearScreen();
+	ButtonBack.draw();
+		// ve giao dien
+	setcolor(YELLOW);	// chon mau chu
+	settextstyle(BOLD_FONT, HORIZ_DIR, 3);		// chon font chu, huong ve chu (direction), size chu
+	
+	char uni[] = "Hoc vien Cong nghe Buu Chinh Vien Thong - TPHCM";
+	char nam[] = "-- 2023 --";
+	char title[] = "* Mon hoc : ";
+	char title2[] = "Cau Truc Du Lieu & Giai Thuat";
+	char gv[] = "* Giang vien : ";
+	char gv2[] = "Luu Nguyen Ky Thu";
+	char doan[] = "* Do An : ";
+	char doan2[] = "Quan Ly Thu Vien";
+	char sv[] = "* Sinh vien :";
+	char author1[] = "1. Nguyen Tan Loc - N21DCCN049 - D21CQCN01-N";
+	char author2[] = "2. Huynh Ngoc Tan - N21DCCN074 - D21CQCN01-N";
+	
+	settextstyle(BOLD_FONT, HORIZ_DIR, 5);
+	outtextxy(w/2-textwidth(uni)/2, 50, uni);
+	outtextxy(w/2-textwidth(nam)/2, h-250, nam);
+	
+	settextstyle(BOLD_FONT, HORIZ_DIR, 3);
+	outtextxy(w/2-500, 200, title);
+	outtextxy(w/2-500, 280, gv);
+	outtextxy(w/2-500, 360, doan);
+	outtextxy(w/2-500, 440, sv);
+	
+	outtextxy(w/2-250, 200, title2);
+	outtextxy(w/2-250, 280, gv2);
+	outtextxy(w/2-250, 360, doan2);
+	
+	outtextxy(w/2-250, 440, author1);
+	outtextxy(w/2-250, 520, author2);
+}
 void RunDauSach()
 {
 	ClearScreen();
@@ -1570,6 +1711,49 @@ void SuaDauSachEvent()
 		}
 	}
 }
+void ThongKeEvent()
+{
+	ButtonEffect(ButtonBack);
+	ButtonEffect(ButtonPrev);
+	ButtonEffect(ButtonNext);
+	if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		if (ButtonBack.isMouseHover(mouseX, mouseY))
+			SetMenuSelect(0);
+		else if (ButtonThongKeTop10.isMouseHover(mouseX, mouseY))
+		{
+			ButtonThongKeTop10.IsHover = 1;
+			SetMenuSelect(ButtonThongKe.ID);
+		}
+		else if (ButtonThongKeQuaHan.isMouseHover(mouseX, mouseY))
+		{
+			CurrentPage = 1;
+			ButtonThongKeTop10.IsHover = 0;
+			SetMenuSelect(ButtonThongKe.ID);
+		}
+		else if (ButtonNext.isMouseHover(mouseX, mouseY))
+		{
+			if (CurrentPage < TotalPage)
+				CurrentPage++;
+			RunThongKe();
+		}
+		else if (ButtonPrev.isMouseHover(mouseX, mouseY))
+		{
+			if (CurrentPage > 1)
+				CurrentPage--;
+			RunThongKe();
+		}
+	}
+}
+void ThongTinEvent()
+{
+	ButtonEffect(ButtonBack);
+	if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		if (ButtonBack.isMouseHover(mouseX, mouseY))
+			SetMenuSelect(0);
+	}
+}
 void SuaDocGiaEvent()
 {
 	ButtonEffect(ButtonDongY);
@@ -1608,7 +1792,7 @@ void SuaDocGiaEvent()
 		}
 		else if (ButtonDongY.isMouseHover(mouseX, mouseY))
 		{
-			TheDocGia DocGia(atoi(ButtonSuaMaThe.UserInput), ButtonSuaHo.UserInput, ButtonSuaTen.UserInput, atoi(ButtonSuaPhai.UserInput), atoi(ButtonSuaTrangThai.UserInput), DSDG.nodes[CurrentItem-1]->DS_MT, DSDG.nodes[CurrentItem-1]->TongSoLuong);
+			TheDocGia DocGia(atoi(ButtonSuaMaThe.UserInput), ButtonSuaHo.UserInput, ButtonSuaTen.UserInput, atoi(ButtonSuaPhai.UserInput), atoi(ButtonSuaTrangThai.UserInput), DSDG.nodes[CurrentItem - 1]->DS_MT, DSDG.nodes[CurrentItem - 1]->TongSoLuong);
 			updateNode(TreeAVLDocGia, DocGia);
 			ThongBao("SUA THANH CONG", 400, 150, ButtonDocGia.ID);
 			ButtonTemp = nullptr;
@@ -1700,6 +1884,14 @@ void MenuEvent()
 		if (ButtonDocGia.isMouseHover(mouseX, mouseY))
 		{
 			SetMenuSelect(ButtonDocGia.ID);
+		}
+		if (ButtonThongKe.isMouseHover(mouseX, mouseY))
+		{
+			SetMenuSelect(ButtonThongKe.ID);
+		}
+		if (ButtonThongTin.isMouseHover(mouseX, mouseY))
+		{
+			SetMenuSelect(ButtonThongTin.ID);
 		}
 		else if (ButtonThoat.isMouseHover(mouseX, mouseY))
 		{
@@ -1910,6 +2102,10 @@ void Event()
 		XoaDocGiaEvent();
 	else if (CurrentMenuId == ButtonSuaDocGia.ID)
 		SuaDocGiaEvent();
+	else if (CurrentMenuId == ButtonThongKe.ID)
+		ThongKeEvent();
+	else if (CurrentMenuId == ButtonThongTin.ID)
+		ThongTinEvent();
 }
 void InDMS()
 {
@@ -1940,6 +2136,15 @@ void InMuonTra(NodeTheDocGia *&TreeAVLDocGia) // Inorder
 		InMuonTra(TreeAVLDocGia->right);
 	}
 }
+void InQuaHan()
+{
+	DSQH.n = 0;
+	GetFromTree(TreeAVLDocGia, DSQH, DSDS);
+	for (int i = 0; i < DSQH.n; ++i)
+	{
+		cout << DSQH.nodes[i]->MaSach << " " << DSQH.nodes[i]->SoNgayQuaHan << endl;
+	}
+}
 int main()
 {
 	initwindow(w, h, AppTitle);
@@ -1947,6 +2152,7 @@ int main()
 	GetDataFromFile();
 	// InDMS();
 	// InMuonTra(TreeAVLDocGia);
+	// InQuaHan();
 	while (1)
 	{
 		Event();
