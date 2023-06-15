@@ -20,7 +20,7 @@ const int X_DS = w / 10, Y_DS = h / 7;
 const int XDS[7] = {10, X_DS * 1.5, X_DS * 4, X_DS * 7, X_DS * 8.5, X_DS * 9.5, X_DS * 10 - 10};
 const int XDMS[] = {10, X_DS * 4, X_DS * 7, X_DS * 10 - 10};
 const int XDG[] = {10, X_DS * 2, X_DS * 4, X_DS * 6, X_DS * 8, X_DS * 10 - 10};
-const int XXDG[] = {10, X_DS * 3, X_DS * 5, X_DS * 7.5, X_DS * 10 - 10};
+const int XXDG[] = {10, X_DS * 2, X_DS * 4.5, X_DS * 7, X_DS * 8.5, X_DS * 10 - 10};
 int mouseX = 0, mouseY = 0;
 bool isExit = 0;
 
@@ -84,9 +84,9 @@ DS_MT DSMT;
 Button ButtonDocGiaHoTen(201, w / 2 - DefaultButtonWidth - 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "HO TEN", 0);
 Button ButtonDocGiaMaThe(202, w / 2 + 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "MA THE", 0);
 Button ButtonXemDocGia(203, (w / 4) * 1 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "XEM", 0);
-Button ButtonThemDocGia(204, (w / 4) * 2 - DefaultButtonWidth / 2 - w / 6, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "THEM", 0);
-Button ButtonXoaDocGia(205, (w / 4) * 3 - DefaultButtonWidth / 2 - w / 6, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "XOA", 0);
-Button ButtonSuaDocGia(206, (w / 4) * 4 - DefaultButtonWidth / 2 - w / 6, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "SUA", 0);
+Button ButtonThemDocGia(204, (w / 4) * 2 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "THEM", 0);
+Button ButtonXoaDocGia(205, (w / 4) * 3 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "XOA", 0);
+Button ButtonSuaDocGia(206, (w / 4) * 4 - DefaultButtonWidth / 2 - w / 8, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "SUA", 0);
 EditButton ButtonThemMaThe(207, w / 2 - w / 6 + 10, h / 2 - h / 4 + 80, w / 3 - 20, DefaultButtonHeight, "MA THE", "", "NHAP VAO MA THE");
 EditButton ButtonThemHo(208, w / 2 - w / 6 + 10, h / 2 - h / 4 + 90 + DefaultButtonHeight, w / 3 - 20, DefaultButtonHeight, "HO", "", "NHAP VAO HO");
 EditButton ButtonThemTen(209, w / 2 - w / 6 + 10, h / 2 - h / 4 + 100 + DefaultButtonHeight * 2, w / 3 - 20, DefaultButtonHeight, "TEN", "", "NHAP VAO TEN");
@@ -97,10 +97,14 @@ EditButton ButtonSuaHo(213, w / 2 - w / 6 + 10, h / 2 - h / 4 + 90 + DefaultButt
 EditButton ButtonSuaTen(214, w / 2 - w / 6 + 10, h / 2 - h / 4 + 100 + DefaultButtonHeight * 2, w / 3 - 20, DefaultButtonHeight, "TEN", "", "NHAP VAO TEN");
 EditButton ButtonSuaPhai(215, w / 2 - w / 6 + 10, h / 2 - h / 4 + 110 + DefaultButtonHeight * 3, w / 3 - 20, DefaultButtonHeight, "PHAI", "", "0: NAM - 1: NU");
 EditButton ButtonSuaTrangThai(216, w / 2 - w / 6 + 10, h / 2 - h / 4 + 120 + DefaultButtonHeight * 4, w / 3 - 20, DefaultButtonHeight, "TRANG THAI", "", "0: KHOA - 1:HOAT DONG");
-// EditButton ButtonSearchDocGia(216, w / 2 - w / 6, 50, w / 3, 50, "TIM DOC GIA", "", "NHAP MA DOC GIA");
+Button ButtonMuonSach(216, (w / 2) * 1 - DefaultButtonWidth / 2 - w / 4, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "MUON", 0);
+Button ButtonTraSach(217, (w / 2) * 2 - DefaultButtonWidth / 2 - w / 4, Y_DS * 6 - 10 - DefaultButtonHeight, DefaultButtonWidth, DefaultButtonHeight, "TRA", 0);
+EditButton ButtonNhapMaSach(218, w / 2 - w / 6 + 10, h / 2 - DefaultButtonHeight / 2, w / 3 - 20, DefaultButtonHeight, "MA SACH", "", "NHAP MA SACH");
 
 void InDanhSachDauSach(DS_DauSach &DSDS);
 void InDMS();
+void InMuonTra(NodeTheDocGia *&TreeAVLDocGia);
+
 string GetNumberFromMaSach(string MaSach)
 {
 
@@ -110,7 +114,16 @@ string GetNumberFromMaSach(string MaSach)
 
 int FindPosBookName(char maSach[15])
 {
-	string
+	for (int i = 0; i < DSDS.n; ++i)
+	{
+		int k = 0;
+		while (maSach[k] == DSDS.nodes[i]->ISBN[k])
+			if (maSach[k + 1] == '-')
+				return i;
+			else
+				k++;
+	}
+	return false;
 }
 
 void GetDataDauSachFromFile(DS_DauSach &DSDS)
@@ -314,6 +327,7 @@ void RunXoaDauSach();
 void RunSuaDauSach();
 void RunDocGia();
 void RunXemDocGia();
+void RunMuonSach();
 void RunThemDMS();
 void RunThemSach();
 void RunThemDocGia();
@@ -343,6 +357,8 @@ void SetMenuSelect(int MenuID)
 		RunDocGia();
 	else if (MenuID == ButtonXemDocGia.ID)
 		RunXemDocGia();
+	else if (MenuID == ButtonMuonSach.ID)
+		RunMuonSach();
 	else if (MenuID == ButtonThemDocGia.ID)
 		RunThemDocGia();
 	else if (MenuID == ButtonXoaDocGia.ID)
@@ -406,18 +422,20 @@ void DrawItemDauSach(DS_DauSach DSDS)
 	memset(NumOfPage, 0, sizeof NumOfPage);
 	string temp;
 	TotalPage = ceil(DSDS.n * 1.0 / 10);
+	if (TotalPage == 0)
+		TotalPage = 1;
 	temp = to_string(CurrentPage);
 	strcat(NumOfPage, temp.c_str());
 	strcat(NumOfPage, "/");
 	temp = to_string(TotalPage);
 	strcat(NumOfPage, temp.c_str());
 	outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
-	if (CurrentPage > TotalPage)
-	{
-		while (CurrentPage > TotalPage)
-			CurrentPage--;
-		RunDauSach();
-	}
+	// if (CurrentPage > TotalPage)
+	// {
+	// 	while (CurrentPage > TotalPage)
+	// 		CurrentPage--;
+	// 	RunDauSach();
+	// }
 }
 
 void SearchDauSach(char TenSach[])
@@ -569,18 +587,20 @@ void DrawItemDocGia(DS_DocGia DSDG)
 	memset(NumOfPage, 0, sizeof NumOfPage);
 	string temp;
 	TotalPage = ceil(DSDG.n * 1.0 / 10);
+	if (TotalPage == 0)
+		TotalPage = 1;
 	temp = to_string(CurrentPage);
 	strcat(NumOfPage, temp.c_str());
 	strcat(NumOfPage, "/");
 	temp = to_string(TotalPage);
 	strcat(NumOfPage, temp.c_str());
 	outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
-	if (CurrentPage > TotalPage)
-	{
-		while (CurrentPage > TotalPage)
-			CurrentPage--;
-		RunDocGia();
-	}
+	// if (CurrentPage > TotalPage)
+	// {
+	// 	while (CurrentPage > TotalPage)
+	// 		CurrentPage--;
+	// 	RunDocGia();
+	// }
 }
 void RunDocGia()
 {
@@ -599,6 +619,10 @@ void RunDocGia()
 	}
 	DSDG.n = 0;
 	GetFromTree(TreeAVLDocGia, DSDG);
+	for (int i = 0; i < DSDG.n; ++i){
+		cout << DSDG.nodes[i]->MaThe << " " << DSDG.nodes[i]->Ten << endl;
+	}
+	cout << "---------------------------" << endl;
 	ButtonDocGiaHoTen.draw();
 	ButtonDocGiaMaThe.draw();
 	ButtonBack.draw();
@@ -637,11 +661,12 @@ void DrawItemMuonTra(DS_MT DSMT)
 	{
 		if (i > DSMT.n)
 			break;
-		line(XXDG[0], (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1) + 1)), XXDG[4], (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1) + 1)));
+		line(XXDG[0], (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1) + 1)), XXDG[5], (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1) + 1)));
 		outtextxy(XXDG[0] + (XXDG[1] - XXDG[0]) / 2 - textwidth(DSMT.nodes[i - 1]->MaSach) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[i - 1]->MaSach);
-		outtextxy(XXDG[1] + (XXDG[2] - XXDG[1]) / 2 - textwidth(TrangThai[DSMT.nodes[i - 1]->TrangThai]) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSMT.nodes[i - 1]->TrangThai]);
-		outtextxy(XXDG[2] + (XXDG[3] - XXDG[2]) / 2 - textwidth(DSMT.nodes[i - 1]->NgayMuon.res) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[i - 1]->NgayMuon.res);
-		outtextxy(XXDG[3] + (XXDG[4] - XXDG[3]) / 2 - textwidth(DSMT.nodes[i - 1]->NgayTra.res) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[i - 1]->NgayTra.res);
+		outtextxy(XXDG[1] + 10, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDS.nodes[FindPosBookName(DSMT.nodes[i - 1]->MaSach)]->TenSach);
+		outtextxy(XXDG[2] + (XXDG[3] - XXDG[2]) / 2 - textwidth(TrangThai[DSMT.nodes[i - 1]->TrangThai]) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSMT.nodes[i - 1]->TrangThai]);
+		outtextxy(XXDG[3] + (XXDG[4] - XXDG[3]) / 2 - textwidth(DSMT.nodes[i - 1]->NgayMuon.res) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[i - 1]->NgayMuon.res);
+		outtextxy(XXDG[4] + (XXDG[5] - XXDG[4]) / 2 - textwidth(DSMT.nodes[i - 1]->NgayTra.res) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[i - 1]->NgayTra.res);
 	}
 }
 void DrawSelectedItemMuonTra(DS_MT DSMT)
@@ -654,18 +679,21 @@ void DrawSelectedItemMuonTra(DS_MT DSMT)
 		ClearScreenXY(XXDG[1] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[2] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
 		ClearScreenXY(XXDG[2] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[3] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
 		ClearScreenXY(XXDG[3] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[3] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		ClearScreenXY(XXDG[4] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[3] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
 		// Fill with color
 		setfillstyle(SOLID_FILL, BG_BUTTON_SELECT);
 		floodfill(XXDG[0] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
 		floodfill(XXDG[1] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
 		floodfill(XXDG[2] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
 		floodfill(XXDG[3] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
+		floodfill(XXDG[4] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
 		// Draw selected item
 		setbkcolor(BG_BUTTON_SELECT);
 		outtextxy(XXDG[0] + (XXDG[1] - XXDG[0]) / 2 - textwidth(DSMT.nodes[SubCurrentItem - 1]->MaSach) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[SubCurrentItem - 1]->MaSach);
-		outtextxy(XXDG[1] + (XXDG[2] - XXDG[1]) / 2 - textwidth(TrangThai[DSMT.nodes[SubCurrentItem - 1]->TrangThai]) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSMT.nodes[SubCurrentItem - 1]->TrangThai]);
-		outtextxy(XXDG[2] + (XXDG[3] - XXDG[2]) / 2 - textwidth(DSMT.nodes[SubCurrentItem - 1]->NgayMuon.res) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[SubCurrentItem - 1]->NgayMuon.res);
-		outtextxy(XXDG[3] + (XXDG[4] - XXDG[3]) / 2 - textwidth(DSMT.nodes[SubCurrentItem - 1]->NgayTra.res) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[SubCurrentItem - 1]->NgayTra.res);
+		outtextxy(XXDG[1] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDS.nodes[FindPosBookName(DSMT.nodes[SubCurrentItem - 1]->MaSach)]->TenSach);
+		outtextxy(XXDG[2] + (XXDG[3] - XXDG[2]) / 2 - textwidth(TrangThai[DSMT.nodes[SubCurrentItem - 1]->TrangThai]) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSMT.nodes[SubCurrentItem - 1]->TrangThai]);
+		outtextxy(XXDG[3] + (XXDG[4] - XXDG[3]) / 2 - textwidth(DSMT.nodes[SubCurrentItem - 1]->NgayMuon.res) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[SubCurrentItem - 1]->NgayMuon.res);
+		outtextxy(XXDG[4] + (XXDG[5] - XXDG[4]) / 2 - textwidth(DSMT.nodes[SubCurrentItem - 1]->NgayTra.res) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[SubCurrentItem - 1]->NgayTra.res);
 	}
 }
 void RunXemDocGia()
@@ -674,11 +702,13 @@ void RunXemDocGia()
 	ButtonBack.draw();
 	ButtonPrev.draw();
 	ButtonNext.draw();
-	char Title[][25] = {"MA SACH", "TRANG THAI", "NGAY MUON", "NGAY TRA"};
+	ButtonMuonSach.draw();
+	ButtonTraSach.draw();
+	char Title[][25] = {"MA SACH", "TEN SACH", "TRANG THAI", "NGAY MUON", "NGAY TRA"};
 	setcolor(WHITE);
-	rectangle(XXDG[0], Y_DS, XXDG[4], Y_DS * 5);
-	line(XXDG[0], Y_DS + 50, XXDG[4], Y_DS + 50);
-	for (int i = 0; i < 4; i++)
+	rectangle(XXDG[0], Y_DS, XXDG[5], Y_DS * 5);
+	line(XXDG[0], Y_DS + 50, XXDG[5], Y_DS + 50);
+	for (int i = 0; i < 5; i++)
 	{
 		line(XXDG[i + 1], Y_DS, XXDG[i + 1], Y_DS * 5);
 		outtextxy(XXDG[i] + ((XXDG[i + 1] - XXDG[i]) / 2 - textwidth(Title[i]) / 2), (Y_DS + 25) - textheight("A") / 2, Title[i]);
@@ -692,6 +722,8 @@ void RunXemDocGia()
 	memset(NumOfPage, 0, sizeof NumOfPage);
 	string temp;
 	TotalPage = ceil(DSMT.n * 1.0 / 10);
+	if (TotalPage == 0)
+		TotalPage = 1;
 	temp = to_string(SubCurrentPage);
 	strcat(NumOfPage, temp.c_str());
 	strcat(NumOfPage, "/");
@@ -701,7 +733,22 @@ void RunXemDocGia()
 	DrawItemMuonTra(DSMT);
 	DrawSelectedItemMuonTra(DSMT);
 }
-
+void RunMuonSach()
+{
+	const int width = w / 3, height = 300;
+	char Title[50] = "MUON SACH";
+	ClearScreenXY(w / 2 - width / 2, h / 2 - height / 2, w / 2 + width / 2, h / 2 + height / 2);
+	setcolor(WHITE);
+	rectangle(w / 2 - width / 2, h / 2 - height / 2, w / 2 + width / 2, h / 2 + height / 2);
+	settextstyle(BOLD_FONT, HORIZ_DIR, 5);
+	setcolor(TEXT_TITLE_COLOR);
+	outtextxy(w / 2 - textwidth(Title) / 2, h / 2 - height / 2 + 10, Title);
+	ButtonNhapMaSach.draw();
+	ButtonDongY.Init(0, w / 2 - DefaultButtonWidth / 2 - w / 12, h / 2 + height / 2 - DefaultButtonHeight - 10, DefaultButtonWidth, DefaultButtonHeight, "DONG Y", 0);
+	ButtonHuyBo.Init(0, w / 2 - DefaultButtonWidth / 2 + w / 12, h / 2 + height / 2 - DefaultButtonHeight - 10, DefaultButtonWidth, DefaultButtonHeight, "HUY BO", 0);
+	ButtonDongY.draw();
+	ButtonHuyBo.draw();
+}
 void RunThemDocGia()
 {
 	const int width = w / 3, height = h / 4;
@@ -796,6 +843,8 @@ void RunXemDauSach()
 	memset(NumOfPage, 0, sizeof NumOfPage);
 	string temp;
 	TotalPage = ceil(dauSach->TongSoLuong * 1.0 / 10);
+	if (TotalPage == 0)
+		TotalPage = 1;
 	temp = to_string(SubCurrentPage);
 	strcat(NumOfPage, temp.c_str());
 	strcat(NumOfPage, "/");
@@ -1285,7 +1334,10 @@ void ThemDMSEvent()
 				ButtonTemp = nullptr;
 				TotalAddDMS = atoi(ButtonThemSoLuong.UserInput);
 				ClearEditButtonData(ButtonThemSoLuong);
-				SetMenuSelect(99);
+				if (!TotalAddDMS)
+					ThongBao("SO LUONG PHAI > 0");
+				else
+					SetMenuSelect(99);
 			}
 			else
 				ThongBao("NHAP SO LUONG SACH");
@@ -1342,6 +1394,8 @@ void XemDocGiaEvent()
 	ButtonEffect(ButtonBack);
 	ButtonEffect(ButtonPrev);
 	ButtonEffect(ButtonNext);
+	ButtonEffect(ButtonMuonSach);
+	ButtonEffect(ButtonTraSach);
 	if (GetAsyncKeyState(VK_LBUTTON))
 	{
 		if (ButtonBack.isMouseHover(mouseX, mouseY))
@@ -1358,10 +1412,63 @@ void XemDocGiaEvent()
 				SubCurrentPage--;
 			RunXemDocGia();
 		}
+		else if (ButtonMuonSach.isMouseHover(mouseX, mouseY))
+			SetMenuSelect(ButtonMuonSach.ID);
+		else if (ButtonTraSach.isMouseHover(mouseX, mouseY))
+		{
+			if (SubCurrentItem == -1)
+			{
+				ThongBao("CHON 1 MA SACH");
+			}
+			else if (DSMT.nodes[SubCurrentItem - 1]->TrangThai != 0)
+				ThongBao("KHONG THE TRA");
+			else
+			{
+				int code = TraSach(DSDG.nodes[CurrentItem - 1], DSMT.nodes[SubCurrentItem - 1]->MaSach, DSDS);
+				if (code == 1)
+					ThongBao("TRA SACH THANH CONG");
+				else
+					ThongBao("LOI");
+			}
+		}
 		else
 		{
 			GetCurrentItem(mouseY);
 			RunXemDocGia();
+		}
+	}
+}
+void MuonSachEvent()
+{
+	ButtonEffect(ButtonDongY);
+	ButtonEffect(ButtonHuyBo);
+	if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		if (ButtonHuyBo.isMouseHover(mouseX, mouseY))
+		{
+			ClearEditButtonData(ButtonNhapMaSach);
+			ButtonTemp = nullptr;
+			SetMenuSelect(ButtonXemDocGia.ID);
+		}
+		else if (ButtonDongY.isMouseHover(mouseX, mouseY))
+		{
+			if (strlen(ButtonNhapMaSach.UserInput) == 0)
+				ThongBao("HAY NHAP MA SACH");
+			else
+			{
+				int code = MuonSach(DSDG.nodes[CurrentItem - 1], ButtonNhapMaSach.UserInput, DSDS);
+				ButtonTemp = nullptr;
+				ClearEditButtonData(ButtonNhapMaSach);
+				if (code != 0)
+					ThongBao(MuonSachCode[code]);
+				else
+					ThongBao(MuonSachCode[code], 400, 150, ButtonXemDocGia.ID);
+			}
+		}
+		else if (ButtonNhapMaSach.isMouseHover(mouseX, mouseY))
+		{
+			CLearLastCharInput();
+			ButtonTemp = &ButtonNhapMaSach;
 		}
 	}
 }
@@ -1505,7 +1612,7 @@ void SuaDocGiaEvent()
 		}
 		else if (ButtonDongY.isMouseHover(mouseX, mouseY))
 		{
-			TheDocGia DocGia(atoi(ButtonSuaMaThe.UserInput), ButtonSuaHo.UserInput, ButtonSuaTen.UserInput, atoi(ButtonSuaPhai.UserInput), atoi(ButtonSuaTrangThai.UserInput));
+			TheDocGia DocGia(atoi(ButtonSuaMaThe.UserInput), ButtonSuaHo.UserInput, ButtonSuaTen.UserInput, atoi(ButtonSuaPhai.UserInput), atoi(ButtonSuaTrangThai.UserInput), DSDG.nodes[CurrentItem-1]->DS_MT, DSDG.nodes[CurrentItem-1]->TongSoLuong);
 			updateNode(TreeAVLDocGia, DocGia);
 			ThongBao("SUA THANH CONG", 400, 150, ButtonDocGia.ID);
 			ButtonTemp = nullptr;
@@ -1641,7 +1748,7 @@ boolean CheckInput(char c)
 	{
 		if (ButtonTemp->ID == ButtonThemSoLuong.ID)
 		{
-			if (c > 48 && c <= 57)
+			if (c >= 48 && c <= 57)
 				return true;
 		}
 	}
@@ -1686,6 +1793,10 @@ boolean CheckInput(char c)
 		}
 		else if (ButtonTemp->ID == ButtonSuaTheLoai.ID)
 			return true;
+	}
+	else if (CurrentMenuId == ButtonMuonSach.ID)
+	{
+		return true;
 	}
 	else if (CurrentMenuId == ButtonThemDocGia.ID)
 	{
@@ -1737,6 +1848,7 @@ void KeyBoardEvent()
 		while (kbhit())
 		{
 			c = getch();
+			c = toupper(c);
 			if (c == BACKSPACE)
 			{
 				ButtonTemp->UserInput[n - 1] = '\0';
@@ -1794,6 +1906,8 @@ void Event()
 		DocGiaEvent();
 	else if (CurrentMenuId == ButtonXemDocGia.ID)
 		XemDocGiaEvent();
+	else if (CurrentMenuId == ButtonMuonSach.ID)
+		MuonSachEvent();
 	else if (CurrentMenuId == ButtonThemDocGia.ID)
 		ThemDocGiaEvent();
 	else if (CurrentMenuId == ButtonXoaDocGia.ID)

@@ -77,26 +77,14 @@ void InsertLast_DM_Sach(DM_Sach *&First, Sach *sach)
   }
 }
 
-// lay node sach o vi tri pos
-DM_Sach *GetDM_Sach(DM_Sach *First, int id)
+// lay node sach voi masach
+DM_Sach *GetDM_Sach(DM_Sach *First, char* masach)
 {
   DM_Sach *node = First;
-  while (node->sach->id < id) // ds tinh tu 1
-    if (node->next == nullptr)
-      return nullptr;
+  while (node) // ds tinh tu 1
+    if (!strcmp(masach, node->sach->MaSach))
+      return node;
     else
       node = node->next;
   return node;
 }
-// // lay node sach voi masach
-// DM_Sach *GetDM_Sach(DM_Sach *First, char* masach)
-// {
-//   DM_Sach *node = First;
-//   while (node) // ds tinh tu 1
-//     if (!strcmp(masach, node->sach->MaSach))
-//       return node;
-//     else
-//       node = node->next;
-//   return node;
-// }
-// #endif
