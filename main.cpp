@@ -20,12 +20,12 @@ const int X_DS = w / 10, Y_DS = h / 7;
 const int XDS[7] = {10, X_DS * 1.5, X_DS * 4, X_DS * 7, X_DS * 8.5, X_DS * 9.5, X_DS * 10 - 10};
 const int XDMS[] = {10, X_DS * 4, X_DS * 7, X_DS * 10 - 10};
 const int XDG[] = {10, X_DS * 2, X_DS * 4, X_DS * 6, X_DS * 8, X_DS * 10 - 10};
-const int XXDG[] = {10, X_DS * 4, X_DS * 7, X_DS * 10 - 10};
+const int XXDG[] = {10, X_DS * 3, X_DS * 5, X_DS * 7.5, X_DS * 10 - 10};
 int mouseX = 0, mouseY = 0;
 bool isExit = 0;
 
 const int ContentHeight = (Y_DS * 5 - Y_DS - 50) / 10;
-int CurrentItem = -1, CurrentItemDMS = -1, CurrentAddDMS = -1, TotalAddDMS = -1;
+int CurrentItem = -1, SubCurrentItem = -1, CurrentAddDMS = -1, TotalAddDMS = -1;
 
 int ButtonHeight = 60, ButtonWidth = 300, ButtonSpace = 80, ButtonY = 200;
 Button ButtonDauSach(100, w / 2 - ButtonWidth / 2, ButtonY + ButtonSpace, ButtonWidth, ButtonHeight, "QUAN LY DAU SACH", 0);
@@ -79,6 +79,7 @@ EditButton ButtonThemViTriSach(135, w / 2 - w / 6 + 10, h / 3 + 50 + DefaultButt
 DS_DauSach DSDS; // global
 DS_DauSach ListSearchDauSach;
 DS_DMS DSDMS;
+DS_MT DSMT;
 // Doc Gia
 Button ButtonDocGiaHoTen(201, w / 2 - DefaultButtonWidth - 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "HO TEN", 0);
 Button ButtonDocGiaMaThe(202, w / 2 + 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "MA THE", 0);
@@ -106,6 +107,12 @@ string GetNumberFromMaSach(string MaSach)
 	string res = MaSach.substr(MaSach.length() - 2, 2);
 	return res;
 }
+
+int FindPosBookName(char maSach[15])
+{
+	string
+}
+
 void GetDataDauSachFromFile(DS_DauSach &DSDS)
 {
 	fstream FileDauSach, FileDanhMucSach;
@@ -219,6 +226,8 @@ void GetDataDocGiaFromFile(NodeTheDocGia *&TreeAVLDocGia)
 				node->NgayTra.Month = 0;
 				node->NgayTra.Year = 0;
 			}
+			node->NgayMuon.GetRes();
+			node->NgayTra.GetRes();
 			InsertLast_DM_MuonTra(DSMT, node);
 		}
 		theDocGia.DS_MT = DSMT;
@@ -283,7 +292,7 @@ void ThongBao(char Data[], int width = 400, int height = 150, int NextMenu = -1)
 char AppTitle[50] = "QUAN LY THU VIEN";
 char NumOfPage[10] = "";
 int CurrentPage = 1, TotalPage = 0;
-int CurrentPageDMS = 1;
+int SubCurrentPage = 1;
 void DrawMenu()
 {
 	ClearScreen();
@@ -619,38 +628,78 @@ void RunDocGia()
 	DrawSelecteItemDocGia(DSDG); // Ve selected item
 }
 
+void DrawItemMuonTra(DS_MT DSMT)
+{
+	char TrangThai[][25] = {"DANG MUON", "DA TRA", "LAM MAT SACH"};
+	if (DSMT.n == 0)
+		return;
+	for (int i = 1 + 10 * (SubCurrentPage - 1); i <= 10 + 10 * (SubCurrentPage - 1); i++)
+	{
+		if (i > DSMT.n)
+			break;
+		line(XXDG[0], (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1) + 1)), XXDG[4], (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1) + 1)));
+		outtextxy(XXDG[0] + (XXDG[1] - XXDG[0]) / 2 - textwidth(DSMT.nodes[i - 1]->MaSach) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[i - 1]->MaSach);
+		outtextxy(XXDG[1] + (XXDG[2] - XXDG[1]) / 2 - textwidth(TrangThai[DSMT.nodes[i - 1]->TrangThai]) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSMT.nodes[i - 1]->TrangThai]);
+		outtextxy(XXDG[2] + (XXDG[3] - XXDG[2]) / 2 - textwidth(DSMT.nodes[i - 1]->NgayMuon.res) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[i - 1]->NgayMuon.res);
+		outtextxy(XXDG[3] + (XXDG[4] - XXDG[3]) / 2 - textwidth(DSMT.nodes[i - 1]->NgayTra.res) / 2, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[i - 1]->NgayTra.res);
+	}
+}
+void DrawSelectedItemMuonTra(DS_MT DSMT)
+{
+	if (SubCurrentItem > 0 && (ceil(SubCurrentItem * 1.0 / 10) == SubCurrentPage))
+	{
+		char TrangThai[][25] = {"DANG MUON", "DA TRA", "LAM MAT SACH"};
+		// Clear text
+		ClearScreenXY(XXDG[0] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[1] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		ClearScreenXY(XXDG[1] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[2] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		ClearScreenXY(XXDG[2] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[3] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		ClearScreenXY(XXDG[3] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XXDG[3] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		// Fill with color
+		setfillstyle(SOLID_FILL, BG_BUTTON_SELECT);
+		floodfill(XXDG[0] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
+		floodfill(XXDG[1] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
+		floodfill(XXDG[2] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
+		floodfill(XXDG[3] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
+		// Draw selected item
+		setbkcolor(BG_BUTTON_SELECT);
+		outtextxy(XXDG[0] + (XXDG[1] - XXDG[0]) / 2 - textwidth(DSMT.nodes[SubCurrentItem - 1]->MaSach) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[SubCurrentItem - 1]->MaSach);
+		outtextxy(XXDG[1] + (XXDG[2] - XXDG[1]) / 2 - textwidth(TrangThai[DSMT.nodes[SubCurrentItem - 1]->TrangThai]) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSMT.nodes[SubCurrentItem - 1]->TrangThai]);
+		outtextxy(XXDG[2] + (XXDG[3] - XXDG[2]) / 2 - textwidth(DSMT.nodes[SubCurrentItem - 1]->NgayMuon.res) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[SubCurrentItem - 1]->NgayMuon.res);
+		outtextxy(XXDG[3] + (XXDG[4] - XXDG[3]) / 2 - textwidth(DSMT.nodes[SubCurrentItem - 1]->NgayTra.res) / 2, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSMT.nodes[SubCurrentItem - 1]->NgayTra.res);
+	}
+}
 void RunXemDocGia()
 {
 	ClearScreen();
 	ButtonBack.draw();
 	ButtonPrev.draw();
 	ButtonNext.draw();
-	char Title[][25] = {"MA SACH", "NGAY MUON", "NGAY TRA"};
+	char Title[][25] = {"MA SACH", "TRANG THAI", "NGAY MUON", "NGAY TRA"};
 	setcolor(WHITE);
-	rectangle(XXDG[0], Y_DS, XXDG[3], Y_DS * 5);
-	line(XXDG[0], Y_DS + 50, XXDG[3], Y_DS + 50);
-	for (int i = 0; i < 3; i++)
+	rectangle(XXDG[0], Y_DS, XXDG[4], Y_DS * 5);
+	line(XXDG[0], Y_DS + 50, XXDG[4], Y_DS + 50);
+	for (int i = 0; i < 4; i++)
 	{
 		line(XXDG[i + 1], Y_DS, XXDG[i + 1], Y_DS * 5);
 		outtextxy(XXDG[i] + ((XXDG[i + 1] - XXDG[i]) / 2 - textwidth(Title[i]) / 2), (Y_DS + 25) - textheight("A") / 2, Title[i]);
 	}
-	char temp[] = {"DOC GIA"}, MaThe[10];
-	strcat(temp, ": ");
+	char title[] = {"DOC GIA"}, MaThe[10];
+	strcat(title, ": ");
 	itoa(DSDG.nodes[CurrentItem - 1]->MaThe, MaThe, 10);
-	strcat(temp, MaThe);
-	outtextxy(w / 2 - textwidth(temp) / 2, textheight("A") - 10, temp);
-
-	// line(XDMS[0], Y_DS * 5, XDMS[6], Y_DS * 5);
-	// memset(NumOfPage, 0, sizeof NumOfPage);
-	// string temp;
-	// TotalPage = ceil(DSDS.n * 1.0 / 10);
-	// temp = to_string(CurrentPage);
-	// strcat(NumOfPage, temp.c_str());
-	// strcat(NumOfPage, "/");
-	// temp = to_string(TotalPage);
-	// strcat(NumOfPage, temp.c_str());
-	// outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
-	// DrawSelecteItem();
+	strcat(title, MaThe);
+	outtextxy(w / 2 - textwidth(title) / 2, textheight("A") - 10, title);
+	GetMT(DSMT, DSDG.nodes[CurrentItem - 1]);
+	memset(NumOfPage, 0, sizeof NumOfPage);
+	string temp;
+	TotalPage = ceil(DSMT.n * 1.0 / 10);
+	temp = to_string(SubCurrentPage);
+	strcat(NumOfPage, temp.c_str());
+	strcat(NumOfPage, "/");
+	temp = to_string(TotalPage);
+	strcat(NumOfPage, temp.c_str());
+	outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
+	DrawItemMuonTra(DSMT);
+	DrawSelectedItemMuonTra(DSMT);
 }
 
 void RunThemDocGia()
@@ -681,36 +730,36 @@ void DrawItemDMS(DS_DMS &DSDMS)
 	char TrangThai[][20] = {"CHO MUON DUOC", "DA CO NGUOI MUON", "DA THANH LY"};
 	if (DSDMS.n)
 	{
-		for (int i = 1 + 10 * (CurrentPageDMS - 1); i <= 10 + 10 * (CurrentPageDMS - 1); i++)
+		for (int i = 1 + 10 * (SubCurrentPage - 1); i <= 10 + 10 * (SubCurrentPage - 1); i++)
 		{
 			if (i > DSDMS.n)
 				break;
-			line(XDMS[0], (Y_DS + ContentHeight * (i - 10 * (CurrentPageDMS - 1) + 1)), XDMS[3], (Y_DS + ContentHeight * (i - 10 * (CurrentPageDMS - 1) + 1)));
-			outtextxy(XDMS[0] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[i - 1]->MaSach);
-			outtextxy(XDMS[1] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSDMS.nodes[i - 1]->TrangThai]);
-			outtextxy(XDMS[2] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[i - 1]->ViTri);
+			line(XDMS[0], (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1) + 1)), XDMS[3], (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1) + 1)));
+			outtextxy(XDMS[0] + 10, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[i - 1]->MaSach);
+			outtextxy(XDMS[1] + 10, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSDMS.nodes[i - 1]->TrangThai]);
+			outtextxy(XDMS[2] + 10, (Y_DS + ContentHeight * (i - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[i - 1]->ViTri);
 		}
 	}
 }
 void DrawSelectedItemDMS(DS_DMS &DSDMS)
 {
-	if (CurrentItemDMS > 0 && (ceil(CurrentItemDMS * 1.0 / 10) == CurrentPageDMS))
+	if (SubCurrentItem > 0 && (ceil(SubCurrentItem * 1.0 / 10) == SubCurrentPage))
 	{
 		char TrangThai[][20] = {"CHO MUON DUOC", "DA CO NGUOI MUON", "DA THANH LY"};
 		// Clear text
-		ClearScreenXY(XDMS[0] + 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XDMS[1] - 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
-		ClearScreenXY(XDMS[1] + 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XDMS[2] - 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
-		ClearScreenXY(XDMS[2] + 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XDMS[3] - 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		ClearScreenXY(XDMS[0] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XDMS[1] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		ClearScreenXY(XDMS[1] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XDMS[2] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
+		ClearScreenXY(XDMS[2] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2) - 10, XDMS[3] - 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 + textheight("A") / 2) + 10);
 		// Fill with color
 		setfillstyle(SOLID_FILL, BG_BUTTON_SELECT);
-		floodfill(XDMS[0] + 1, Y_DS + 50 + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)), WHITE);
-		floodfill(XDMS[1] + 1, Y_DS + 50 + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)), WHITE);
-		floodfill(XDMS[2] + 1, Y_DS + 50 + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)), WHITE);
+		floodfill(XDMS[0] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
+		floodfill(XDMS[1] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
+		floodfill(XDMS[2] + 1, Y_DS + 50 + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)), WHITE);
 		// Draw selected item
 		setbkcolor(BG_BUTTON_SELECT);
-		outtextxy(XDMS[0] + 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[CurrentItemDMS - 1]->MaSach);
-		outtextxy(XDMS[1] + 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSDMS.nodes[CurrentItemDMS - 1]->TrangThai]);
-		outtextxy(XDMS[2] + 10, (Y_DS + ContentHeight * (CurrentItemDMS - 10 * (CurrentPageDMS - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[CurrentItemDMS - 1]->ViTri);
+		outtextxy(XDMS[0] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[SubCurrentItem - 1]->MaSach);
+		outtextxy(XDMS[1] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), TrangThai[DSDMS.nodes[SubCurrentItem - 1]->TrangThai]);
+		outtextxy(XDMS[2] + 10, (Y_DS + ContentHeight * (SubCurrentItem - 10 * (SubCurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DSDMS.nodes[SubCurrentItem - 1]->ViTri);
 	}
 }
 
@@ -747,7 +796,7 @@ void RunXemDauSach()
 	memset(NumOfPage, 0, sizeof NumOfPage);
 	string temp;
 	TotalPage = ceil(dauSach->TongSoLuong * 1.0 / 10);
-	temp = to_string(CurrentPageDMS);
+	temp = to_string(SubCurrentPage);
 	strcat(NumOfPage, temp.c_str());
 	strcat(NumOfPage, "/");
 	temp = to_string(TotalPage);
@@ -755,10 +804,10 @@ void RunXemDauSach()
 	outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
 	DrawItemDMS(DSDMS);
 	DrawSelectedItemDMS(DSDMS);
-	// if (CurrentPageDMS > TotalPage)
+	// if (SubCurrentPage > TotalPage)
 	// {
-	// 	while (CurrentPageDMS > TotalPage)
-	// 		CurrentPageDMS--;
+	// 	while (SubCurrentPage > TotalPage)
+	// 		SubCurrentPage--;
 	// 	RunXemDauSach();
 	// }
 }
@@ -824,10 +873,17 @@ void GetCurrentItem(int mouseY)
 	}
 	else if (CurrentMenuId == ButtonXemDauSach.ID)
 	{
-		if ((temp > 0) && (temp < 11) && (CurrentItemDMS = temp + (CurrentPageDMS - 1) * 10) <= DSDMS.n)
-			CurrentItemDMS = temp + (CurrentPageDMS - 1) * 10;
+		if ((temp > 0) && (temp < 11) && (SubCurrentItem = temp + (SubCurrentPage - 1) * 10) <= DSDMS.n)
+			SubCurrentItem = temp + (SubCurrentPage - 1) * 10;
 		else
-			CurrentItemDMS = -1;
+			SubCurrentItem = -1;
+	}
+	else if (CurrentMenuId == ButtonXemDocGia.ID)
+	{
+		if ((temp > 0) && (temp < 11) && (SubCurrentItem = temp + (SubCurrentPage - 1) * 10) <= DSMT.n)
+			SubCurrentItem = temp + (SubCurrentPage - 1) * 10;
+		else
+			SubCurrentItem = -1;
 	}
 }
 
@@ -992,8 +1048,8 @@ void DauSachEvent()
 			}
 			else
 			{
-				CurrentItemDMS = -1;
-				CurrentPageDMS = 1;
+				SubCurrentItem = -1;
+				SubCurrentPage = 1;
 				SetMenuSelect(ButtonXemDauSach.ID);
 			}
 		}
@@ -1053,7 +1109,11 @@ void DocGiaEvent()
 				ThongBao("HAY CHON 1 DOC GIA");
 			}
 			else
+			{
+				SubCurrentItem = -1;
+				SubCurrentPage = 1;
 				SetMenuSelect(ButtonXemDocGia.ID);
+			}
 		}
 		else if (ButtonThemDocGia.isMouseHover(mouseX, mouseY))
 			SetMenuSelect(ButtonThemDocGia.ID);
@@ -1187,14 +1247,14 @@ void XemDauSachEvent()
 			SetMenuSelect(ButtonDauSach.ID);
 		else if (ButtonNext.isMouseHover(mouseX, mouseY))
 		{
-			if (CurrentPageDMS < TotalPage)
-				CurrentPageDMS++;
+			if (SubCurrentPage < TotalPage)
+				SubCurrentPage++;
 			RunXemDauSach();
 		}
 		else if (ButtonPrev.isMouseHover(mouseX, mouseY))
 		{
-			if (CurrentPageDMS > 1)
-				CurrentPageDMS--;
+			if (SubCurrentPage > 1)
+				SubCurrentPage--;
 			RunXemDauSach();
 		}
 		else if (ButtonThemDMS.isMouseHover(mouseX, mouseY))
@@ -1286,6 +1346,23 @@ void XemDocGiaEvent()
 	{
 		if (ButtonBack.isMouseHover(mouseX, mouseY))
 			SetMenuSelect(ButtonDocGia.ID);
+		else if (ButtonNext.isMouseHover(mouseX, mouseY))
+		{
+			if (SubCurrentPage < TotalPage)
+				SubCurrentPage++;
+			RunXemDocGia();
+		}
+		else if (ButtonPrev.isMouseHover(mouseX, mouseY))
+		{
+			if (SubCurrentPage > 1)
+				SubCurrentPage--;
+			RunXemDocGia();
+		}
+		else
+		{
+			GetCurrentItem(mouseY);
+			RunXemDocGia();
+		}
 	}
 }
 void XoaDauSachEvent()

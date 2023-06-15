@@ -2,6 +2,7 @@
 // #define _STRUCTDAUSACH_H // thì định nghĩa _STRUCTDAUSACH_H
 // #include "StructDanhMucSach.h"
 #define MAX_SIZE_LIST_DAU_SACH 100
+#define MAX_SIZE_LIST_DMS 100
 
 struct DauSach
 {

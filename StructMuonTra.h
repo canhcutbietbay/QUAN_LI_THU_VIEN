@@ -1,7 +1,7 @@
 struct DateTime
 {
-    // char Year[3], Month[3], Day[3];
     int Year, Month, Day;
+    char res[15];
     DateTime(){};
     DateTime(int year, int month, int day)
     {
@@ -9,13 +9,27 @@ struct DateTime
         Month = month;
         Day = day;
     }
-    // DateTime(char year[3], char month[3], char day[3])
-    // {
-    //     strcpy(Year, year);
-    //     strcpy(Month, month);
-    //     strcpy(Day, day);
-    // }
-
+    void GetRes()
+    {
+        if (Day)
+        {
+            char temp[10];
+            itoa(Day, temp, 10);
+            if (Day < 10)
+                strcat(this->res, "0");
+            strcat(this->res, temp);
+            strcat(this->res, "/");
+            if (Month < 10)
+                strcat(this->res, "0");
+            itoa(Month, temp, 10);
+            strcat(this->res, temp);
+            strcat(this->res, "/");
+            itoa(Year, temp, 10);
+            strcat(this->res, temp);
+        }
+        else
+            strcpy(res, "");
+    }
     void GetTimeNow()
     {
         time_t CurrentTime = time(0);
@@ -40,7 +54,7 @@ struct DateTime
         return SoNgayMuon;
     }
 };
-
+//
 struct MuonTra
 {
     char MaSach[15];
@@ -127,3 +141,96 @@ void InsertBefore(DS_MuonTra *&DSMT, NodeMuonTra *node, NodeMuonTra *before)
     else
         InsertLast_DM_MuonTra(DSMT, node->value);
 }
+char *TBMuon(DS_MuonTra *firstnode);
+int DK_MuonSach(NodeMuonTra *check);
+bool MuonQuaHan(DateTime *NgayMuon, DateTime *NgayTra);
+// bool CungDauSach(DS_MuonTra *firstnode, char *ms);
+
+// void InSachMuon(NodeTheDocGia *TheDocGia, int MaThe)
+// {
+// }
+//
+bool MuonQuaHan(DateTime *NgayMuon, DateTime *NgayTra)
+{
+    if (NgayTra->Day != 0)
+        return false;
+    else if (NgayMuon->GetSoNgayMuon() > 7)
+        return true;
+    else
+        return false;
+}
+//
+// bool CungDauSach(NodeMuonTra *firstnode, char *ms)
+// {
+//     if (firstnode == nullptr)
+//         return false;
+//     else
+//     {
+//         NodeMuonTra *node = firstnode;
+//         for (node->Right != nullptr, node = node->Right)
+//         {
+//             if (node->value->TrangThai == 0)
+//                 while (1)
+//                 {
+//                     int k = 0;
+//                     if (ms[k] == node->value->MaSach[k])
+//                         if (ms[k] == '-')
+//                             return true;
+//                         else
+//                             k++;
+//                     else
+//                         break;
+//                 }
+//         }
+//         return false;
+//     }
+// }
+//
+
+// int TTSach(DS_DauSach ds, char* masach)
+// {
+//     for (int i=0; i < ds.n; i++)
+//     {
+//         if (inside(masach, ds.nodes[i]->isbn))
+//         return checknodeSach(ds.nodes[i]->DS_Sach, masach);
+//     }
+// }
+/*
+    0- co the muon sach
+    1- muon 3 sach
+    2- muon 1 sach qua 7 ngay
+    3- chung 1 dau sach
+    4- sach da cho muon
+    5- sach da thanh li
+    6- khong co masach nay
+*/
+
+// int DK_MuonSach(NodeMuonTra *firstnode, char* ms, DS_DauSach DSDS)
+// {
+//     if (firstnode == nullptr)
+//     {
+//         int tt = TTSach(DSDS, masach);
+//         return (tt == 0) ? 0 : (tt+3);
+//     }
+//     else
+//     {
+//         NodeMuonTra *node = new NodeMuonTra;
+//         node = firstnode;
+//         int DangMuon = 0;
+//         for (;node != nullptr; node = node->Right)
+//         {
+//             if (node->value->TrangThai == 0)
+//             {
+//                 DangMuon++;
+//                 if (inside(ms, node->value->MaSach))
+//                     return 3;
+//                 if (MuonQuaHan(&(node->value->NgayMuon), &(node->value->NgayTra)))
+//                 return 2;
+//             }
+//         }
+//         if (DangMuon == 3)
+//             return 1;
+//         int tt = TTSach(DSDS, masach);
+//         return (tt == 0) ? 0 : (tt+3);
+//     }
+// }

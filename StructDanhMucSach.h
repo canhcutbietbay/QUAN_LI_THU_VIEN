@@ -1,7 +1,6 @@
 // #ifndef _STRUCTDANHMUCSACH_H // Nếu chưa định nghĩa _STRUCTDANHMUCSACH_H
 // #define _STRUCTDANHMUCSACH_H // thì định nghĩa _STRUCTDANHMUCSACH_H
 // #include "StructDauSach.h"
-#define MAX_SIZE_LIST_DMS 100
 struct Sach
 {
   int id = 0;

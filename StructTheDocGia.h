@@ -1,7 +1,6 @@
 #define MAX_SIZE_LIST_DOC_GIA 90000
-/*
+#define MAX_SIZE_LIST_MT 100
 
-*/
 struct ArrRanMT
 {
 	bool used[90000];
@@ -44,30 +43,6 @@ int RanNewMT(ArrRanMT &mathe)
 	(mathe.k)++;
 	return (i + 9999);
 }
-//
-struct DSMT
-{
-	int n;
-	MuonTra *nodes[3];
-	DSMT()
-	{
-		n = 0;
-	}
-	~DSMT() {}
-};
-
-// su dung khi doc file
-// void InsertLastDSMT(DSMT &DSMuon, MuonTra *muontra)
-// {
-// 	if (DSMT.n > 3)
-// 		printf("DSMuon day \n");
-// 	else
-// 	{
-// 		DSMT.nodes[DSMT.n] = muontra;
-// 		DSMT.n++;
-// 	}
-// }
-//
 struct TheDocGia
 {
 	int MaThe;
@@ -85,7 +60,6 @@ struct TheDocGia
 	 */
 	int TongSoLuong;
 	DS_MuonTra *DS_MT;
-	DSMT *Muon;
 	// constructor
 	TheDocGia() {}
 	TheDocGia(int mathe, char ho[], char ten[], int phai, int trangthai)
@@ -99,7 +73,34 @@ struct TheDocGia
 		DS_MT = NULL;
 	}
 };
-//
+
+struct DS_MT
+{
+	int n = 0;
+	MuonTra *nodes[MAX_SIZE_LIST_MT];
+	// su dung de tao danh sach muon tra => output ra man hinh
+	void InsertLastDSMT(DS_MT &DSMT, MuonTra *muonTra)
+	{
+		if (DSMT.n > MAX_SIZE_LIST_MT)
+			printf("DSMT day \n");
+		else
+		{
+			DSMT.nodes[DSMT.n] = muonTra;
+			DSMT.n++;
+		}
+	}
+};
+
+void GetMT(DS_MT &DSMT, TheDocGia *theDocGia)
+{
+	DSMT.n = 0;
+	if (theDocGia->TongSoLuong == 0)
+		return;
+	NodeMuonTra *temp = theDocGia->DS_MT->First;
+	for (temp; temp != nullptr; temp = temp->Right)
+		DSMT.InsertLastDSMT(DSMT, temp->value);
+}
+
 struct DS_DocGia
 {
 	int n = 0;

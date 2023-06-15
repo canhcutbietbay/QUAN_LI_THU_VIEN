@@ -5,7 +5,6 @@ using namespace std;
 
 struct DateTime
 {
-    // char Year[3], Month[3], Day[3];
     int Year, Month, Day;
     char res[15];
     DateTime(){};
@@ -15,12 +14,6 @@ struct DateTime
         Month = month;
         Day = day;
     }
-    // DateTime(char year[3], char month[3], char day[3])
-    // {
-    //     strcpy(Year, year);
-    //     strcpy(Month, month);
-    //     strcpy(Day, day);
-    // }
     void GetRes()
     {
         char temp[10];
