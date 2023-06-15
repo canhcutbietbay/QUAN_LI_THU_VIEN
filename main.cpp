@@ -30,7 +30,7 @@ int CurrentItem = -1, SubCurrentItem = -1, CurrentAddDMS = -1, TotalAddDMS = -1;
 int ButtonHeight = 60, ButtonWidth = 300, ButtonSpace = 80, ButtonY = 200;
 Button ButtonDauSach(100, w / 2 - ButtonWidth / 2, ButtonY + ButtonSpace, ButtonWidth, ButtonHeight, "QUAN LY DAU SACH", 0);
 Button ButtonDocGia(200, w / 2 - ButtonWidth / 2, ButtonY + 2 * ButtonSpace, ButtonWidth, ButtonHeight, "QUAN LY DOC GIA", 0);
-Button ButtonSach(300, w / 2 - ButtonWidth / 2, ButtonY + 3 * ButtonSpace, ButtonWidth, ButtonHeight, "MUON TRA SACH", 0);
+Button ButtonThongKe(300, w / 2 - ButtonWidth / 2, ButtonY + 3 * ButtonSpace, ButtonWidth, ButtonHeight, "THONG KE", 0);
 Button ButtonThongTin(400, w / 2 - ButtonWidth / 2, ButtonY + 4 * ButtonSpace, ButtonWidth, ButtonHeight, "THONG TIN", 0);
 Button ButtonThoat(500, w / 2 - ButtonWidth / 2, ButtonY + 5 * ButtonSpace, ButtonWidth, ButtonHeight, "THOAT", 0);
 
@@ -316,7 +316,7 @@ void DrawMenu()
 	outtextxy(w / 2 - textwidth(AppTitle) / 2, 100, AppTitle);
 	ButtonDauSach.draw();
 	ButtonDocGia.draw();
-	ButtonSach.draw();
+	ButtonThongKe.draw();
 	ButtonThongTin.draw();
 	ButtonThoat.draw();
 }
@@ -619,10 +619,6 @@ void RunDocGia()
 	}
 	DSDG.n = 0;
 	GetFromTree(TreeAVLDocGia, DSDG);
-	for (int i = 0; i < DSDG.n; ++i){
-		cout << DSDG.nodes[i]->MaThe << " " << DSDG.nodes[i]->Ten << endl;
-	}
-	cout << "---------------------------" << endl;
 	ButtonDocGiaHoTen.draw();
 	ButtonDocGiaMaThe.draw();
 	ButtonBack.draw();
@@ -1691,7 +1687,7 @@ void MenuEvent()
 {
 	ButtonEffect(ButtonDauSach);
 	ButtonEffect(ButtonDocGia);
-	ButtonEffect(ButtonSach);
+	ButtonEffect(ButtonThongKe);
 	ButtonEffect(ButtonThongTin);
 	ButtonEffect(ButtonThoat);
 	// Menu Click Event

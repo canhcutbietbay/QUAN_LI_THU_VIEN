@@ -62,7 +62,7 @@ struct TheDocGia
 	DS_MuonTra *DS_MT;
 	// constructor
 	TheDocGia() {}
-	TheDocGia(int mathe, char ho[], char ten[], int phai, int trangthai, DS_MuonTra *DSMT=nullptr, int tongsoluong = 0)
+	TheDocGia(int mathe, char ho[], char ten[], int phai, int trangthai, DS_MuonTra *DSMT = nullptr, int tongsoluong = 0)
 	{
 		// random MaThe...
 		MaThe = mathe;
@@ -202,36 +202,6 @@ struct QuaHan
 	//
 };
 
-struct DS_QuaHan
-{
-	int n;
-	QuaHan *nodes[MAX_SIZE_DAUSACH];
-	void InsertQuaHan(DS_QuaHan &DSQH, QuaHan *quahan)
-	{
-		if (DSDG.n > MAX_SIZE_DAUSACH)
-			printf("\n");
-		else
-		{
-			int pos = DSQH.n++;
-			while (pos)
-			{
-				if (quahan->SoNgayQuaHan > DSQH.nodes[pos]->SoNgayQuaHan)
-				{
-					for (int i = DSQH.n - 1; i > pos; i--)
-					{
-						DSQH.nodes[i] = DSQH.nodes[i-1];
-					}
-				}
-				else break;
-				pos--;
-			}
-			DSQH.nodes[pos] = quahan;
-		}
-	}
-};
-/*
-
-*/
 int max(int a, int b)
 {
 	if (a > b)
@@ -470,342 +440,182 @@ void GetFromTree(NodeTheDocGia *root, DS_DocGia &DSDG)
 	DSDG.InsertLastDocGia(DSDG, &root->DocGia);
 	GetFromTree(root->right, DSDG);
 }
-//
-/*
-
-*/
-// void GetDSMuon(NodeTheDocGia *node)
-// {
-// 	if (node == nullptr)
-// 		return;
-// 	else
-// 	{
-// 		NodeMuonTra *check = node->DocGia.DS_MT->First;
-// 		while (check)
-// 		{
-// 			if (check->value->TrangThai == 0)
-// 			{
-// 				InsertLastDSMT(node->DocGia.Muon, check->value);
-// 				check = check->Right;
-// 			}
-// 		}
-// 	}
-// }
-// DS_MuonTra *GetDSMuon(NodeTheDocGia *node)
-// {
-// 	if (node == nullptr)
-// 		return;
-// 	else
-// 	{
-// 		NodeMuonTra *check = node->DocGia.DS_MT->First;
-// 		int k = 0;
-// 		while (check != nullptr)
-// 		{
-// 			if (check->value->TrangThai == 0)
-// 			{
-// 				node->DocGia.DS_Muon[k] = check->value;
-// 				k++;
-// 				if (k == 3)
-// 					break;
-// 			}
-// 			check = check->Right;
-// 		}
-// 		return node->DocGia.DS_Muon;
-// 	}
-// }
-//
-//xet nodesach
-int checknodeSach(DM_Sach *dms, char* masach)
+// xet nodesach
+int checknodeSach(DM_Sach *dms, char *masach)
 {
-  DM_Sach *temp = dms;
-  while (temp)
-  {
-    if (!strcmp(masach, temp->sach->MaSach))
-      return temp->sach->TrangThai;
-    temp = temp->next;
-  }
-  return 3; // khong ton tai ma sach nay`
+	DM_Sach *temp = dms;
+	while (temp)
+	{
+		if (!strcmp(masach, temp->sach->MaSach))
+			return temp->sach->TrangThai;
+		temp = temp->next;
+	}
+	return 3; // khong ton tai ma sach nay`
 }
 
 // // Muon Qua Han
 bool MuonQuaHan(DateTime *NgayMuon, DateTime *NgayTra)
 {
-    if (NgayTra->Day != 0)
-        return false;
-    else if (NgayMuon->GetSoNgayMuon() > 7)
-        return true;
-    else
-        return false;
+	if (NgayTra->Day != 0)
+		return false;
+	else if (NgayMuon->GetSoNgayMuon() > 7)
+		return true;
+	else
+		return false;
 }
 // // check
-bool inside(char* S, char* s)
+bool inside(char *S, char *s)
 {
-    int k=0;
-    while (S[k] == s[k])
-        if (S[k+1] == '-')
-            return true;
-        else k++;
-    return false;
+	int k = 0;
+	while (S[k] == s[k])
+		if (S[k + 1] == '-')
+			return true;
+		else
+			k++;
+	return false;
 }
-int TTSach(DS_DauSach ds, char* masach)
+int TTSach(DS_DauSach ds, char *masach)
 {
-    for (int i=0; i < ds.n; i++)
-    {
-        if (inside(masach, ds.nodes[i]->ISBN))
-        return checknodeSach(ds.nodes[i]->DS_Sach, masach);
-    }
+	for (int i = 0; i < ds.n; i++)
+	{
+		if (inside(masach, ds.nodes[i]->ISBN))
+			return checknodeSach(ds.nodes[i]->DS_Sach, masach);
+	}
 }
 // // lay dau sach tu masach
-<<<<<<< Updated upstream
-// DM_Sach *GetSach(DS_DauSach ds, char* masach)
-// {
-//     for (int i=0; i < ds.n; i++)
-//     {
-//         if (inside(masach, ds.nodes[i]->isbn))
-//         	return GetDM_Sach(ds.nodes[i]->DS_Sach, masach);
-//     }
-// 	return nullptr;
-// }
-// /*
-// -----------
-// DANH SACH QUA HAN
-// -----------
-// */
-// QuaHan *CreateDSQH()
-// {
-//   QuaHan *node = new QuaHan;
-//   return node;
-// }
-// //TAO DANH SACH QUA HAN
-// void CreateDS_QuaHan(DS_DauSach &DSDS, DS_DocGia &DSDG)
-// {
-// 	QuaHan *insert = new QuaHan;
-// 	// Nhap tat ca sach dang muon
-// 	for (int i=0; i< DSDG.n; i++)
-// 	{
-// 		for (int j=0; j < DSDG.nodes[i]->Muon->n; j++)
-// 		{
-// 			QuaHan *node = new QuaHan;
-// 			int k=0;
-// 			while (!inside(DSDG.nodes[i]->Muon->nodes[j]->MaSach, DSDS.nodes[k]->ISBN))
-// 				k++;
-// 			node->MaThe = DSDG.nodes[i]->MaThe;
-// 			char temp[51];
-// 			strcat(strcpy(temp, DSDG.nodes[i]->Ho), " ");
-// 			strcpy(node->HoTen, strcat(temp, DSDG.nodes[i]->Ten));
-// 			strcpy(node->MaSach, DSDG.nodes[i]->Muon->nodes[j]->MaSach);
-// 			strcpy(node->TenSach, DSDS.nodes[k]->TenSach);
-// 			node->NgayMuon = DSDG.nodes[i]->Muon->nodes[j]->NgayMuon;
-// 			node->SoNgayQuaHan = DSDG.nodes[i]->Muon->nodes[j]->NgayMuon.GetSoNgayMuon();
-// 			node->next = nullptr;
-// 			// sort & insert
-// 			*bf = nullptr;
-// 			insert = first;
-// 			if (first)
-// 			{
-// 				while (1)
-// 				{
-// 					if (!bf) 
-// 					{
-// 						if (node->SoNgayQuaHan > insert->SoNgayQuaHan)
-// 						{
-// 							node->next = insert;
-// 							bf->next = node;
-// 							break;
-// 						}
-// 						bf = insert;
-// 						insert = insert->next;
-// 						if (!insert)
-// 						{
-// 							node->next = insert;
-// 							bf->next = node;
-// 							break;
-// 						}
-// 					}
-// 					else 
-// 					{
-// 						if (node->SoNgayQuaHan > insert->SoNgayQuaHan)
-// 						{
-// 							node->next = insert;
-// 							first = node;
-// 							break;
-// 						}
-// 						bf = insert;
-// 						insert = insert->next;
-// 						if (!insert)
-// 						{
-// 							node->next = insert;
-// 							first->next = node;
-// 							break;
-// 						}
-// 					}
-// 				}
-// 			}
-// 			else first = node;
-// 		}
-// 	}
-// 	return first;
-// }
-// /*
-// ------------------
-=======
-DM_Sach *GetSach(DS_DauSach ds, char* masach)
+DM_Sach *GetSach(DS_DauSach ds, char *masach)
 {
-    for (int i=0; i < ds.n; i++)
-    {
-        if (inside(masach, ds.nodes[i]->ISBN))
-        	return GetDM_Sach(ds.nodes[i]->DS_Sach, masach);
-    }
+	for (int i = 0; i < ds.n; i++)
+	{
+		if (inside(masach, ds.nodes[i]->ISBN))
+			return GetDM_Sach(ds.nodes[i]->DS_Sach, masach);
+	}
 	return nullptr;
 }
 /*
-    0- Muon sach thanh cong
-    1- muon 3 sach
-    2- muon 1 sach qua 7 ngay
-    3- chung 1 dau sach
-    4- sach da cho muon
-    5- sach da thanh li
-    6- khong co ma sach nay
+	0- Muon sach thanh cong
+	1- muon 3 sach
+	2- muon 1 sach qua 7 ngay
+	3- chung 1 dau sach
+	4- sach da cho muon
+	5- sach da thanh li
+	6- khong co ma sach nay
 	7- The da bi khoa
 */
 
-int DK_MuonSach(NodeMuonTra *firstnode, char* ms, DS_DauSach DSDS)
+int DK_MuonSach(NodeMuonTra *firstnode, char *ms, DS_DauSach DSDS)
 {
-    if (firstnode == nullptr)
-    {
-        int tt = TTSach(DSDS, ms);
-        return (tt == 0) ? 0 : (tt+3);
-    }
-    else
-    {
-        NodeMuonTra *node = new NodeMuonTra;
-        node = firstnode;
-        int DangMuon = 0;
-        for (;node != nullptr; node = node->Right)
-        {
-            if (node->value->TrangThai == 0)
-            {
-                DangMuon++;
-                if (inside(ms, node->value->MaSach))
-                    return 3;
-                if (MuonQuaHan(&(node->value->NgayMuon), &(node->value->NgayTra)))
-                return 2;
-            }
-        }
-        if (DangMuon == 3)
-            return 1;
-        int tt = TTSach(DSDS, ms);
-        return (tt == 0) ? 0 : (tt+3); 
-    }
+	if (firstnode == nullptr)
+	{
+		int tt = TTSach(DSDS, ms);
+		return (tt == 0) ? 0 : (tt + 3);
+	}
+	else
+	{
+		NodeMuonTra *node = new NodeMuonTra;
+		node = firstnode;
+		int DangMuon = 0;
+		for (; node != nullptr; node = node->Right)
+		{
+			if (node->value->TrangThai == 0)
+			{
+				DangMuon++;
+				if (inside(ms, node->value->MaSach))
+					return 3;
+				if (MuonQuaHan(&(node->value->NgayMuon), &(node->value->NgayTra)))
+					return 2;
+			}
+		}
+		if (DangMuon == 3)
+			return 1;
+		int tt = TTSach(DSDS, ms);
+		return (tt == 0) ? 0 : (tt + 3);
+	}
 }
->>>>>>> Stashed changes
-// MUON & TRA SACH
-// ------------------
-// */
-// /*
-//     0- co the muon sach
-//     1- muon 3 sach
-//     2- muon 1 sach qua 7 ngay
-//     3- chung 1 dau sach
-//     4- sach da cho muon
-//     5- sach da thanh li
-//     6- khong co masach nay
-// */
-// int DK_MuonSach(NodeMuonTra *firstnode, char* ms, DS_DauSach DSDS)
-// {
-//     if (firstnode == nullptr)
-//     {
-//         int tt = TTSach(DSDS, masach);
-//         return (tt == 0) ? 0 : (tt+3);
-//     }
-//     else
-//     {
-//         NodeMuonTra *node = new NodeMuonTra;
-//         node = firstnode;
-//         int DangMuon = 0;
-//         for (;node != nullptr; node = node->Right)
-//         {
-//             if (node->value->TrangThai == 0)
-//             {
-//                 DangMuon++;
-//                 if (inside(ms, node->value->MaSach))
-//                     return 3;
-//                 if (MuonQuaHan(&(node->value->NgayMuon), &(node->value->NgayTra)))
-//                 return 2;
-//             }
-//         }
-//         if (DangMuon == 3)
-//             return 1;
-//         int tt = TTSach(DSDS, masach);
-//         return (tt == 0) ? 0 : (tt+3); 
-//     }
-// }
+
 // // MUONSACH
-<<<<<<< Updated upstream
-// int MuonSach(TheDocGia *thedocgia, char* masach, DS_DauSach &DSDS)
-// {
-// 	if (thedocgia->TrangThai == 0)
-// 		return;// THE BI KHOA
-// 	int TH = DK_MuonSach(thedocgia->DS_MT->First, masach, DSDS);
-// 	if (TH == 0)
-// 	{
-// 		//lay sach muon
-// 		DM_Sach *SachMuon = GetSach(DSDS, masach);
-// 		//doi trang thai sach thanh DA DUOC MUON
-// 		SachMuon->sach->TrangThai = 1;
-// 		//thiet lap muon tra 
-// 		MuonTra *newnode = new MuonTra;
-// 		newnode->MaSach = masach;
-// 		newnode->TrangThai = 0;
-// 		newnode->NgayMuon.GetTimeNow();
-// 		newnode->NgayTra.Day = newnode->NgayTra.Month = newnode->NgayTra.Year = 0;
-// 		//them vao DSMT
-// 		InsertLast_DM_MuonTra(thedocgia->DS_MT, newnode);
-// 		//them vao DSMUON
-// 		thedocgia->Muon->nodes[thedocgia->Muon->n] = newnode;
-// 		thedocgia->Muon->n++;
-// 	}
-// 	else return TH;
-// }
-// // TRASACH
-// int TraSach(TheDocGia *thedocgia, char* masach, DS_DauSach &DSDS)
-// {
-// 	NodeMuonTra *find = thedocgia->DS_MT->First;
-// 	// tim sach da muon
-// 	while (find)
-// 		if (!strcmp(masach, find->value->MaSach))
-// 		{
-// 			// chinh sua DSMT & Muon cua DocGia
-// 			find->value->TrangThai = 1;
-// 			find->value->NgayTra.GetTimeNow();
-// 			thedocgia->Muon->nodes[thedocgia->Muon->n - 1] = nullptr;
-// 			thedocgia->Muon->n--;
-// 			// tra sach ve trang thai co the muon
-// 			DM_Sach *SachTra = GetSach(DSDS, masach);
-// 			SachTra->sach->TrangThai = 0;
-// 			return 1;
-// 		}
-// 		else find = find->Right;
-// 	return 0;
-// }
-/*
---------------
-LIST DAU SACH MUON NHIEU NHAT
---------------
-*/
-void UpdateSoLuotMuon(DS_DauSach &DSDS, char* masach)
+int MuonSach(TheDocGia *thedocgia, char *masach, DS_DauSach &DSDS)
 {
-    for (int i = 0; i < DSDS.n; i++)
-    {
-        if (inside(masach,DSDS.nodes[i]->ISBN))
-			DSDS.nodes[i]->SoLuotMuon++;
-    }
+	if (thedocgia->TrangThai == 0)
+		return 7; // THE BI KHOA
+	int TH = DK_MuonSach(thedocgia->DS_MT->First, masach, DSDS);
+	if (TH == 0)
+	{
+		// lay sach muon
+		DM_Sach *SachMuon = GetSach(DSDS, masach);
+		// doi trang thai sach thanh DA DUOC MUON
+		SachMuon->sach->TrangThai = 1;
+		// thiet lap muon tra
+		MuonTra *newnode = new MuonTra;
+		newnode->NgayMuon.GetTimeNow();
+		newnode->NgayMuon.GetRes();
+		newnode->NgayTra.Day = newnode->NgayTra.Month = newnode->NgayTra.Year = 0;
+		newnode->NgayTra.GetRes();
+		strcpy(newnode->MaSach, masach);
+		newnode->TrangThai = 0;
+		// them vao DSMT
+		thedocgia->TongSoLuong++;
+		InsertLast_DM_MuonTra(thedocgia->DS_MT, newnode);
+		return 0;
+	}
+	else
+		return TH;
 }
+// TRASACH
+int TraSach(TheDocGia *thedocgia, char *masach, DS_DauSach &DSDS)
+{
+	NodeMuonTra *find = thedocgia->DS_MT->First;
+	// tim sach da muon
+	while (find)
+		if (!strcmp(masach, find->value->MaSach))
+		{
+			// chinh sua DSMT & Muon cua DocGia
+			find->value->TrangThai = 1;
+			find->value->NgayTra.GetTimeNow();
+			find->value->NgayTra.GetRes();
+			// tra sach ve trang thai co the muon
+			DM_Sach *SachTra = GetSach(DSDS, masach);
+			SachTra->sach->TrangThai = 0;
+			return 1;
+		}
+		else
+			find = find->Right;
+	return 0;
+};
+
+struct DS_QuaHan
+{
+	int n;
+	QuaHan *nodes[MAX_SIZE_DAUSACH];
+	void InsertQuaHan(DS_QuaHan &DSQH, QuaHan *quahan)
+	{
+		if (DSQH.n > MAX_SIZE_DAUSACH)
+			printf("\n");
+		else
+		{
+			int pos = DSQH.n++;
+			while (pos)
+			{
+				if (quahan->SoNgayQuaHan > DSQH.nodes[pos]->SoNgayQuaHan)
+				{
+					for (int i = DSQH.n - 1; i > pos; i--)
+					{
+						DSQH.nodes[i] = DSQH.nodes[i-1];
+					}
+				}
+				else break;
+				pos--;
+			}
+			DSQH.nodes[pos] = quahan;
+		}
+	}
+};
+
 void GetFromTree(NodeTheDocGia *root, DS_QuaHan &DSQH, DS_DauSach &DSDS)
 {
 	if (root == NULL)
 		return;
-	GetFromTree(root->left, DSQH);
+	GetFromTree(root->left, DSQH, DSDS);
 	NodeMuonTra *node = root->DocGia.DS_MT->First;
 	while (node)
 	{
@@ -828,59 +638,9 @@ void GetFromTree(NodeTheDocGia *root, DS_QuaHan &DSQH, DS_DauSach &DSDS)
 			newnode->NgayMuon.Day = node->value->NgayMuon.Day;
 			newnode->NgayMuon.Month = node->value->NgayMuon.Month;
 			newnode->NgayMuon.Year = node->value->NgayMuon.Year;
-			newnode->SoNgayQuaHan = newnode->NgayMuon.GetSoNgayMuon();		
+			newnode->SoNgayQuaHan = newnode->NgayMuon.GetSoNgayMuon();
 			DSQH.InsertQuaHan(DSQH, newnode);
 		}
 	}
-	GetFromTree(root->right, DSQH);
+	GetFromTree(root->right, DSQH, DSDS);
 }
-=======
-int MuonSach(TheDocGia *thedocgia, char* masach, DS_DauSach &DSDS)
-{
-	if (thedocgia->TrangThai == 0)
-		return 7;// THE BI KHOA
-	int TH = DK_MuonSach(thedocgia->DS_MT->First, masach, DSDS);
-	if (TH == 0)
-	{
-		//lay sach muon
-		DM_Sach *SachMuon = GetSach(DSDS, masach);
-		//doi trang thai sach thanh DA DUOC MUON
-		SachMuon->sach->TrangThai = 1;
-		//thiet lap muon tra 
-		MuonTra *newnode = new MuonTra;
-		newnode->NgayMuon.GetTimeNow();
-		newnode->NgayMuon.GetRes();
-		newnode->NgayTra.Day = newnode->NgayTra.Month = newnode->NgayTra.Year = 0;
-		newnode->NgayTra.GetRes();
-		strcpy(newnode->MaSach, masach);
-		newnode->TrangThai = 0;
-		//them vao DSMT
-		thedocgia->TongSoLuong++;
-		InsertLast_DM_MuonTra(thedocgia->DS_MT, newnode);
-		return 0;
-	}
-	else return TH;
-}
-// TRASACH
-int TraSach(TheDocGia *thedocgia, char* masach, DS_DauSach &DSDS)
-{
-	NodeMuonTra *find = thedocgia->DS_MT->First;
-	// tim sach da muon
-	while (find)
-		if (!strcmp(masach, find->value->MaSach))
-		{
-			// chinh sua DSMT & Muon cua DocGia
-			find->value->TrangThai = 1;
-			find->value->NgayTra.GetTimeNow();
-			find->value->NgayTra.GetRes();
-			// tra sach ve trang thai co the muon
-			// int Pos = FindPosBookName(masach);
-			// DM_Sach *SachTra = GetSach(DSDS.nodes[Pos]->DS_Sach, masach);
-			DM_Sach *SachTra = GetSach(DSDS, masach);
-			SachTra->sach->TrangThai = 0;
-			return 1;
-		}
-		else find = find->Right;
-	return 0;
-};
->>>>>>> Stashed changes

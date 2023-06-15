@@ -9,7 +9,7 @@ struct DauSach
     char ISBN[30], TenSach[30], TacGia[30], TheLoai[30];
     int SoTrang, NXB;
     DM_Sach *DS_Sach;
-    int TongSoLuong, SoLuotMuon;
+    int TongSoLuong;
 
     // constructor
     DauSach() {}
@@ -22,7 +22,6 @@ struct DauSach
         SoTrang = sotrang;
         NXB = nxb;
         TongSoLuong = 0;
-        SoLuotMuon = 0;
     }
     void Init(char isbn[], char tensach[], char tacgia[], char theloai[], int sotrang, int nxb)
     {
