@@ -20,12 +20,12 @@ using namespace std;
 */
 int CurrentMenuId = 0, LastCurrenMenuID = 0;
 const int X_DS = w / 10, Y_DS = h / 7;
-const int XDS[7] = {10, X_DS * 1.5, X_DS * 4, X_DS * 7, X_DS * 8.5, X_DS * 9.5, X_DS * 10 - 10};
+const int XDS[] = {10, X_DS * 1.5, X_DS * 4, X_DS * 7, X_DS * 8.5, X_DS * 9.5, X_DS * 10 - 10};
+const int XT10[] = {10, X_DS * 1, X_DS * 3.5, X_DS * 6, X_DS * 7.5, X_DS * 8.5, X_DS * 9, X_DS * 10 - 10};
 const int XDMS[] = {10, X_DS * 4, X_DS * 7, X_DS * 10 - 10};
 const int XDG[] = {10, X_DS * 2, X_DS * 4, X_DS * 6, X_DS * 8, X_DS * 10 - 10};
 const int XXDG[] = {10, X_DS * 2, X_DS * 4.5, X_DS * 7, X_DS * 8.5, X_DS * 10 - 10};
 const int XQH[] = {10, X_DS * 1.5, X_DS * 3.5, X_DS * 5, X_DS * 7.5, X_DS * 9, X_DS * 10 - 10};
-const int XT10[] = {10, X_DS * 4, X_DS * 7, X_DS * 10 - 10};
 
 int mouseX = 0, mouseY = 0;
 bool isExit = 0;
@@ -84,6 +84,7 @@ DS_DauSach ListSearchDauSach;
 DS_DMS DSDMS;
 DS_MT DSMT;
 DS_QuaHan DSQH;
+TopList DS10;
 // Doc Gia
 Button ButtonDocGiaMaThe(201, w / 2 - DefaultButtonWidth - 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "MA THE", 0);
 Button ButtonDocGiaHoTen(202, w / 2 + 10, Y_DS - 75, DefaultButtonWidth, DefaultButtonHeight, "HO TEN", 0);
@@ -170,6 +171,8 @@ void GetDataDauSachFromFile(DS_DauSach &DSDS)
 			getline(FileDanhMucSach, data);
 			sach->id = atoi(GetNumberFromMaSach(data).c_str());
 			strcpy(sach->MaSach, data.c_str());
+			getline(FileDanhMucSach, data);
+			sach->SoLuotMuon = atoi(data.c_str());
 			getline(FileDanhMucSach, data);
 			sach->TrangThai = atoi(data.c_str());
 			getline(FileDanhMucSach, data);
@@ -263,69 +266,72 @@ void GetDataFromFile()
 
 void WriteDataDauSachToFile(DS_DauSach DSDS)
 {
-  fstream FileDauSach, FileDanhMucSach;
-  FileDauSach.open("data_dausach.txt", ios::out);
-  if (!FileDauSach.is_open())
-  {
-    printf("Loi mo FileDauSach de ghi \n");
-    return;
-  }
-  
-  FileDanhMucSach.open("data_danhmucsach.txt", ios::out);
-  if (!FileDanhMucSach.is_open())
-  {
-    printf("Loi mo FileDanhMucSach de ghi \n");
-    return;
-  }
+	fstream FileDauSach, FileDanhMucSach;
+	FileDauSach.open("data_dausach.txt", ios::out);
+	if (!FileDauSach.is_open())
+	{
+		printf("Loi mo FileDauSach de ghi \n");
+		return;
+	}
 
-  FileDauSach << DSDS.n << endl;
-  for (int i = 0; i < DSDS.n; ++i)
-  {
-    FileDauSach << DSDS.nodes[i]->ISBN << endl;
-    FileDauSach << DSDS.nodes[i]->TenSach << endl;
-    FileDauSach << DSDS.nodes[i]->SoTrang << endl;
-    FileDauSach << DSDS.nodes[i]->TacGia << endl;
-    FileDauSach << DSDS.nodes[i]->NXB << endl;
-    FileDauSach << DSDS.nodes[i]->TheLoai << endl;
-	FileDanhMucSach << DSDS.nodes[i]->TongSoLuong << endl;
-	if (DSDS.nodes[i]->TongSoLuong > 0) 
-		for (DM_Sach *node = DSDS.nodes[i]->DS_Sach; node != NULL; node = node->next)
-		{
-			FileDanhMucSach << node->sach->MaSach << endl;
-			// FileDanhMucSach << node->sach->SoLuotMuon << endl;
-			FileDanhMucSach << node->sach->TrangThai << endl;
-			FileDanhMucSach << node->sach->ViTri << endl;
-		}
-  }
-  FileDauSach.close();
-  FileDanhMucSach.close();
+	FileDanhMucSach.open("data_danhmucsach.txt", ios::out);
+	if (!FileDanhMucSach.is_open())
+	{
+		printf("Loi mo FileDanhMucSach de ghi \n");
+		return;
+	}
+
+	FileDauSach << DSDS.n << endl;
+	for (int i = 0; i < DSDS.n; ++i)
+	{
+		FileDauSach << DSDS.nodes[i]->ISBN << endl;
+		FileDauSach << DSDS.nodes[i]->TenSach << endl;
+		FileDauSach << DSDS.nodes[i]->SoTrang << endl;
+		FileDauSach << DSDS.nodes[i]->TacGia << endl;
+		FileDauSach << DSDS.nodes[i]->NXB << endl;
+		FileDauSach << DSDS.nodes[i]->TheLoai << endl;
+		FileDanhMucSach << DSDS.nodes[i]->TongSoLuong << endl;
+		if (DSDS.nodes[i]->TongSoLuong > 0)
+			for (DM_Sach *node = DSDS.nodes[i]->DS_Sach; node != NULL; node = node->next)
+			{
+				FileDanhMucSach << node->sach->MaSach << endl;
+				// FileDanhMucSach << node->sach->SoLuotMuon << endl;
+				FileDanhMucSach << node->sach->TrangThai << endl;
+				FileDanhMucSach << node->sach->ViTri << endl;
+			}
+	}
+	FileDauSach.close();
+	FileDanhMucSach.close();
 }
 void WriteDSMuonTra(fstream &FileMuonTra, NodeTheDocGia *thedocgia)
 {
 	FileMuonTra << thedocgia->DocGia.TongSoLuong << endl;
 	if (thedocgia->DocGia.TongSoLuong > 0)
-	for (NodeMuonTra *node = thedocgia->DocGia.DS_MT->First; node != NULL; node = node->Right)
-	{
-		FileMuonTra << node->value->MaSach << endl;
-		FileMuonTra << node->value->TrangThai << endl;
-		FileMuonTra << node->value->NgayMuon.res << endl;
-		if (node->value->TrangThai == 0)
-			FileMuonTra << "0" << endl;
-		FileMuonTra << node->value->NgayTra.res << endl;
-	}
+		for (NodeMuonTra *node = thedocgia->DocGia.DS_MT->First; node != NULL; node = node->Right)
+		{
+			FileMuonTra << node->value->MaSach << endl;
+			FileMuonTra << node->value->TrangThai << endl;
+			FileMuonTra << node->value->NgayMuon.res << endl;
+			if (node->value->TrangThai == 0)
+				FileMuonTra << "0" << endl;
+			FileMuonTra << node->value->NgayTra.res << endl;
+		}
 }
 void WriteDG(fstream &FileDocGia, fstream &FileMuonTra, NodeTheDocGia *&TreeAVLDocGia)
 {
-  if (TreeAVLDocGia != nullptr){
-  FileDocGia << TreeAVLDocGia->DocGia.MaThe << endl;
-  FileDocGia << TreeAVLDocGia->DocGia.Ho << endl;
-  FileDocGia << TreeAVLDocGia->DocGia.Ten << endl;
-  FileDocGia << TreeAVLDocGia->DocGia.Phai << endl;
-  FileDocGia << TreeAVLDocGia->DocGia.TrangThai << endl;
-  WriteDSMuonTra(FileMuonTra, TreeAVLDocGia);
-  if (TreeAVLDocGia->left != nullptr) WriteData(FileDocGia, FileMuonTra, TreeAVLDocGia->left);
-  if (TreeAVLDocGia->right != nullptr) WriteData(FileDocGia, FileMuonTra, TreeAVLDocGia->right);
-  }
+	if (TreeAVLDocGia != nullptr)
+	{
+		FileDocGia << TreeAVLDocGia->DocGia.MaThe << endl;
+		FileDocGia << TreeAVLDocGia->DocGia.Ho << endl;
+		FileDocGia << TreeAVLDocGia->DocGia.Ten << endl;
+		FileDocGia << TreeAVLDocGia->DocGia.Phai << endl;
+		FileDocGia << TreeAVLDocGia->DocGia.TrangThai << endl;
+		WriteDSMuonTra(FileMuonTra, TreeAVLDocGia);
+		if (TreeAVLDocGia->left != nullptr)
+			WriteDG(FileDocGia, FileMuonTra, TreeAVLDocGia->left);
+		if (TreeAVLDocGia->right != nullptr)
+			WriteDG(FileDocGia, FileMuonTra, TreeAVLDocGia->right);
+	}
 }
 void WriteDocGia(fstream &FileDocGia, fstream &FileMuonTra, NodeTheDocGia *&TreeAVLDocGia)
 {
@@ -550,6 +556,28 @@ void DrawItemQuaHan(DS_QuaHan DSQH)
 		outtextxy(XQH[5] + (XQH[6] - XQH[5]) / 2 - textwidth(data) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), data);
 	}
 }
+void DrawItemTop10(TopList &DS10)
+{
+	char data[15];
+	if (DS10.n == 0)
+		return;
+	for (int i = 1 + 10 * (CurrentPage - 1); i <= 10 + 10 * (CurrentPage - 1); i++)
+	{
+		if (i > DS10.n)
+			break;
+		line(XT10[0], (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1) + 1)), XT10[7], (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1) + 1)));
+		outtextxy(XT10[0] + (XT10[1] - XT10[0]) / 2 - textwidth(DS10.nodes[i - 1]->ISBN) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DS10.nodes[i - 1]->ISBN);
+		outtextxy(XT10[1] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DS10.nodes[i - 1]->TenSach);
+		outtextxy(XT10[2] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DS10.nodes[i - 1]->TacGia);
+		outtextxy(XT10[3] + 10, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), DS10.nodes[i - 1]->TheLoai);
+		itoa(DS10.nodes[i - 1]->SoTrang, data, 10);
+		outtextxy(XT10[4] + (XT10[5] - XT10[4]) / 2 - textwidth(data) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), data);
+		itoa(DS10.nodes[i - 1]->NXB, data, 10);
+		outtextxy(XT10[5] + (XT10[6] - XT10[5]) / 2 - textwidth(data) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), data);
+		itoa(DS10.nodes[i - 1]->SoLuotMuon, data, 10);
+		outtextxy(XT10[6] + (XT10[7] - XT10[6]) / 2 - textwidth(data) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), data);
+	}
+}
 
 void RunQuaHan()
 {
@@ -586,24 +614,28 @@ void RunQuaHan()
 	strcat(NumOfPage, temp.c_str());
 	outtextxy(w / 2 - textwidth(NumOfPage) / 2, Y_DS * 5 + 10, NumOfPage);
 }
+void InTop10();
 void RunTop10()
 {
 	ClearScreen();
 	ButtonBack.draw();
 	ButtonThongKeQuaHan.draw();
 	ButtonThongKeTop10.draw();
-	char Title[][25] = {"ISBN", "TEN SACH", "SO LUOT MUON"};
+	char Title[][25] = {"ISBN", "TEN SACH", "TAC GIA", "THE LOAI", "SO TRANG", "NXB", "LUOT MUON"};
 	setcolor(WHITE);
 	// Ve khung + title
 	char title[] = "THONG KE";
 	outtextxy(w / 2 - textwidth(title) / 2, textheight("A") - 10, title);
-	rectangle(XT10[0], Y_DS, XT10[3], Y_DS * 5);
-	line(XT10[0], Y_DS + 50, XT10[3], Y_DS + 50);
-	for (int i = 0; i < 3; i++)
+	rectangle(XT10[0], Y_DS, XT10[7], Y_DS * 5);
+	line(XT10[0], Y_DS + 50, XT10[7], Y_DS + 50);
+	for (int i = 0; i < 7; i++)
 	{
 		line(XT10[i + 1], Y_DS, XT10[i + 1], Y_DS * 5);
 		outtextxy(XT10[i] + ((XT10[i + 1] - XT10[i]) / 2 - textwidth(Title[i]) / 2), (Y_DS + 25) - textheight("A") / 2, Title[i]);
 	}
+	DS10.n = 0;
+	GetTop10(DSDS, DS10);
+	DrawItemTop10(DS10);
 }
 void RunThongKe()
 {
@@ -1835,6 +1867,7 @@ void ThongKeEvent()
 			SetMenuSelect(0);
 		else if (ButtonThongKeTop10.isMouseHover(mouseX, mouseY))
 		{
+			CurrentPage = 1;
 			ButtonThongKeTop10.IsHover = 1;
 			SetMenuSelect(ButtonThongKe.ID);
 		}
@@ -2307,6 +2340,15 @@ void InQuaHan()
 		cout << DSQH.nodes[i]->MaSach << " " << DSQH.nodes[i]->SoNgayQuaHan << endl;
 	}
 }
+void InTop10()
+{
+	DS10.n = 0;
+	GetTop10(DSDS, DS10);
+	for (int i = 0; i < DS10.n; ++i)
+	{
+		cout << DS10.nodes[i]->ISBN << " " << DS10.nodes[i]->SoLuotMuon << endl;
+	}
+}
 int main()
 {
 	initwindow(w, h, AppTitle);
@@ -2315,6 +2357,7 @@ int main()
 	// InDMS();
 	// InMuonTra(TreeAVLDocGia);
 	// InQuaHan();
+	// InTop10();
 	while (1)
 	{
 		Event();

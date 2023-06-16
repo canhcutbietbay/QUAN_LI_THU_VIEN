@@ -32,22 +32,22 @@ struct DauSach
         SoTrang = sotrang;
         NXB = nxb;
     }
-    void TongSLM()
+    void TongSLM(DM_Sach *DS_Sach)
     {
-        int sum=0;
-        while(DS_Sach)
+        int sum = 0;
+        while (DS_Sach)
         {
-            sum+=DS_Sach->sach->SoLuotMuon;
+            sum += DS_Sach->sach->SoLuotMuon;
             DS_Sach = DS_Sach->next;
-        }   
+        }
         TongSoLuotMuon = sum;
     }
-    bool ThuocDauSach(char* c)
+    bool ThuocDauSach(char *c)
     {
-        for(int i = 0; i < strlen(ISBN); i++)
+        for (int i = 0; i < strlen(ISBN); i++)
         {
             if (c[i] != ISBN[i])
-            return false;
+                return false;
         }
         return true;
     }
@@ -232,5 +232,52 @@ char *CreateMaSach(DauSach *&ds)
         ms = strcat(ms, "-");
         strcat(ms, cid);
         return ms;
+    }
+}
+
+struct Top
+{
+    char ISBN[30], TenSach[30], TacGia[30], TheLoai[30];
+    int SoTrang, NXB;
+    int SoLuotMuon = 0;
+    //
+    Top() {}
+    ~Top() {}
+    //
+};
+// TOP 10
+struct TopList
+{
+    int n = 0;
+    Top *nodes[10];
+    void InsertTop(TopList &DS10, Top *top)
+    {
+        int pos = (DS10.n == 10) ? 10 : DS10.n++;
+        while (pos)
+        {
+            if (top->SoLuotMuon > DS10.nodes[pos - 1]->SoLuotMuon)
+                pos--;
+            else
+                break;
+        }
+        for (int i = DS10.n; i >= pos; --i)
+            DS10.nodes[i] = DS10.nodes[i - 1];
+        DS10.nodes[pos] = top;
+    }
+};
+void GetTop10(DS_DauSach &DSDS, TopList &DS10)
+{
+    for (int i = 0; i < DSDS.n; i++)
+    {
+        Top *top = new Top;
+        strcpy(top->ISBN, DSDS.nodes[i]->ISBN);
+        strcpy(top->TenSach, DSDS.nodes[i]->TenSach);
+        strcpy(top->TacGia, DSDS.nodes[i]->TacGia);
+        strcpy(top->TheLoai, DSDS.nodes[i]->TheLoai);
+        top->SoTrang = DSDS.nodes[i]->SoTrang;
+        top->NXB = DSDS.nodes[i]->NXB;
+        DSDS.nodes[i]->TongSLM(DSDS.nodes[i]->DS_Sach);
+        top->SoLuotMuon = DSDS.nodes[i]->TongSoLuotMuon;
+        DS10.InsertTop(DS10, top);
     }
 }
