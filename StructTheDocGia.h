@@ -649,3 +649,53 @@ void GetFromTree(NodeTheDocGia *root, DS_QuaHan &DSQH, DS_DauSach &DSDS)
 	}
 	GetFromTree(root->right, DSQH, DSDS);
 }
+
+//	FREE MEMORY
+// void FreeTreeAVLDocGia(NodeTheDocGia *&TreeAVLDocGia)
+// {
+// 	if (TreeAVLDocGia == NULL)
+// 		return;
+// 	FreeTreeAVLDocGia(TreeAVLDocGia->left);
+// 	delete TreeAVLDocGia;
+// 	FreeTreeAVLDocGia(TreeAVLDocGia->right);
+// }
+// void FreeDSDG(DS_DocGia &DSDG)
+// {
+// 	int k = MAX_SIZE_LIST_DOC_GIA;
+// 	while (k--)
+// 	{
+// 		delete DSDG.nodes[k];
+// 	}
+// }
+// void FreeDSMT(DS_MT &DSMT)
+// {
+// 	int k = MAX_SIZE_LIST_MT;
+// 	while (k--)
+// 	{
+// 		delete DSMT.nodes[k];
+// 	}
+// }
+// void FreeTopList(TopList &toplist)
+// {
+// 	int k = 10;
+// 	while (k--)
+// 	{
+// 		delete toplist.nodes[k];
+// 	}
+// }
+// void FreeDSQH(DS_QuaHan &DSQH)
+// {
+// 	int k = MAX_SIZE_DAUSACH;
+// 	while (k--)
+// 	{
+// 		delete DSQH.nodes[k];
+// 	}
+// }
+// void FreeMemory_DG_MT(NodeTheDocGia *&TreeAVLDocGia, DS_DocGia &DSDG, DS_MT &DSMT, TopList &toplist, DS_QuaHan &quahan)
+// {
+// 	FreeTreeAVLDocGia(NodeTheDocGia *TreeAVLDocGia);
+// 	FreeDSDG(DS_DocGia DSDG);
+// 	FreeDSMT(DS_MT DSMT);
+// 	FreeTopList(TopList toplist);
+// 	FreeDSQH(DS_QuaHan DSQH);
+// }

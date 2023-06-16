@@ -281,3 +281,25 @@ void GetTop10(DS_DauSach &DSDS, TopList &DS10)
         DS10.InsertTop(DS10, top);
     }
 }
+
+// void FreeDSDS(DS_DauSach &DSDS)
+// {
+//     int k = MAX_SIZE_LIST_DAU_SACH;
+//     while(k--)
+//     {
+//         delete DSDS.nodes[k];
+//     }
+// }
+// void FreeDSDMS(DS_DMS &DSDMS)
+// {
+//     int k = MAX_SIZE_LIST_DMS;
+//     while(k--)
+//     {
+//         delete DSDMS.nodes[k];
+//     }
+// }
+// void FreeMemory_DS_DMS(DS_DauSach &DSDS, DS_DMS &DSDMS)
+// {
+//     FreeDSDG(DSDS);
+//     FreeDSDMS(DSDMS);
+// }
