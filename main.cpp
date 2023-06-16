@@ -261,6 +261,79 @@ void GetDataFromFile()
 	GetDataDocGiaFromFile(TreeAVLDocGia);
 }
 
+void WriteDataDauSachToFile(DS_DauSach DSDS)
+{
+  fstream FileDauSach, FileDanhMucSach;
+  FileDauSach.open("data_dausach.txt", ios::out);
+  if (!FileDauSach.is_open())
+  {
+    printf("Loi mo FileDauSach de ghi \n");
+    return;
+  }
+  
+  FileDanhMucSach.open("data_danhmucsach.txt", ios::out);
+  if (!FileDanhMucSach.is_open())
+  {
+    printf("Loi mo FileDanhMucSach de ghi \n");
+    return;
+  }
+
+  FileDauSach << DSDS.n << endl;
+  for (int i = 0; i < DSDS.n; ++i)
+  {
+    FileDauSach << DSDS.nodes[i]->ISBN << endl;
+    FileDauSach << DSDS.nodes[i]->TenSach << endl;
+    FileDauSach << DSDS.nodes[i]->SoTrang << endl;
+    FileDauSach << DSDS.nodes[i]->TacGia << endl;
+    FileDauSach << DSDS.nodes[i]->NXB << endl;
+    FileDauSach << DSDS.nodes[i]->TheLoai << endl;
+	FileDanhMucSach << DSDS.nodes[i]->TongSoLuong << endl;
+	if (DSDS.nodes[i]->TongSoLuong > 0) 
+		for (DM_Sach *node = DSDS.nodes[i]->DS_Sach; node != NULL; node = node->next)
+		{
+			FileDanhMucSach << node->sach->MaSach << endl;
+			// FileDanhMucSach << node->sach->SoLuotMuon << endl;
+			FileDanhMucSach << node->sach->TrangThai << endl;
+			FileDanhMucSach << node->sach->ViTri << endl;
+		}
+  }
+  FileDauSach.close();
+  FileDanhMucSach.close();
+}
+void WriteDSMuonTra(fstream &FileMuonTra, NodeTheDocGia *thedocgia)
+{
+	FileMuonTra << thedocgia->DocGia.TongSoLuong << endl;
+	if (thedocgia->DocGia.TongSoLuong > 0)
+	for (NodeMuonTra *node = thedocgia->DocGia.DS_MT->First; node != NULL; node = node->Right)
+	{
+		FileMuonTra << node->value->MaSach << endl;
+		FileMuonTra << node->value->TrangThai << endl;
+		FileMuonTra << node->value->NgayMuon.res << endl;
+		if (node->value->TrangThai == 0)
+			FileMuonTra << "0" << endl;
+		FileMuonTra << node->value->NgayTra.res << endl;
+	}
+}
+void WriteDG(fstream &FileDocGia, fstream &FileMuonTra, NodeTheDocGia *&TreeAVLDocGia)
+{
+  if (TreeAVLDocGia != nullptr){
+  FileDocGia << TreeAVLDocGia->DocGia.MaThe << endl;
+  FileDocGia << TreeAVLDocGia->DocGia.Ho << endl;
+  FileDocGia << TreeAVLDocGia->DocGia.Ten << endl;
+  FileDocGia << TreeAVLDocGia->DocGia.Phai << endl;
+  FileDocGia << TreeAVLDocGia->DocGia.TrangThai << endl;
+  WriteDSMuonTra(FileMuonTra, TreeAVLDocGia);
+  if (TreeAVLDocGia->left != nullptr) WriteData(FileDocGia, FileMuonTra, TreeAVLDocGia->left);
+  if (TreeAVLDocGia->right != nullptr) WriteData(FileDocGia, FileMuonTra, TreeAVLDocGia->right);
+  }
+}
+void WriteDocGia(fstream &FileDocGia, fstream &FileMuonTra, NodeTheDocGia *&TreeAVLDocGia)
+{
+	DSDG.n = 0;
+	GetFromTree(TreeAVLDocGia, DSDG);
+	FileDocGia << DSDG.n << endl;
+	WriteDG(FileDocGia, FileMuonTra, TreeAVLDocGia);
+}
 void ButtonEffect(Button &Button)
 {
 	if (Button.isMouseHover(mousex(), mousey()))

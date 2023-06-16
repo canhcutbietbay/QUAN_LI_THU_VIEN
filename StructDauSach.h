@@ -10,7 +10,7 @@ struct DauSach
     int SoTrang, NXB;
     DM_Sach *DS_Sach;
     int TongSoLuong;
-
+    int TongSoLuotMuon = 0;
     // constructor
     DauSach() {}
     DauSach(char isbn[], char tensach[], char tacgia[], char theloai[], int sotrang, int nxb)
@@ -31,6 +31,25 @@ struct DauSach
         strcpy(TheLoai, theloai);
         SoTrang = sotrang;
         NXB = nxb;
+    }
+    void TongSLM()
+    {
+        int sum=0;
+        while(DS_Sach)
+        {
+            sum+=DS_Sach->sach->SoLuotMuon;
+            DS_Sach = DS_Sach->next;
+        }   
+        TongSoLuotMuon = sum;
+    }
+    bool ThuocDauSach(char* c)
+    {
+        for(int i = 0; i < strlen(ISBN); i++)
+        {
+            if (c[i] != ISBN[i])
+            return false;
+        }
+        return true;
     }
     // destructor
     ~DauSach(){};

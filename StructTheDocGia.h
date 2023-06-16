@@ -73,6 +73,7 @@ struct TheDocGia
 		DS_MT = DSMT;
 		TongSoLuong = tongsoluong;
 	}
+	
 };
 struct NodeTheDocGia
 {
@@ -126,6 +127,7 @@ struct DS_DocGia
 			DSDG.n++;
 		}
 	}
+	
 	int CompareDG(TheDocGia *a, TheDocGia *b, int mode)
 	{
 		// mode 0: MaThe, mode 1: HoTen
@@ -179,7 +181,42 @@ struct DS_DocGia
 /*
 
 */
+struct QuaHan
+{
+	int MaThe;
+	char HoTen[51];
+	char MaSach[15];
+	char TenSach[30];
+	DateTime NgayMuon;
+	int SoNgayQuaHan;
+	//
+	QuaHan() {}
+	QuaHan(int mathe, char hoten[51], char masach[15], char tensach[30], DateTime ngaymuon, int songayquahan)
+	{
+		MaThe = mathe;
+		strcpy(HoTen, hoten);
+		strcpy(MaSach, masach);
+		strcpy(TenSach, tensach);
+		NgayMuon = ngaymuon;
+		SoNgayQuaHan = songayquahan;
+	}
+	~QuaHan() {}
+	//
+};
+/*
 
+*/
+struct Top
+{
+	char ISBN[30], TenSach[30], TacGia[30], TheLoai[30];
+    int SoTrang, NXB;
+	int SoLuotMuon = 0;
+	//
+	Top() {}
+	~Top() {}
+	//
+};
+//
 int max(int a, int b)
 {
 	if (a > b)
@@ -536,6 +573,19 @@ int MuonSach(TheDocGia *thedocgia, char *masach, DS_DauSach &DSDS)
 		// them vao DSMT
 		thedocgia->TongSoLuong++;
 		InsertLast_DM_MuonTra(thedocgia->DS_MT, newnode);
+		for (int i = 0; i < DSDS.n; i++)
+		{
+			if (DSDS.nodes[i]->ThuocDauSach(masach))
+				while (DSDS.nodes[i]->DS_Sach->sach->MaSach)
+				{
+					if(!strcmp(masach, nodes[i]->DS_Sach->sach->MaSach))
+					{
+						nodes[i]->DS_Sach->sach->SoLuotMuon++;
+						break;
+					}
+					DSDS.nodes[i]->DS_Sach = DSDS.nodes[i]->DS_Sach->next;
+				}
+		}
 		return 0;
 	}
 	else
@@ -562,28 +612,7 @@ int TraSach(TheDocGia *thedocgia, char *masach, DS_DauSach &DSDS)
 			find = find->Right;
 	return 0;
 };
-struct QuaHan
-{
-	int MaThe;
-	char HoTen[51];
-	char MaSach[15];
-	char TenSach[30];
-	DateTime NgayMuon;
-	int SoNgayQuaHan;
-	//
-	QuaHan() {}
-	QuaHan(int mathe, char hoten[51], char masach[15], char tensach[30], DateTime ngaymuon, int songayquahan)
-	{
-		MaThe = mathe;
-		strcpy(HoTen, hoten);
-		strcpy(MaSach, masach);
-		strcpy(TenSach, tensach);
-		NgayMuon = ngaymuon;
-		SoNgayQuaHan = songayquahan;
-	}
-	~QuaHan() {}
-	//
-};
+// QUA HAN
 struct DS_QuaHan
 {
 	int n;
@@ -591,20 +620,22 @@ struct DS_QuaHan
 	void InsertQuaHan(DS_QuaHan &DSQH, QuaHan *quahan)
 	{
 		if (DSQH.n > MAX_SIZE_DAUSACH)
-			std::cout << "Loi" << std::endl;
+			printf("\n");
 		else
 		{
-			int pos = DSQH.n;
+			int pos = DSQH.n++;
 			while (pos)
 			{
-				if (quahan->SoNgayQuaHan > DSQH.nodes[pos - 1]->SoNgayQuaHan)
-					pos--;
-				else
-					break;
+				if (quahan->SoNgayQuaHan > DSQH.nodes[pos]->SoNgayQuaHan)
+				{
+					for (int i = DSQH.n - 1; i > pos - 1; i--)
+					{
+						DSQH.nodes[i] = DSQH.nodes[i-1];
+					}
+				}
+				else break;
+				pos--;
 			}
-			DSQH.n++;
-			for (int i = DSQH.n; i >= pos; --i)
-				DSQH.nodes[i] = DSQH.nodes[i - 1];
 			DSQH.nodes[pos] = quahan;
 		}
 	}
@@ -637,14 +668,47 @@ void GetFromTree(NodeTheDocGia *root, DS_QuaHan &DSQH, DS_DauSach &DSDS)
 			newnode->NgayMuon.Day = node->value->NgayMuon.Day;
 			newnode->NgayMuon.Month = node->value->NgayMuon.Month;
 			newnode->NgayMuon.Year = node->value->NgayMuon.Year;
-			newnode->NgayMuon.GetRes();
 			newnode->SoNgayQuaHan = newnode->NgayMuon.GetSoNgayMuon();
-			if (newnode->SoNgayQuaHan > 7){
-				newnode->SoNgayQuaHan -= 7;
-				DSQH.InsertQuaHan(DSQH, newnode);
-			}
+			DSQH.InsertQuaHan(DSQH, newnode);
 		}
-		node = node->Right;
 	}
 	GetFromTree(root->right, DSQH, DSDS);
+}
+// TOP 10
+struct TopList
+{
+	int n;
+	Top *nodes[10];
+	void InsertTop(TopList &DS10, Top *top)
+	{
+		int pos = 0;
+		while (pos < DS10.n)
+		{
+			if (top->SoLuotMuon > DS10.nodes[pos]->SoLuotMuon)
+			{
+				for (int i = 9; i > pos; i--)
+				{
+					DS10.nodes[i] = DS10.nodes[i-1];
+				}
+				break;
+			}
+			pos++;
+		}
+		DS10.nodes[pos] = top;
+	}
+};
+void InsertTop(DS_DauSach &DSDS, TopList *toplist)
+{
+	for (int i = 0; i < DSDS.n; i++)
+	{
+		Top *top = new Top;
+		strcpy(top->ISBN, DSDS.nodes[i]->ISBN);
+        strcpy(top->TenSach, DSDS.nodes[i]->TenSach);
+        strcpy(top->TacGia, DSDS.nodes[i]->TacGia);
+        strcpy(top->TenSach, DSDS.nodes[i]->TenSach);
+        top->SoTrang = DSDS.nodes[i]->SoTrang;
+        top->NXB = DSDS.nodes[i]->NXB;
+		top->SoLuotMuon = DSDS.nodes[i]->TongSoLuotMuon;
+		toplist->InsertTop(DS10, top);
+	}
 }

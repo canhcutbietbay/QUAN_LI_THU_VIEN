@@ -7,6 +7,7 @@ struct Sach
   char MaSach[15];
   int TrangThai;
   char ViTri[30];
+  int SoLuotMuon=0;
   // construction
   Sach() {}
   Sach(char maSach[15], int trangThai, char viTri[30])
