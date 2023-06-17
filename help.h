@@ -330,6 +330,7 @@ void KeyBoardEvent()
 			if (ButtonTemp->ID == ButtonSearchDauSach.ID)
 			{
 				SearchDauSach(ButtonSearchDauSach.UserInput);
+				CurrentPage = 1;
 				RunDauSach();
 			}
 		}

@@ -39,6 +39,7 @@ void RunQuaHan()
 		outtextxy(XQH[i] + ((XQH[i + 1] - XQH[i]) / 2 - textwidth(Title[i]) / 2), (Y_DS + 25) - textheight("A") / 2, Title[i]);
 	}
 	DSQH.n = 0;
+	if (TreeAVLDocGia != SubTree) TreeAVLDocGia = SubTree;
 	GetFromTree(TreeAVLDocGia, DSQH, DSDS);
 	DrawItemQuaHan(DSQH);
 	memset(NumOfPage, 0, sizeof NumOfPage);
@@ -95,6 +96,7 @@ void RunTop10()
 	}
 	DS10.n = 0;
 	GetTop10(DSDS, DS10);
+	std::cout << DS10.n << std::endl;
 	DrawItemTop10(DS10);
 }
 
@@ -118,5 +120,42 @@ void DrawItemTop10(TopList &DS10)
 		outtextxy(XT10[5] + (XT10[6] - XT10[5]) / 2 - textwidth(data) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), data);
 		itoa(DS10.nodes[i - 1]->SoLuotMuon, data, 10);
 		outtextxy(XT10[6] + (XT10[7] - XT10[6]) / 2 - textwidth(data) / 2, (Y_DS + ContentHeight * (i - 10 * (CurrentPage - 1)) + ContentHeight / 2 - textheight("A") / 2), data);
+	}
+}
+
+// --------------- Event----------------- //
+void ThongKeEvent()
+{
+	ButtonEffect(ButtonBack);
+	ButtonEffect(ButtonPrev);
+	ButtonEffect(ButtonNext);
+	if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		if (ButtonBack.isMouseHover(mouseX, mouseY))
+			SetMenuSelect(0);
+		else if (ButtonThongKeTop10.isMouseHover(mouseX, mouseY))
+		{
+			CurrentPage = 1;
+			ButtonThongKeTop10.IsHover = 1;
+			SetMenuSelect(ButtonThongKe.ID);
+		}
+		else if (ButtonThongKeQuaHan.isMouseHover(mouseX, mouseY))
+		{
+			CurrentPage = 1;
+			ButtonThongKeTop10.IsHover = 0;
+			SetMenuSelect(ButtonThongKe.ID);
+		}
+		else if (ButtonNext.isMouseHover(mouseX, mouseY))
+		{
+			if (CurrentPage < TotalPage)
+				CurrentPage++;
+			RunThongKe();
+		}
+		else if (ButtonPrev.isMouseHover(mouseX, mouseY))
+		{
+			if (CurrentPage > 1)
+				CurrentPage--;
+			RunThongKe();
+		}
 	}
 }

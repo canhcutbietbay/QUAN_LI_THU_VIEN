@@ -91,7 +91,7 @@ DS_DMS DSDMS;
 DS_MT DSMT;
 DS_QuaHan DSQH;
 TopList DS10;
-NodeTheDocGia *TreeAVLDocGia;
+NodeTheDocGia *TreeAVLDocGia, *SubTree;
 DS_DocGia DSDG;
 
 
@@ -199,10 +199,14 @@ void SuaDMSEvent();
 void ThemDauSachEvent();
 void XoaDauSachEvent();
 void SuaDauSachEvent();
-
 //Doc Gia
-
+void DocGiaEvent();
+void XemDocGiaEvent();
+void MuonSachEvent();
+void ThemDocGiaEvent();
+void XoaDocGiaEvent();
+void SuaDocGiaEvent();
 //Thong Ke
-
+void ThongKeEvent();
 // Thong Tin
-
+void ThongTinEvent();

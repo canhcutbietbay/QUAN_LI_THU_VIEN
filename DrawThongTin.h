@@ -35,3 +35,15 @@ void RunThongTin()
 	outtextxy(w / 2 - 250, 440, author1);
 	outtextxy(w / 2 - 250, 520, author2);
 }
+
+
+// --------------- Event ----------------- //
+void ThongTinEvent()
+{
+	ButtonEffect(ButtonBack);
+	if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		if (ButtonBack.isMouseHover(mouseX, mouseY))
+			SetMenuSelect(0);
+	}
+}

@@ -35,6 +35,7 @@ void MenuEvent()
 		}
 		if (ButtonThongKe.isMouseHover(mouseX, mouseY))
 		{
+			SubTree = TreeAVLDocGia;
 			SetMenuSelect(ButtonThongKe.ID);
 		}
 		if (ButtonThongTin.isMouseHover(mouseX, mouseY))

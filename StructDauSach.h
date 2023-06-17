@@ -249,7 +249,7 @@ struct Top
     ~Top() {}
     //
 };
-// TOP 10
+// // TOP 10
 struct TopList
 {
     int n = 0;
@@ -269,7 +269,8 @@ struct TopList
         DS10.nodes[pos] = top;
     }
 };
-void GetTop10(DS_DauSach &DSDS, TopList &DS10)
+
+void GetTop10(DS_DauSach DSDS, TopList &DS10)
 {
     for (int i = 0; i < DSDS.n; i++)
     {
