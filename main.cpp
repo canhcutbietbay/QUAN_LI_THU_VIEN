@@ -308,7 +308,8 @@ void Event()
 	else if (CurrentMenuId == ButtonThongTin.ID)
 		ThongTinEvent();
 }
-void FreeMemory(){
+void FreeMemory()
+{
 	FreeMemory_DS_DMS(DSDS, ListSearchDauSach, DSDMS);
 	FreeMemory_DG_MT(TreeAVLDocGia, DSDG, DSMT, DS10, DSQH);
 	cout << "FreeMemory" << endl;
@@ -319,6 +320,7 @@ int main()
 	initwindow(w, h, AppTitle);
 	DrawMenu();
 	GetDataFromFile();
+	// InDMS();
 	while (1)
 	{
 		Event();
@@ -326,8 +328,8 @@ int main()
 			break;
 		delay(50);
 	}
-//	 WriteDataToFile();
-	// FreeMemory();
+	WriteDataToFile();
+	FreeMemory();
 	closegraph();
 	return 0;
 }

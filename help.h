@@ -345,7 +345,8 @@ void InDMS()
 		DM_Sach *temp = DSDS.nodes[i]->DS_Sach;
 		for (temp; temp != nullptr; temp = temp->next)
 		{
-			std::cout << temp->sach->id << " " << temp->sach->MaSach << " " << temp->sach->TrangThai << " " << temp->sach->ViTri << std::endl;
+			// std::cout << temp->sach->id << " " << temp->sach->MaSach << " " << temp->sach->TrangThai << " " << temp->sach->ViTri << std::endl;
+			std::cout << temp->sach->MaSach << " " << temp << std::endl;
 		}
 		std::cout << "-------------------" << std::endl;
 	}

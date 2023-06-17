@@ -1,5 +1,3 @@
-
-
 struct ArrRanMT
 {
 	bool used[90000];
@@ -664,6 +662,7 @@ void FreeDSDG(DS_DocGia &DSDG)
 	while (k--)
 	{
 		delete DSDG.nodes[k];
+        DSDG.nodes[k] = nullptr;
 	}
 }
 void FreeDSMT(DS_MT &DSMT)
@@ -672,6 +671,7 @@ void FreeDSMT(DS_MT &DSMT)
 	while (k--)
 	{
 		delete DSMT.nodes[k];
+        DSMT.nodes[k] = nullptr;
 	}
 }
 void FreeTopList(TopList &toplist)
@@ -680,6 +680,7 @@ void FreeTopList(TopList &toplist)
 	while (k--)
 	{
 		delete toplist.nodes[k];
+        toplist.nodes[k] = nullptr;
 	}
 }
 void FreeDSQH(DS_QuaHan &DSQH)
@@ -688,6 +689,8 @@ void FreeDSQH(DS_QuaHan &DSQH)
 	while (k--)
 	{
 		delete DSQH.nodes[k];
+        DSQH.nodes[k] = nullptr;
+
 	}
 }
 void FreeMemory_DG_MT(NodeTheDocGia *&TreeAVLDocGia, DS_DocGia &DSDG, DS_MT &DSMT, TopList &toplist, DS_QuaHan &DSQH)

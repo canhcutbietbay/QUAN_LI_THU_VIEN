@@ -46,7 +46,7 @@ struct DauSach
         return true;
     }
     // destructor
-    ~DauSach(){};
+    // ~DauSach(){};
 };
 struct DS_DauSach
 {
@@ -289,20 +289,22 @@ void GetTop10(DS_DauSach DSDS, TopList &DS10)
 
 void FreeDSDS(DS_DauSach &DSDS)
 {
-    int k = MAX_SIZE_LIST_DAU_SACH;
+    int k = DSDS.n;
     while (k--)
     {
         while (DSDS.nodes[k]->DS_Sach != nullptr)
-            DeleteFirstDM_Sach(DSDS.nodes[k]->DS_Sach);
+            DSDS.nodes[k]->DS_Sach = DeleteFirstDM_Sach(DSDS.nodes[k]->DS_Sach);
         delete DSDS.nodes[k];
+        DSDS.nodes[k] = nullptr;
     }
 }
 void FreeDSDMS(DS_DMS &DSDMS)
 {
-    int k = MAX_SIZE_LIST_DMS;
+    int k = MAX_SIZE_LIST_DMS - 1;
     while (k--)
     {
         delete DSDMS.nodes[k];
+        DSDMS.nodes[k] = nullptr;
     }
 }
 void FreeMemory_DS_DMS(DS_DauSach &DSDS, DS_DauSach &ListSearchDauSach, DS_DMS &DSDMS)

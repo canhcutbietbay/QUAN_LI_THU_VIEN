@@ -105,9 +105,10 @@ DM_Sach *DeleteFirstDM_Sach(DM_Sach *node)
     return nullptr; // Khong co gi de xoa het
   else
   {
-    DM_Sach *newHead = node->next;
-    delete (node);
-    return newHead;
+    DM_Sach *temp = node;
+    node = node->next;
+    delete (temp);
+    return node;
   }
 }
 

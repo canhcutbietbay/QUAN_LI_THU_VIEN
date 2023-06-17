@@ -96,7 +96,6 @@ void RunTop10()
 	}
 	DS10.n = 0;
 	GetTop10(DSDS, DS10);
-	std::cout << DS10.n << std::endl;
 	DrawItemTop10(DS10);
 }
 
