@@ -17,21 +17,11 @@ int h = GetSystemMetrics(SM_CYSCREEN);
 
 #define TIPS 14
 
-#define MAX_SIZE_DAUSACH 300
-#define MAX_DOC_GIA 200
-#define QUEUE_CAPACITY 200
-#define START_ID_DG 1e4
-#define END_ID_DG 1e5
+#define MAX_SIZE_LIST_DAU_SACH 100
+#define MAX_SIZE_LIST_DMS 100
+#define MAX_SIZE_LIST_DOC_GIA 90000
+#define MAX_SIZE_LIST_MT 1000
 
 const int ENTER = 13;
 const int BACKSPACE = 8;
 const int SPACE = 32;
-
-char MuonSachCode[][25] = {"MUON SACH THANH CONG", // 0
-                           "DA MUON 3 SACH", //1
-                           "MUON 1 SACH QUA 7 NGAY",//2
-                           "MUON CUNG 1 DAU SACH",//3
-                           "SACH DA CHO MUON",//4
-                           "SACH DA THANH LY",//5
-                           "MA SACH KHONG TON TAI",//6
-                           "THE DA BI KHOA"};//7

@@ -1,9 +1,3 @@
-// #ifndef _STRUCTDAUSACH_H // Nếu chưa định nghĩa _STRUCTDAUSACH_H
-// #define _STRUCTDAUSACH_H // thì định nghĩa _STRUCTDAUSACH_H
-// #include "StructDanhMucSach.h"
-#define MAX_SIZE_LIST_DAU_SACH 100
-#define MAX_SIZE_LIST_DMS 100
-
 struct DauSach
 {
     char ISBN[30], TenSach[30], TacGia[30], TheLoai[30];
@@ -177,10 +171,15 @@ void InsertAfter_DM_Sach(DauSach *&node, Sach *sach)
         InsertFirst_DM_Sach(node->DS_Sach, sach);
     else
     {
-        DM_Sach *find = node->DS_Sach;
-        for (int i = 0; i < sach->id - 1; i++)
-            find = find->next;
-        InsertAfter_DM_Sach(find, sach);
+        if (sach->id == 0)
+            AddFirst_DM_Sach(node->DS_Sach, sach);
+        else
+        {
+            DM_Sach *find = node->DS_Sach;
+            for (int i = 0; i < sach->id - 1; i++)
+                find = find->next;
+            InsertAfter_DM_Sach(find, sach);
+        }
     }
 }
 
@@ -192,6 +191,11 @@ char *CreateMaSach(DauSach *&ds)
     char cid[3];
     // TH chua co sach
     if (node == nullptr)
+    {
+        strcat(ms, "-00");
+        return ms;
+    }
+    else if (node->sach->id > 0)
     {
         strcat(ms, "-00");
         return ms;
@@ -282,24 +286,27 @@ void GetTop10(DS_DauSach &DSDS, TopList &DS10)
     }
 }
 
-// void FreeDSDS(DS_DauSach &DSDS)
-// {
-//     int k = MAX_SIZE_LIST_DAU_SACH;
-//     while(k--)
-//     {
-//         delete DSDS.nodes[k];
-//     }
-// }
-// void FreeDSDMS(DS_DMS &DSDMS)
-// {
-//     int k = MAX_SIZE_LIST_DMS;
-//     while(k--)
-//     {
-//         delete DSDMS.nodes[k];
-//     }
-// }
-// void FreeMemory_DS_DMS(DS_DauSach &DSDS, DS_DMS &DSDMS)
-// {
-//     FreeDSDG(DSDS);
-//     FreeDSDMS(DSDMS);
-// }
+void FreeDSDS(DS_DauSach &DSDS)
+{
+    int k = MAX_SIZE_LIST_DAU_SACH;
+    while (k--)
+    {
+        while (DSDS.nodes[k]->DS_Sach != nullptr)
+            DeleteFirstDM_Sach(DSDS.nodes[k]->DS_Sach);
+        delete DSDS.nodes[k];
+    }
+}
+void FreeDSDMS(DS_DMS &DSDMS)
+{
+    int k = MAX_SIZE_LIST_DMS;
+    while (k--)
+    {
+        delete DSDMS.nodes[k];
+    }
+}
+void FreeMemory_DS_DMS(DS_DauSach &DSDS, DS_DauSach &ListSearchDauSach, DS_DMS &DSDMS)
+{
+    FreeDSDS(DSDS);
+    FreeDSDS(ListSearchDauSach);
+    FreeDSDMS(DSDMS);
+}

@@ -1,13 +1,10 @@
-// #ifndef _STRUCTDANHMUCSACH_H // Nếu chưa định nghĩa _STRUCTDANHMUCSACH_H
-// #define _STRUCTDANHMUCSACH_H // thì định nghĩa _STRUCTDANHMUCSACH_H
-// #include "StructDauSach.h"
 struct Sach
 {
   int id = 0;
   char MaSach[15];
   int TrangThai;
   char ViTri[30];
-  int SoLuotMuon=0;
+  int SoLuotMuon = 0;
   // construction
   Sach() {}
   Sach(char maSach[15], int trangThai, char viTri[30])
@@ -30,15 +27,6 @@ struct DM_Sach
 void InsertFirst_DM_Sach(DM_Sach *&First, Sach *sach);
 void InsertAfter_DM_Sach(DM_Sach *&node, Sach *sach);
 void InsertLast_DM_Sach(DM_Sach *&First, Sach *sach);
-// lenh truy xuat
-// DM_Sach *GetDM_Sach(DM_Sach *First, int pos);
-// DM_Sach *GetDM_Sach(DM_Sach *First, char *masach);
-Sach *GetSach(DM_Sach *First, char *masach);
-// lenh cap nhat sach cua node
-void DeleteDM_Sach(DM_Sach *First, char *masach);
-DM_Sach *MaSach(DM_Sach dms, int addval);
-/*
- */
 
 // new DM_Sach;
 DM_Sach *CreateDM_Sach(Sach *sach)
@@ -54,7 +42,16 @@ void InsertFirst_DM_Sach(DM_Sach *&First, Sach *sach)
 {
   DM_Sach *newSach = CreateDM_Sach(sach);
   First = newSach;
+
 }
+void AddFirst_DM_Sach(DM_Sach *&First, Sach *sach)
+{
+  DM_Sach *newSach = CreateDM_Sach(sach), *temp;
+  temp = First ;
+  newSach->next = temp;
+  First = newSach;
+}
+
 
 // them DM_Sach o vi tri
 void InsertAfter_DM_Sach(DM_Sach *&node, Sach *sach)
@@ -79,7 +76,7 @@ void InsertLast_DM_Sach(DM_Sach *&First, Sach *sach)
 }
 
 // lay node sach voi masach
-DM_Sach *GetDM_Sach(DM_Sach *First, char* masach)
+DM_Sach *GetDM_Sach(DM_Sach *First, char *masach)
 {
   DM_Sach *node = First;
   while (node) // ds tinh tu 1
@@ -88,4 +85,68 @@ DM_Sach *GetDM_Sach(DM_Sach *First, char* masach)
     else
       node = node->next;
   return node;
+}
+
+int DeleteAfterDM_Sach(DM_Sach *node)
+{
+  DM_Sach *temp;
+  // nếu node là NULL hoặc sau node không có nút
+  if ((node == nullptr) || (node->next == nullptr))
+    return 0;
+  temp = node->next; // node la nut can xoa
+  node->next = temp->next;
+  delete temp;
+  return 1;
+}
+
+DM_Sach *DeleteFirstDM_Sach(DM_Sach *node)
+{
+  if (node == nullptr)
+    return nullptr; // Khong co gi de xoa het
+  else
+  {
+    DM_Sach *newHead = node->next;
+    delete (node);
+    return newHead;
+  }
+}
+
+int DeleteSach(DM_Sach *&First, char maSach[])
+{
+  if (strcmp(First->sach->MaSach, maSach) == 0)
+  {
+    First = DeleteFirstDM_Sach(First);
+    if (First != nullptr)
+      return 1;
+    else
+      return 0;
+  }
+  else
+  {
+    DM_Sach *node = First;
+    for (node; node->next != nullptr; node = node->next)
+    {
+      if (strcmp(node->next->sach->MaSach, maSach) == 0)
+      {
+        int code = DeleteAfterDM_Sach(node);
+        return code;
+      }
+    }
+  }
+  return 0;
+}
+
+int UpdateSach(DM_Sach *&First, Sach sach)
+{
+  DM_Sach *node = GetDM_Sach(First, sach.MaSach);
+  if (node == nullptr)
+  {
+    return 0;
+  }
+  else
+  {
+    node->sach->TrangThai = sach.TrangThai;
+    strcpy(node->sach->ViTri, sach.ViTri);
+    return 1;
+  }
 }

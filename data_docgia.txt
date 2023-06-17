@@ -15,13 +15,13 @@ CHUONG
 0
 1
 10578
-c
-d
+TAN QUA
+MON
 1
 1
 10083
-a
-b
+LOC QUA
+MON
 0
 0
 14072

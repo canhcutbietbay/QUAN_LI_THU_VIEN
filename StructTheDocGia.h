@@ -1,5 +1,4 @@
-#define MAX_SIZE_LIST_DOC_GIA 90000
-#define MAX_SIZE_LIST_MT 100
+
 
 struct ArrRanMT
 {
@@ -588,10 +587,10 @@ struct QuaHan
 struct DS_QuaHan
 {
 	int n;
-	QuaHan *nodes[MAX_SIZE_DAUSACH];
+	QuaHan *nodes[MAX_SIZE_LIST_DAU_SACH];
 	void InsertQuaHan(DS_QuaHan &DSQH, QuaHan *quahan)
 	{
-		if (DSQH.n > MAX_SIZE_DAUSACH)
+		if (DSQH.n > MAX_SIZE_LIST_DAU_SACH)
 			std::cout << "Loi" << std::endl;
 		else
 		{
@@ -651,51 +650,51 @@ void GetFromTree(NodeTheDocGia *root, DS_QuaHan &DSQH, DS_DauSach &DSDS)
 }
 
 //	FREE MEMORY
-// void FreeTreeAVLDocGia(NodeTheDocGia *&TreeAVLDocGia)
-// {
-// 	if (TreeAVLDocGia == NULL)
-// 		return;
-// 	FreeTreeAVLDocGia(TreeAVLDocGia->left);
-// 	delete TreeAVLDocGia;
-// 	FreeTreeAVLDocGia(TreeAVLDocGia->right);
-// }
-// void FreeDSDG(DS_DocGia &DSDG)
-// {
-// 	int k = MAX_SIZE_LIST_DOC_GIA;
-// 	while (k--)
-// 	{
-// 		delete DSDG.nodes[k];
-// 	}
-// }
-// void FreeDSMT(DS_MT &DSMT)
-// {
-// 	int k = MAX_SIZE_LIST_MT;
-// 	while (k--)
-// 	{
-// 		delete DSMT.nodes[k];
-// 	}
-// }
-// void FreeTopList(TopList &toplist)
-// {
-// 	int k = 10;
-// 	while (k--)
-// 	{
-// 		delete toplist.nodes[k];
-// 	}
-// }
-// void FreeDSQH(DS_QuaHan &DSQH)
-// {
-// 	int k = MAX_SIZE_DAUSACH;
-// 	while (k--)
-// 	{
-// 		delete DSQH.nodes[k];
-// 	}
-// }
-// void FreeMemory_DG_MT(NodeTheDocGia *&TreeAVLDocGia, DS_DocGia &DSDG, DS_MT &DSMT, TopList &toplist, DS_QuaHan &quahan)
-// {
-// 	FreeTreeAVLDocGia(NodeTheDocGia *TreeAVLDocGia);
-// 	FreeDSDG(DS_DocGia DSDG);
-// 	FreeDSMT(DS_MT DSMT);
-// 	FreeTopList(TopList toplist);
-// 	FreeDSQH(DS_QuaHan DSQH);
-// }
+void FreeTreeAVLDocGia(NodeTheDocGia *&TreeAVLDocGia)
+{
+	if (TreeAVLDocGia == NULL)
+		return;
+	FreeTreeAVLDocGia(TreeAVLDocGia->left);
+	delete TreeAVLDocGia;
+	FreeTreeAVLDocGia(TreeAVLDocGia->right);
+}
+void FreeDSDG(DS_DocGia &DSDG)
+{
+	int k = MAX_SIZE_LIST_DOC_GIA;
+	while (k--)
+	{
+		delete DSDG.nodes[k];
+	}
+}
+void FreeDSMT(DS_MT &DSMT)
+{
+	int k = MAX_SIZE_LIST_MT;
+	while (k--)
+	{
+		delete DSMT.nodes[k];
+	}
+}
+void FreeTopList(TopList &toplist)
+{
+	int k = 10;
+	while (k--)
+	{
+		delete toplist.nodes[k];
+	}
+}
+void FreeDSQH(DS_QuaHan &DSQH)
+{
+	int k = DSQH.n;
+	while (k--)
+	{
+		delete DSQH.nodes[k];
+	}
+}
+void FreeMemory_DG_MT(NodeTheDocGia *&TreeAVLDocGia, DS_DocGia &DSDG, DS_MT &DSMT, TopList &toplist, DS_QuaHan &DSQH)
+{
+	FreeTreeAVLDocGia(TreeAVLDocGia);
+	FreeDSDG(DSDG);
+	FreeDSMT(DSMT);
+	FreeTopList(toplist);
+	FreeDSQH(DSQH);
+}
