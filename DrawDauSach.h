@@ -372,8 +372,6 @@ void RunSuaDauSach()
 	ButtonHuyBo.draw();
 }
 
-
-
 // -------------------Event----------------//
 
 void SearchDauSachEvent()
@@ -610,7 +608,11 @@ void XoaDMSEvent()
 		{
 			if (DSDMS.nodes[SubCurrentItem - 1]->SoLuotMuon == 0)
 			{
-				int code = DeleteSach(DSDS.nodes[CurrentItem - 1]->DS_Sach, DSDMS.nodes[SubCurrentItem - 1]->MaSach);
+				int code;
+				if (strlen(ButtonSearchDauSach.UserInput) == 0)
+					code = DeleteSach(DSDS.nodes[CurrentItem - 1]->DS_Sach, DSDMS.nodes[SubCurrentItem - 1]->MaSach);
+				else
+					code = DeleteSach(DSDS.nodes[TimPosDauSach(DSDS, ListSearchDauSach.nodes[CurrentItem - 1]->ISBN)]->DS_Sach, DSDMS.nodes[SubCurrentItem - 1]->MaSach);
 				if (code == 1)
 				{
 					DSDS.nodes[CurrentItem - 1]->TongSoLuong--;
@@ -863,4 +865,3 @@ void SuaDauSachEvent()
 		}
 	}
 }
-

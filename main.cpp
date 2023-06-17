@@ -320,7 +320,6 @@ int main()
 	initwindow(w, h, AppTitle);
 	DrawMenu();
 	GetDataFromFile();
-	// InDMS();
 	while (1)
 	{
 		Event();
@@ -329,6 +328,7 @@ int main()
 		delay(50);
 	}
 	WriteDataToFile();
+	
 	FreeMemory();
 	closegraph();
 	return 0;
